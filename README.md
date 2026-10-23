@@ -23,9 +23,10 @@ godot --path .
 | Action  | Keyboard        | Gamepad          |
 |---------|-----------------|------------------|
 | Roll    | WASD / arrows   | Left stick, D-pad |
+| Rotate camera | Hold right mouse button and move the mouse | |
 | Restart | R               | Start            |
 
-"Up" always rolls the ball towards the top of the screen.
+Movement is relative to the camera: "up" always rolls the ball towards the top of the screen, however the camera is turned.
 
 ## The prototype level
 
@@ -39,7 +40,7 @@ Scenes/Level.tscn   The course (CSG boxes with collision), checkpoints, goal, au
 Scenes/Ball.tscn    The player ball (RigidBody3D)
 Scripts/Game.cs     Countdown, timer, falling/respawn, checkpoints, goal
 Scripts/Ball.cs     Camera-relative rolling controls
-Scripts/CameraRig.cs Isometric orthographic follow camera
+Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Shaders/            World-space grid for the course, two-tone ball
 ```
