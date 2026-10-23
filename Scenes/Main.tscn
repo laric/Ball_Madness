@@ -1,7 +1,6 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://Scripts/Game.cs" id="1_game"]
-[ext_resource type="PackedScene" path="res://Scenes/Level.tscn" id="2_level"]
 [ext_resource type="PackedScene" path="res://Scenes/Ball.tscn" id="3_ball"]
 [ext_resource type="Script" path="res://Scripts/CameraRig.cs" id="4_rig"]
 
@@ -36,8 +35,6 @@ light_energy = 1.2
 shadow_enabled = true
 directional_shadow_max_distance = 80.0
 
-[node name="Level" parent="." instance=ExtResource("2_level")]
-
 [node name="Ball" parent="." instance=ExtResource("3_ball")]
 
 [node name="CameraRig" type="Node3D" parent="." node_paths=PackedStringArray("Target")]
@@ -69,6 +66,26 @@ theme_override_font_sizes/font_size = 40
 text = "TIME 60.0"
 horizontal_alignment = 1
 
+[node name="LevelLabel" type="Label" parent="Hud"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 600.0
+offset_bottom = 52.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 24
+text = "LEVEL 1/1"
+
+[node name="Dim" type="ColorRect" parent="Hud"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.45)
+
 [node name="MessageLabel" type="Label" parent="Hud"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,4 +110,4 @@ grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 18
-text = "WASD / arrows / left stick to roll   ·   right-drag to turn camera   ·   wheel to zoom   ·   R to restart"
+text = "WASD / arrows / left stick to roll   ·   right-drag to turn camera   ·   wheel to zoom   ·   R to restart   ·   Enter to continue"

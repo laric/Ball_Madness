@@ -5,7 +5,8 @@ namespace BallMadness;
 /// <summary>
 /// Smoke test: drives the ball along the level's "Route" markers and quits
 /// with exit code 0 if it reaches the goal. Enabled by running the game with
-/// <c>-- --autopilot</c> (works headless, see README).
+/// <c>-- --autopilot</c> (works headless, see README). With <c>--all</c> it
+/// carries on to the next level instead and quits after the last one.
 /// </summary>
 public partial class AutoPilot : Node
 {
@@ -18,6 +19,7 @@ public partial class AutoPilot : Node
 	private int _next;
 	private int _lastFalls;
 	private bool _relocate;
+	private bool _allLevels;
 
 	public override void _Ready()
 	{
@@ -29,7 +31,8 @@ public partial class AutoPilot : Node
 		for (int i = 0; i < _route.Length; i++)
 			_route[i] = routeNode.GetChild<Node3D>(i).GlobalPosition;
 
-		GD.Print($"[autopilot] following {_route.Length} waypoints");
+		_allLevels = System.Array.IndexOf(OS.GetCmdlineUserArgs(), "--all") >= 0;
+		GD.Print($"[autopilot] level {Levels.CurrentNumber}: following {_route.Length} waypoints");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -37,11 +40,19 @@ public partial class AutoPilot : Node
 		switch (_game.CurrentState)
 		{
 			case Game.State.Finished:
-				GD.Print($"[autopilot] FINISHED with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
+				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
+				if (_allLevels)
+					_game.Continue();
+				else
+					GetTree().Quit(0);
+				return;
+			case Game.State.GameComplete:
+				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
+				GD.Print($"[autopilot] GAME COMPLETE: {Levels.Count} level(s) in {Levels.RunTime:0.0}s, {Levels.RunFalls} fall(s)");
 				GetTree().Quit(0);
 				return;
 			case Game.State.TimeUp:
-				GD.Print($"[autopilot] TIME UP at waypoint {_next}/{_route.Length}");
+				GD.Print($"[autopilot] TIME UP on level {Levels.CurrentNumber} at waypoint {_next}/{_route.Length}");
 				GetTree().Quit(1);
 				return;
 		}

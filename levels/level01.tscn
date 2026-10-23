@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Shader" path="res://Shaders/grid.gdshader" id="1_grid"]
+[ext_resource type="Script" path="res://Scripts/LevelInfo.cs" id="2_info"]
 
 [sub_resource type="ShaderMaterial" id="grid"]
 render_priority = 0
@@ -46,6 +47,10 @@ height = 2.0
 radius = 2.0
 
 [node name="Level" type="Node3D"]
+script = ExtResource("2_info")
+DisplayName = "First Descent"
+TimeLimit = 60.0
+KillHeight = -12.0
 
 [node name="Spawn" type="Marker3D" parent="."]
 position = Vector3(0, 20.6, 0)
