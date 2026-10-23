@@ -107,3 +107,18 @@ To build one locally, install the Linux release export template for Godot 4.7.2 
 ```sh
 GODOT=godot-mono packaging/linux/build-appimage.sh dev   # writes build/Ball_Madness-dev-x86_64.AppImage
 ```
+
+## Windows release builds
+
+`.github/workflows/release-windows.yml` exports a single self-contained `Ball_Madness-<version>-windows-x86_64.exe` for 64-bit Windows 10/11. The game data, the C# assemblies and the .NET runtime are all embedded in the .exe, so there is nothing to install or unzip; on first launch the game unpacks its .NET files into `%APPDATA%\Godot\app_userdata\Ball Madness`.
+
+- **Push a version tag** and the .exe is attached to the same GitHub Release as the AppImage.
+- **Run it by hand** from the Actions tab ("Windows build" → "Run workflow") to build any branch. The .exe is then a download on the run page under Artifacts.
+
+The export runs on Linux; a Windows runner then plays the last level with the autopilot in the built .exe before publishing it. The .exe is not code-signed, so Windows SmartScreen asks for confirmation the first time ("More info" → "Run anyway").
+
+To build one locally, install the Windows export templates for Godot 4.7.2, then:
+
+```sh
+GODOT=godot-mono packaging/windows/build-windows.sh dev   # writes build/Ball_Madness-dev-windows-x86_64.exe
+```
