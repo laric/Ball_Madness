@@ -60,38 +60,40 @@ jobs:
           mkdir -p "$dest"
           cp ~/godot/templates/* "$dest/"
 
+      # Not VERSION: MSBuild reads environment variables as properties, and a
+      # VERSION like "main-265d62f" breaks the C# build.
       - name: Pick version
         run: |
           if [ "$GITHUB_REF_TYPE" = tag ]; then
-            echo "VERSION=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+            echo "APP_VERSION=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
           else
-            echo "VERSION=${GITHUB_REF_NAME//\//-}-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+            echo "APP_VERSION=${GITHUB_REF_NAME//\//-}-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
           fi
 
       - name: Build AppImage
         env:
           APPIMAGE_EXTRACT_AND_RUN: 1
-        run: packaging/linux/build-appimage.sh "$VERSION"
+        run: packaging/linux/build-appimage.sh "$APP_VERSION"
 
       - name: Smoke test (autopilot through the last level)
         env:
           APPIMAGE_EXTRACT_AND_RUN: 1
         run: |
           last=$(ls levels/level*.tscn | tail -1 | sed 's/.*level0*\([0-9]*\)\.tscn/\1/')
-          timeout 300 build/Ball_Madness-$VERSION-x86_64.AppImage --headless -- --level "$last" --autopilot | tee autopilot.log
+          timeout 300 build/Ball_Madness-$APP_VERSION-x86_64.AppImage --headless -- --level "$last" --autopilot | tee autopilot.log
           grep -q "GAME COMPLETE" autopilot.log
 
       - name: Upload workflow artifact
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: Ball_Madness-${{ env.VERSION }}-x86_64.AppImage
-          path: build/Ball_Madness-${{ env.VERSION }}-x86_64.AppImage
+          name: Ball_Madness-${{ env.APP_VERSION }}-x86_64.AppImage
+          path: build/Ball_Madness-${{ env.APP_VERSION }}-x86_64.AppImage
           if-no-files-found: error
 
       - name: Attach to GitHub Release
         if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v2
         with:
-          files: build/Ball_Madness-${{ env.VERSION }}-x86_64.AppImage
+          files: build/Ball_Madness-${{ env.APP_VERSION }}-x86_64.AppImage
           generate_release_notes: true
