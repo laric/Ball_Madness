@@ -5,7 +5,8 @@ namespace BallMadness;
 /// <summary>
 /// Isometric follow camera. The rig sits on the target and holds the rotation;
 /// the child Camera3D is pushed back along the rig's local Z axis.
-/// Hold the right mouse button and move the mouse to orbit around the ball.
+/// Hold the right mouse button and move the mouse to orbit around the ball;
+/// scroll the mouse wheel to zoom.
 /// </summary>
 public partial class CameraRig : Node3D
 {
@@ -21,15 +22,27 @@ public partial class CameraRig : Node3D
 	[Export] public float MinPitchDegrees = -80.0f;
 	[Export] public float MaxPitchDegrees = -15.0f;
 
+	/// <summary>Zoom limits, as the orthographic camera's visible height in metres.</summary>
+	[Export] public float MinZoom = 8.0f;
+	[Export] public float MaxZoom = 45.0f;
+
+	/// <summary>How much one wheel notch zooms (1.1 = 10% per notch).</summary>
+	[Export] public float ZoomStep = 1.1f;
+
 	/// <summary>When false the camera stays where it is (e.g. while the ball falls off the course).</summary>
 	public bool Following { get; set; } = true;
 
 	private bool _orbiting;
 	private float _yaw;
 	private float _pitch;
+	private Camera3D _camera;
+	private float _targetZoom;
 
 	public override void _Ready()
 	{
+		_camera = GetNode<Camera3D>("Camera3D");
+		_targetZoom = _camera.Size;
+
 		// Start from the rotation set in the scene.
 		_pitch = Rotation.X;
 		_yaw = Rotation.Y;
@@ -38,7 +51,14 @@ public partial class CameraRig : Node3D
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Right } button)
+		if (@event is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.WheelUp or MouseButton.WheelDown } wheel)
+		{
+			// Some touchpads report fractional scroll amounts in Factor; mouse wheels report 1.
+			float notches = wheel.Factor > 0 ? wheel.Factor : 1.0f;
+			float scale = Mathf.Pow(ZoomStep, wheel.ButtonIndex == MouseButton.WheelUp ? -notches : notches);
+			_targetZoom = Mathf.Clamp(_targetZoom * scale, MinZoom, MaxZoom);
+		}
+		else if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Right } button)
 		{
 			_orbiting = button.Pressed;
 			// Hide and lock the cursor while orbiting so the mouse can't leave the window.
@@ -65,10 +85,12 @@ public partial class CameraRig : Node3D
 
 	public override void _Process(double delta)
 	{
+		float t = 1.0f - Mathf.Exp(-FollowSharpness * (float)delta);
+		_camera.Size = Mathf.Lerp(_camera.Size, _targetZoom, t);
+
 		if (Target == null || !Following)
 			return;
 
-		float t = 1.0f - Mathf.Exp(-FollowSharpness * (float)delta);
 		GlobalPosition = GlobalPosition.Lerp(Target.GlobalPosition, t);
 	}
 

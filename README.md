@@ -24,6 +24,7 @@ godot --path .
 |---------|-----------------|------------------|
 | Roll    | WASD / arrows   | Left stick, D-pad |
 | Rotate camera | Hold right mouse button and move the mouse | |
+| Zoom    | Mouse wheel     |                  |
 | Restart | R               | Start            |
 
 Movement is relative to the camera: "up" always rolls the ball towards the top of the screen, however the camera is turned.
@@ -40,14 +41,14 @@ Scenes/Level.tscn   The course (CSG boxes with collision), checkpoints, goal, au
 Scenes/Ball.tscn    The player ball (RigidBody3D)
 Scripts/Game.cs     Countdown, timer, falling/respawn, checkpoints, goal
 Scripts/Ball.cs     Camera-relative rolling controls
-Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit
+Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Shaders/            World-space grid for the course, two-tone ball
 ```
 
 Levels need a `Spawn` marker, `Area3D` nodes in the `checkpoint` and `goal` groups, and a `Route` node of `Marker3D` waypoints for the autopilot. Everything else is plain geometry, so the course can be edited directly in the Godot editor.
 
-Tuning knobs are exported properties: `TimeLimit` and `KillHeight` on `Main`, `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's orthographic `size` on `CameraRig/Camera3D`.
+Tuning knobs are exported properties: `TimeLimit` and `KillHeight` on `Main`, `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's starting orthographic `size` on `CameraRig/Camera3D` (plus `MinZoom`, `MaxZoom`, `ZoomStep` and `MouseSensitivity` on `CameraRig`).
 
 ## Smoke test
 
