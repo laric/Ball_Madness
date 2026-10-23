@@ -26,13 +26,22 @@ godot --path .
 | Rotate camera | Hold right mouse button and move the mouse | |
 | Zoom    | Mouse wheel     |                  |
 | Switch camera mode (fixed / follow) | C | |
-| Restart level | R         | Start            |
+| Pause menu | Esc          | Start            |
+| Restart level | R         | Back             |
 | Continue (next level / retry) | Enter / Space | A |
 | Skip to next level (testing) | Click "Next level" at the top right (debug builds and the editor only) | |
 
 Movement is relative to the camera: "up" always rolls the ball towards the top of the screen, however the camera is turned.
 
 The camera has two modes, saved in `user://settings.cfg`. **Fixed** (the default) keeps its angle until you turn it. **Follow** slowly swings round to look the way the ball is rolling; it pauses while you right-drag and for two seconds after, and holds still while the ball falls.
+
+## Title screen and saves
+
+The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, and **Settings** has the camera mode. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
+
+Progress is saved to `user://save.json` (on Linux `~/.local/share/godot/app_userdata/Ball Madness/`, on Windows `%APPDATA%\Godot\app_userdata\Ball Madness\`) as soon as you reach a goal. It is stored per level pack (`main` for now) and per level index: the furthest level completed, and each level's best time and fewest falls. Delete the file to start over.
+
+Starting with `-- --level N` or `-- --autopilot` skips the title screen. Autopilot runs don't write the save file unless you pass one with `-- --save PATH`.
 
 ## Levels
 
@@ -68,10 +77,14 @@ The finale: faster pistons on a 2.5 m walkway, a sliding bridge, an arena guarde
 ## Project layout
 
 ```
+Scenes/Title.tscn   Title screen (the main scene): menus over a turning view of level 1
 Scenes/Main.tscn    Game root: environment, light, ball, camera rig, HUD (the level is loaded at runtime)
 Scenes/Ball.tscn    The player ball (RigidBody3D)
 levels/levelNN.tscn The courses (CSG boxes with collision), checkpoints, goal, autopilot route
 Scripts/Game.cs     Loads the level; countdown, timer, falling/respawn, checkpoints, goal, end screens
+Scripts/Title.cs    Title screen: Continue, Level select, Settings, Quit
+Scripts/SaveGame.cs Progress in user://save.json: furthest level, best times, fewest falls
+Scripts/UI/         Menu theme, level select, settings screen, pause menu
 Scripts/Levels.cs   Finds the levels, tracks which one is being played and the run's total time
 Scripts/LevelInfo.cs Per-level settings on the level's root: name, time limit, kill height
 Scripts/Ball.cs     Camera-relative rolling controls

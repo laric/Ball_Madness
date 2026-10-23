@@ -86,6 +86,14 @@ public static class Levels
 		CurrentIndex = IsLastLevel ? 0 : CurrentIndex + 1;
 	}
 
+	/// <summary>Starts a new run at the level with this index (from the title screen or level select).</summary>
+	public static void StartAt(int index)
+	{
+		StartNewRun();
+		CurrentIndex = Mathf.Clamp(index, 0, Count - 1);
+		_argsApplied = true;
+	}
+
 	public static void StartNewRun()
 	{
 		CurrentIndex = 0;
