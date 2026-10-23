@@ -239,6 +239,115 @@ public static class Packs
 		}
 	}
 
+	/// <summary>Makes an empty user pack with an id made from <paramref name="name"/>.</summary>
+	public static Pack CreatePack(string name, string author = null)
+	{
+		name = string.IsNullOrWhiteSpace(name) ? "My pack" : name.Trim();
+		string baseId = Slug(name, "pack");
+		string id = baseId;
+		for (int n = 2; Find(id) != null || DirAccess.DirExistsAbsolute($"{UserRoot}/{id}"); n++)
+			id = $"{baseId}-{n}";
+
+		var info = new PackFile { Id = id, Name = name, Author = author, Version = "1", Levels = new List<string>() };
+		string folder = $"{UserRoot}/{id}";
+		DirAccess.MakeDirRecursiveAbsolute($"{folder}/levels");
+		WriteText($"{folder}/pack.json", Serialize(info));
+		Refresh();
+		return Find(id) ?? throw new InvalidOperationException($"Made {id} but it didn't load");
+	}
+
+	/// <summary>Writes a user pack's pack.json and returns the reloaded pack.</summary>
+	public static Pack SaveInfo(Pack pack, PackFile info)
+	{
+		RequireUserPack(pack);
+		WriteText($"{pack.Folder}/pack.json", Serialize(info));
+		Refresh();
+		return Find(info.Id);
+	}
+
+	/// <summary>A copy of the pack's info with its level order written out in full.</summary>
+	public static PackFile InfoCopy(Pack pack) => new()
+	{
+		Format = pack.Info.Format,
+		Id = pack.Info.Id,
+		Name = pack.Info.Name,
+		Author = pack.Info.Author,
+		Version = pack.Info.Version,
+		Description = pack.Info.Description,
+		Levels = pack.LevelPaths.Select(p => p.GetFile()).ToList(),
+	};
+
+	/// <summary>
+	/// Writes a level into a user pack, adding it to the end of the play
+	/// order if it's new. Returns the reloaded pack.
+	/// </summary>
+	public static Pack SaveLevel(Pack pack, string fileName, LevelFile level)
+	{
+		RequireUserPack(pack);
+		if (!IsValidLevelFileName(fileName))
+			throw new InvalidOperationException($"Bad level file name \"{fileName}\"");
+		DirAccess.MakeDirRecursiveAbsolute($"{pack.Folder}/levels");
+		WriteText($"{pack.Folder}/levels/{fileName}", Serialize(level));
+
+		var info = InfoCopy(pack);
+		if (!info.Levels.Contains(fileName))
+			info.Levels.Add(fileName);
+		return SaveInfo(pack, info);
+	}
+
+	/// <summary>Deletes a level file from a user pack. Returns the reloaded pack.</summary>
+	public static Pack DeleteLevel(Pack pack, string fileName)
+	{
+		RequireUserPack(pack);
+		var info = InfoCopy(pack);
+		info.Levels.Remove(fileName);
+		if (IsValidLevelFileName(fileName))
+			DirAccess.RemoveAbsolute($"{pack.Folder}/levels/{fileName}");
+		return SaveInfo(pack, info);
+	}
+
+	/// <summary>Deletes a user pack's folder.</summary>
+	public static void DeletePack(Pack pack)
+	{
+		RequireUserPack(pack);
+		DeleteFolder(pack.Folder);
+		Refresh();
+	}
+
+	/// <summary>A level file name for a new level that no level in the pack uses yet.</summary>
+	public static string NewLevelFileName(Pack pack, string levelName)
+	{
+		string baseName = Slug(levelName, "level");
+		var taken = pack.LevelPaths.Select(p => p.GetFile()).ToHashSet();
+		string name = $"{baseName}.json";
+		for (int n = 2; taken.Contains(name) || FileAccess.FileExists($"{pack.Folder}/levels/{name}"); n++)
+			name = $"{baseName}-{n}.json";
+		return name;
+	}
+
+	/// <summary>Lower case letters, digits and single dashes made from any text.</summary>
+	public static string Slug(string text, string fallback)
+	{
+		var chars = new List<char>();
+		foreach (char c in (text ?? "").ToLowerInvariant())
+		{
+			if (c is >= 'a' and <= 'z' or >= '0' and <= '9')
+				chars.Add(c);
+			else if (chars.Count > 0 && chars[^1] != '-')
+				chars.Add('-');
+		}
+		string slug = new string(chars.ToArray()).Trim('-');
+		if (slug.Length > 40)
+			slug = slug[..40].TrimEnd('-');
+		return slug.Length == 0 ? fallback : slug;
+	}
+
+	private static void RequireUserPack(Pack pack)
+	{
+		if (pack.BuiltIn)
+			throw new InvalidOperationException($"{pack.Name} is built in and can't be changed");
+	}
+
 	private static List<Pack> Discover()
 	{
 		var packs = new List<Pack>();
@@ -289,7 +398,8 @@ public static class Packs
 				throw new InvalidOperationException($"missing levels/{name}");
 			paths.Add(path);
 		}
-		if (paths.Count == 0)
+		// A player's pack may be empty while they build its first level.
+		if (paths.Count == 0 && builtIn)
 			throw new InvalidOperationException("no levels");
 
 		return new Pack { Info = info, Folder = folder, BuiltIn = builtIn, LevelPaths = paths };

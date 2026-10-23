@@ -1,6 +1,6 @@
 # Level and pack format
 
-Levels are JSON files, grouped into packs. The game reads them with `Scripts/LevelFormat/Packs.cs` and builds the level's nodes with `Scripts/LevelFormat/LevelBuilder.cs`. The files hold numbers and names only; every type name maps to one of the game's own scripts, so a level can't run code.
+Levels are JSON files, grouped into packs. The in-game level editor reads and writes this format, so hand-written and editor-made levels mix freely. The game reads them with `Scripts/LevelFormat/Packs.cs` and builds the level's nodes with `Scripts/LevelFormat/LevelBuilder.cs`. The files hold numbers and names only; every type name maps to one of the game's own scripts, so a level can't run code.
 
 Conventions used throughout:
 

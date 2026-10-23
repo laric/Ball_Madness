@@ -1,0 +1,62 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Editing/LevelEditor.cs" id="1_editor"]
+[ext_resource type="Script" path="res://Scripts/CameraRig.cs" id="2_rig"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+sky_top_color = Color(0.08, 0.06, 0.2, 1)
+sky_horizon_color = Color(0.35, 0.3, 0.55, 1)
+ground_bottom_color = Color(0.02, 0.02, 0.05, 1)
+ground_horizon_color = Color(0.35, 0.3, 0.55, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+ambient_light_energy = 0.6
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+
+[node name="Editor" type="Node3D"]
+script = ExtResource("1_editor")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.95, 0.55, 0)
+position = Vector3(0, 30, 0)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 150.0
+
+[node name="Focus" type="Node3D" parent="."]
+
+[node name="CameraRig" type="Node3D" parent="." node_paths=PackedStringArray("Target")]
+rotation = Vector3(-0.6155, 0.7854, 0)
+script = ExtResource("2_rig")
+Target = NodePath("../Focus")
+FollowSharpness = 10.0
+MinZoom = 6.0
+MaxZoom = 140.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+position = Vector3(0, 0, 120)
+projection = 1
+size = 30.0
+near = 0.5
+far = 400.0
+
+[node name="Ui" type="CanvasLayer" parent="."]
+
+[node name="Root" type="Control" parent="Ui"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

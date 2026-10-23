@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using BallMadness.Editing;
 using BallMadness.LevelFormat;
 using Godot;
 
 namespace BallMadness;
 
 /// <summary>
-/// The title screen and the game's main scene: Continue, Level select,
-/// Settings and Quit over a slowly turning view of the first level.
+/// The title screen and the game's main scene: Continue, Level select, the
+/// pack to play (when there's more than one), the Level editor, Settings and
+/// Quit over a slowly turning view of the pack's first level.
 ///
 /// Running with <c>-- --level N</c> or <c>-- --autopilot</c> skips straight
 /// to the game so testing works as before.
@@ -23,6 +27,7 @@ public partial class Title : Node3D
 	private float _orbitAngle = Mathf.Pi / 4;
 	private Control _ui;
 	private Control _mainMenu;
+	private Control _packPage;
 
 	public override void _Ready()
 	{
@@ -37,8 +42,16 @@ public partial class Title : Node3D
 		_camera = GetNode<Camera3D>("Camera3D");
 		_ui = GetNode<Control>("Ui/Root");
 		_ui.Theme = MenuUi.Theme;
+		Levels.ReloadPack();
 		AddBackgroundLevel();
 		ShowMainMenu();
+
+		// Back from the level editor: reopen the pack manager on the same pack.
+		if (EditorSession.ReturnToPack is string pack)
+		{
+			EditorSession.ReturnToPack = null;
+			ShowPackManager(pack);
+		}
 	}
 
 	public override void _Process(double delta)
@@ -86,6 +99,9 @@ public partial class Title : Node3D
 			: $"Continue  ·  level {next + 1}";
 		MenuUi.AddButton(column, continueText, () => StartLevel(next));
 		MenuUi.AddButton(column, "Level select", ShowLevelSelect);
+		if (PlayablePacks().Count > 1)
+			MenuUi.AddButton(column, $"Pack: {Levels.CurrentPack.Name}", ShowPackSelect);
+		MenuUi.AddButton(column, "Level editor", () => ShowPackManager(null));
 		MenuUi.AddButton(column, "Settings", ShowSettings);
 		MenuUi.AddButton(column, "Quit", () => GetTree().Quit());
 		MenuUi.FocusFirst(column);
@@ -101,6 +117,49 @@ public partial class Title : Node3D
 		OpenSubmenu(select);
 	}
 
+	/// <summary>Packs with at least one level: the built-in ones first, then the player's.</summary>
+	private static List<Pack> PlayablePacks() => Packs.All.Where(p => p.LevelPaths.Count > 0).ToList();
+
+	public void ShowPackSelect()
+	{
+		var page = new Control();
+		page.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+		var column = MenuUi.CenteredColumn(page, "PLAY WHICH PACK?", 620);
+		foreach (var pack in PlayablePacks())
+		{
+			string id = pack.Id;
+			int done = SaveGame.FurthestCompleted(id) + 1;
+			string count = pack.LevelPaths.Count == 1 ? "1 level" : $"{pack.LevelPaths.Count} levels";
+			var button = MenuUi.AddButton(column, $"{pack.Name}\n{count}  ·  {done} completed", () =>
+			{
+				Levels.SelectPack(id);
+				GetTree().ReloadCurrentScene();
+			});
+			button.AddThemeFontSizeOverride("font_size", 22);
+			if (pack == Levels.CurrentPack)
+				button.CallDeferred(Control.MethodName.GrabFocus);
+		}
+		MenuUi.AddButton(column, "Back", BackToMainMenu);
+		OpenSubmenu(page);
+		_packPage = page;
+	}
+
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		// The other submenus handle Esc / B themselves.
+		if (_packPage != null && IsInstanceValid(_packPage) && _mainMenu == _packPage && @event.IsActionPressed("ui_cancel"))
+		{
+			GetViewport().SetInputAsHandled();
+			BackToMainMenu();
+		}
+	}
+
+	public void ShowPackManager(string packId)
+	{
+		var manager = new PackManager { InitialPackId = packId, Closed = BackToMainMenu };
+		OpenSubmenu(manager);
+	}
+
 	public void ShowSettings()
 	{
 		var settings = new SettingsMenu { Closed = BackToMainMenu };
@@ -109,12 +168,17 @@ public partial class Title : Node3D
 
 	private void OpenSubmenu(Control menu)
 	{
-		_mainMenu.QueueFree();
-		_mainMenu = null;
+		_mainMenu?.QueueFree();
+		_mainMenu = menu;
 		_ui.AddChild(menu);
 	}
 
-	private void BackToMainMenu() => ShowMainMenu();
+	private void BackToMainMenu()
+	{
+		_mainMenu?.QueueFree();
+		_mainMenu = null;
+		ShowMainMenu();
+	}
 
 	private void StartLevel(int index)
 	{

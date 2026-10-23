@@ -4,7 +4,8 @@ namespace BallMadness;
 
 /// <summary>
 /// Pauses the game on Esc or the gamepad's Start button and offers Resume,
-/// Restart level, Settings and Title screen. Keeps running while the tree is
+/// Restart level, Settings and Title screen (Back to editor while test
+/// playing a level from the editor). Keeps running while the tree is
 /// paused.
 /// </summary>
 public partial class PauseMenu : CanvasLayer
@@ -68,7 +69,10 @@ public partial class PauseMenu : CanvasLayer
 		MenuUi.AddButton(column, "Resume", Resume);
 		MenuUi.AddButton(column, "Restart level", Restart);
 		MenuUi.AddButton(column, "Settings", ShowSettings);
-		MenuUi.AddButton(column, "Title screen", ToTitle);
+		if (Levels.Testing)
+			MenuUi.AddButton(column, "Back to editor", () => (GetParent() as Game)?.ReturnToEditor());
+		else
+			MenuUi.AddButton(column, "Title screen", ToTitle);
 		MenuUi.FocusFirst(column);
 	}
 
