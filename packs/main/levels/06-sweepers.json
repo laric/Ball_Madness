@@ -1,0 +1,347 @@
+{
+	"format": 1,
+	"name": "Sweepers",
+	"timeLimit": 50,
+	"killHeight": 0,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"hazard_mat": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"turntable_mat": {
+			"color": [0.35, 0.8, 0.85],
+			"roughness": 0.6
+		}
+	},
+	"spawn": [0, 18.6, 0],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, 17.5, 0],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "FirstRamp",
+			"shape": "box",
+			"pos": [8.8143, 15.5358, 0],
+			"rot": [21.8014, 90, 0],
+			"size": [5, 1, 10.7703],
+			"material": "grid"
+		},
+		{
+			"name": "Doorstep",
+			"shape": "box",
+			"pos": [16, 13.5, 0],
+			"size": [4, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "RoomA",
+			"shape": "box",
+			"pos": [25, 13.5, 0],
+			"size": [14, 1, 14],
+			"material": "grid"
+		},
+		{
+			"name": "WallNR",
+			"shape": "box",
+			"pos": [25, 14.05, -7.15],
+			"rot": [0, 90, 0],
+			"size": [0.3, 1.1, 14.3],
+			"material": "rail"
+		},
+		{
+			"name": "WallSL",
+			"shape": "box",
+			"pos": [25, 14.05, 7.15],
+			"rot": [0, 90, 0],
+			"size": [0.3, 1.1, 14.3],
+			"material": "rail"
+		},
+		{
+			"name": "WallW1L",
+			"shape": "box",
+			"pos": [17.85, 14.05, -4.5],
+			"size": [0.3, 1.1, 5.3],
+			"material": "rail"
+		},
+		{
+			"name": "WallW2L",
+			"shape": "box",
+			"pos": [17.85, 14.05, 4.5],
+			"size": [0.3, 1.1, 5.3],
+			"material": "rail"
+		},
+		{
+			"name": "WallE1R",
+			"shape": "box",
+			"pos": [32.15, 14.05, -4.5],
+			"size": [0.3, 1.1, 5.3],
+			"material": "rail"
+		},
+		{
+			"name": "WallE2R",
+			"shape": "box",
+			"pos": [32.15, 14.05, 4.5],
+			"size": [0.3, 1.1, 5.3],
+			"material": "rail"
+		},
+		{
+			"name": "Bridge1",
+			"shape": "box",
+			"pos": [34.5, 13.5, 0],
+			"rot": [0, 90, 0],
+			"size": [2, 1, 5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner1",
+			"shape": "box",
+			"pos": [38, 13.5, 0],
+			"size": [2, 1, 2],
+			"material": "bridge"
+		},
+		{
+			"name": "Bridge2",
+			"shape": "box",
+			"pos": [38, 13.5, -3.5],
+			"rot": [0, 180, 0],
+			"size": [2, 1, 5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [38, 13.5, -7],
+			"size": [2, 1, 2],
+			"material": "bridge"
+		},
+		{
+			"name": "Bridge3",
+			"shape": "box",
+			"pos": [41.5, 13.5, -7],
+			"rot": [0, 90, 0],
+			"size": [2, 1, 5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner3",
+			"shape": "box",
+			"pos": [45, 13.5, -7],
+			"size": [2, 1, 2],
+			"material": "bridge"
+		},
+		{
+			"name": "Bridge4",
+			"shape": "box",
+			"pos": [45, 13.5, -4],
+			"size": [2, 1, 4],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner4",
+			"shape": "box",
+			"pos": [46, 13.5, 0],
+			"size": [4, 1, 4],
+			"material": "bridge"
+		},
+		{
+			"name": "NarrowRamp",
+			"shape": "box",
+			"pos": [52.3419, 12.0257, 0],
+			"rot": [18.4331, 90, 0],
+			"size": [2.5, 1, 9.4868],
+			"material": "grid"
+		},
+		{
+			"name": "RoomB",
+			"shape": "box",
+			"pos": [63.5, 10.5, 0],
+			"size": [13, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "FinishArea",
+			"shape": "box",
+			"pos": [88, 10.5, 0],
+			"size": [9, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "SweeperA",
+			"type": "spinner",
+			"pos": [25, 14.45, 0],
+			"speed": -50,
+			"parts": [
+				{
+					"name": "Bar",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [12, 0.8, 0.8],
+					"material": "hazard_mat"
+				},
+				{
+					"name": "Hub",
+					"shape": "cylinder",
+					"pos": [0, 0.3, 0],
+					"radius": 0.7,
+					"height": 1.6,
+					"material": "hazard_mat"
+				}
+			]
+		},
+		{
+			"name": "SweeperB",
+			"type": "spinner",
+			"pos": [64.5, 11.45, 0],
+			"speed": -70,
+			"parts": [
+				{
+					"name": "Bar",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [7, 0.8, 0.8],
+					"material": "hazard_mat"
+				},
+				{
+					"name": "Hub",
+					"shape": "cylinder",
+					"pos": [0, 0.3, 0],
+					"radius": 0.7,
+					"height": 1.6,
+					"material": "hazard_mat"
+				}
+			]
+		},
+		{
+			"name": "Turntable",
+			"type": "spinner",
+			"pos": [77, 10.5, 0],
+			"speed": 25,
+			"parts": [
+				{
+					"name": "Disc",
+					"shape": "cylinder",
+					"pos": [0, 0, 0],
+					"radius": 7,
+					"height": 1,
+					"material": "turntable_mat"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [16, 14, 0],
+			"rot": [0, 90.0002, 0],
+			"size": [6, 3, 2]
+		},
+		{
+			"pos": [46, 14, 0],
+			"rot": [0, 90.0002, 0],
+			"size": [4, 3, 2]
+		},
+		{
+			"pos": [59, 11, 0],
+			"rot": [0, 90.0002, 0],
+			"size": [10, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [89, 11, 0]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0, 0]
+		},
+		{
+			"pos": [4, 0, 0]
+		},
+		{
+			"pos": [14, 0, 0]
+		},
+		{
+			"pos": [17, 0, 0]
+		},
+		{
+			"pos": [19, 0, 0]
+		},
+		{
+			"pos": [21, 0, 4.5]
+		},
+		{
+			"pos": [29, 0, 4.5]
+		},
+		{
+			"pos": [31, 0, 0]
+		},
+		{
+			"pos": [33, 0, 0]
+		},
+		{
+			"pos": [38, 0, 0]
+		},
+		{
+			"pos": [38, 0, -7]
+		},
+		{
+			"pos": [45, 0, -7]
+		},
+		{
+			"pos": [45, 0, -2.5]
+		},
+		{
+			"pos": [46, 0, 0]
+		},
+		{
+			"pos": [48, 0, 0]
+		},
+		{
+			"pos": [50.5, 0, 0]
+		},
+		{
+			"pos": [53, 0, 0]
+		},
+		{
+			"pos": [57, 0, 0]
+		},
+		{
+			"pos": [59, 0, 3.6]
+		},
+		{
+			"pos": [68.5, 0, 3.6]
+		},
+		{
+			"pos": [70, 0, 0]
+		},
+		{
+			"pos": [84, 0, 0]
+		},
+		{
+			"pos": [89, 0, 0]
+		}
+	]
+}

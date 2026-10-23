@@ -7,7 +7,7 @@ namespace BallMadness;
 
 /// <summary>
 /// The player's progress, kept in user://save.json. Progress is stored per
-/// level pack (only "main" for now) and per level index: the furthest level
+/// level pack id and per level index: the furthest level
 /// completed, and the best time and fewest falls on each level.
 ///
 /// Runs with <c>--autopilot</c> don't touch the save file unless one is given
@@ -15,7 +15,6 @@ namespace BallMadness;
 /// </summary>
 public static class SaveGame
 {
-	public const string MainPack = "main";
 	public const string DefaultPath = "user://save.json";
 
 	public class LevelRecord
@@ -45,8 +44,8 @@ public static class SaveGame
 	private static string _path;
 	private static bool _enabled;
 
-	/// <summary>The pack being played. Only the main pack exists for now.</summary>
-	public static string CurrentPack => MainPack;
+	/// <summary>Id of the pack being played.</summary>
+	public static string CurrentPack => Levels.CurrentPack.Id;
 
 	private static SaveFile Data
 	{

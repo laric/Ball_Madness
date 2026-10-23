@@ -1,0 +1,291 @@
+{
+	"format": 1,
+	"name": "Piston Alley",
+	"timeLimit": 45,
+	"killHeight": 0,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"pusher": {
+			"color": [0.85, 0.2, 0.45],
+			"roughness": 0.5,
+			"metallic": 0.1
+		}
+	},
+	"spawn": [0, 21.1, 0],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, 19.5, 0],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "FirstRamp",
+			"shape": "box",
+			"pos": [0, 17.5358, 8.8143],
+			"rot": [-21.8014, 0, 0],
+			"size": [4, 1, 10.7703],
+			"material": "grid"
+		},
+		{
+			"name": "Landing",
+			"shape": "box",
+			"pos": [0, 15.5, 18],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Alley",
+			"shape": "box",
+			"pos": [0, 15.5, 35],
+			"size": [3, 1, 26],
+			"material": "bridge"
+		},
+		{
+			"name": "Housing1",
+			"shape": "box",
+			"pos": [-8.5, 16.4, 27],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Housing2",
+			"shape": "box",
+			"pos": [8.5, 16.4, 33],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Housing3",
+			"shape": "box",
+			"pos": [-8.5, 16.4, 39],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Plaza",
+			"shape": "box",
+			"pos": [0, 15.5, 52],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "NarrowRamp",
+			"shape": "box",
+			"pos": [9.8419, 13.5257, 52],
+			"rot": [0, -90, 18.4331],
+			"size": [1.6, 1, 12.6491],
+			"material": "grid"
+		},
+		{
+			"name": "Ledge",
+			"shape": "box",
+			"pos": [20, 11.5, 52],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Beam1",
+			"shape": "box",
+			"pos": [20, 11.5, 62],
+			"size": [1.4, 1, 12],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner1",
+			"shape": "box",
+			"pos": [20, 11.5, 68.75],
+			"size": [2, 1, 2],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam2",
+			"shape": "box",
+			"pos": [24.75, 11.5, 68.75],
+			"size": [7.5, 1, 1.4],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [29.5, 11.5, 68.75],
+			"size": [2, 1, 2],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam3",
+			"shape": "box",
+			"pos": [29.5, 11.5, 74.25],
+			"size": [1.4, 1, 9],
+			"material": "bridge"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [29.5, 11.5, 82.75],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Piston1",
+			"type": "mover",
+			"pos": [-6, 16.62, 27],
+			"offset": [6, 0, 0],
+			"period": 4,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "pusher"
+				}
+			]
+		},
+		{
+			"name": "Piston2",
+			"type": "mover",
+			"pos": [6, 16.62, 33],
+			"offset": [-6, 0, 0],
+			"period": 4,
+			"phase": 0.35,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "pusher"
+				}
+			]
+		},
+		{
+			"name": "Piston3",
+			"type": "mover",
+			"pos": [-6, 16.62, 39],
+			"offset": [6, 0, 0],
+			"period": 4,
+			"phase": 0.7,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "pusher"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [0, 16, 50],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [20, 12, 52],
+			"size": [8, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [29.5, 12, 84]
+		}
+	],
+	"gates": [
+		{
+			"name": "Piston1Gate",
+			"pos": [0, 16.9, 27],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Piston2Gate",
+			"pos": [0, 16.9, 33],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Piston3Gate",
+			"pos": [0, 16.9, 39],
+			"size": [3, 1, 2.2]
+		}
+	],
+	"route": [
+		{
+			"pos": [0, 0, 0]
+		},
+		{
+			"pos": [0, 0, 12]
+		},
+		{
+			"pos": [0, 0, 18]
+		},
+		{
+			"pos": [0, 0, 24.5]
+		},
+		{
+			"pos": [0, 0, 30.5],
+			"gate": "Piston1Gate",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [0, 0, 36.5],
+			"gate": "Piston2Gate",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [0, 0, 43],
+			"gate": "Piston3Gate",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [0, 0, 52]
+		},
+		{
+			"pos": [6, 0, 52]
+		},
+		{
+			"pos": [14, 0, 52]
+		},
+		{
+			"pos": [20, 0, 52]
+		},
+		{
+			"pos": [20, 0, 54.5],
+			"speed": 3
+		},
+		{
+			"pos": [20, 0, 60],
+			"speed": 3
+		},
+		{
+			"pos": [20, 0, 68.75],
+			"speed": 3
+		},
+		{
+			"pos": [29.5, 0, 68.75],
+			"speed": 3
+		},
+		{
+			"pos": [29.5, 0, 74],
+			"speed": 3
+		},
+		{
+			"pos": [29.5, 0, 84]
+		}
+	]
+}

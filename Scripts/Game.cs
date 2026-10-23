@@ -8,9 +8,9 @@ namespace BallMadness;
 /// checkpoint, reaching the goal, running out of time, and moving on to the
 /// next level.
 ///
-/// The level only needs Area3D nodes in the "checkpoint" and "goal" groups and
-/// a Marker3D named "Spawn"; everything else is plain geometry. A
-/// <see cref="LevelInfo"/> script on its root sets the time limit.
+/// The level is built from its file by <see cref="LevelFormat.LevelBuilder"/>:
+/// Area3D nodes in the "checkpoint" and "goal" groups, a Marker3D named
+/// "Spawn", and a <see cref="LevelInfo"/> root with the time limit.
 ///
 /// Completed levels are written to the save file as soon as the goal is
 /// reached. Esc or the gamepad's Start button opens the <see cref="PauseMenu"/>.
@@ -21,7 +21,7 @@ public partial class Game : Node3D
 
 	public const string ScenePath = "res://Scenes/Main.tscn";
 
-	/// <summary>Used when the level has no <see cref="LevelInfo"/> on its root.</summary>
+	/// <summary>Seconds on the clock; set from the level's file when it loads.</summary>
 	[Export] public float TimeLimit = 60.0f;
 	[Export] public float CountdownTime = 3.0f;
 	[Export] public float RespawnDelay = 1.2f;
@@ -95,16 +95,13 @@ public partial class Game : Node3D
 	private void LoadLevel()
 	{
 		Levels.ApplyCommandLine();
-		var level = Levels.LoadCurrent().Instantiate<Node3D>();
+		LevelInfo level = Levels.BuildCurrent();
 		level.Name = "Level";
 		AddChild(level);
 
-		if (level is LevelInfo info)
-		{
-			TimeLimit = info.TimeLimit;
-			KillHeight = info.KillHeight;
-			_levelName = info.DisplayName;
-		}
+		TimeLimit = level.TimeLimit;
+		KillHeight = level.KillHeight;
+		_levelName = level.DisplayName;
 		_levelLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
 		GetNode<Button>("Hud/SkipButton").Text = Levels.IsLastLevel ? "Back to level 1 ▶" : "Next level ▶";
 	}

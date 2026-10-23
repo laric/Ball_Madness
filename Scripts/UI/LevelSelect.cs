@@ -64,15 +64,7 @@ public partial class LevelSelect : Control
 		return $"{name}\nbest {record.BestTime:0.0}s  ·  fewest {falls}";
 	}
 
-	/// <summary>Reads the level's display name from the LevelInfo on its root.</summary>
-	private static string LevelName(int index)
-	{
-		var scene = GD.Load<PackedScene>(Levels.PathFor(Levels.Numbers[index]));
-		var level = scene.Instantiate();
-		string name = level is LevelInfo info ? info.DisplayName : "";
-		level.Free();
-		return name;
-	}
+	private static string LevelName(int index) => Levels.NameAt(index);
 
 	/// <summary>Starts the cursor on the level Continue would play.</summary>
 	private void FocusNextLevel(GridContainer grid)

@@ -1,0 +1,19 @@
+{
+	"format": 1,
+	"id": "main",
+	"name": "Ball Madness",
+	"author": "Ball Madness",
+	"version": "1",
+	"levels": [
+		"01-first-descent.json",
+		"02-switchbacks.json",
+		"03-stepping-stones.json",
+		"04-sweepers.json",
+		"05-swaying-bridges.json",
+		"06-sweepers.json",
+		"07-piston-falls.json",
+		"08-piston-alley.json",
+		"09-sweeper-works.json",
+		"10-the-gauntlet.json"
+	]
+}

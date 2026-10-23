@@ -1,4 +1,5 @@
 using System;
+using BallMadness.LevelFormat;
 using Godot;
 
 namespace BallMadness;
@@ -56,7 +57,7 @@ public partial class Title : Node3D
 		if (Levels.Count == 0)
 			return;
 
-		var level = GD.Load<PackedScene>(Levels.PathFor(Levels.Numbers[0])).Instantiate<Node3D>();
+		var level = LevelBuilder.Build(Packs.LoadLevel(Levels.CurrentPack.LevelPaths[0]));
 		// Scenery only: no hazards moving or areas firing behind the menu.
 		level.ProcessMode = ProcessModeEnum.Disabled;
 		AddChild(level);
