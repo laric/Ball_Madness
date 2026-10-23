@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Shader" path="res://Shaders/grid.gdshader" id="1_grid"]
+[ext_resource type="Script" path="res://Scripts/LevelInfo.cs" id="2_info"]
 
 [sub_resource type="ShaderMaterial" id="grid"]
 render_priority = 0
@@ -26,6 +27,12 @@ shader = ExtResource("1_grid")
 shader_parameter/base_color = Color(0.9, 0.3, 0.2, 1)
 shader_parameter/line_color = Color(0.4, 0.1, 0.08, 1)
 
+[sub_resource type="ShaderMaterial" id="rail"]
+render_priority = 0
+shader = ExtResource("1_grid")
+shader_parameter/base_color = Color(0.7, 0.45, 0.85, 1)
+shader_parameter/line_color = Color(0.3, 0.15, 0.4, 1)
+
 [sub_resource type="ShaderMaterial" id="checkpoint"]
 render_priority = 0
 shader = ExtResource("1_grid")
@@ -38,91 +45,106 @@ shader = ExtResource("1_grid")
 shader_parameter/base_color = Color(0.3, 0.9, 0.4, 1)
 shader_parameter/line_color = Color(0.05, 0.4, 0.1, 1)
 
-[sub_resource type="BoxShape3D" id="checkpoint_shape"]
+[sub_resource type="BoxShape3D" id="checkpoint1_shape"]
 size = Vector3(12, 3, 2)
+
+[sub_resource type="BoxShape3D" id="checkpoint2_shape"]
+size = Vector3(10, 3, 2)
 
 [sub_resource type="CylinderShape3D" id="goal_shape"]
 height = 2.0
 radius = 2.0
 
 [node name="Level" type="Node3D"]
+script = ExtResource("2_info")
+DisplayName = "Stepping Stones"
+TimeLimit = 55.0
 
 [node name="Spawn" type="Marker3D" parent="."]
-position = Vector3(0, 20.6, 0)
+position = Vector3(0, 26.6, 0)
 
 [node name="Course" type="Node3D" parent="."]
 
-[node name="StartPad" type="CSGBox3D" parent="Course"]
-position = Vector3(0, 19.5, 0)
+[node name="StartPad1" type="CSGBox3D" parent="Course"]
+position = Vector3(0, 25.5, 0)
 use_collision = true
 size = Vector3(10, 1, 10)
 material = SubResource("start")
 
-[node name="FirstRamp" type="CSGBox3D" parent="Course"]
-position = Vector3(0, 16.5528, 10.7764)
-rotation = Vector3(0.4636, 0, 0)
+[node name="Step1" type="CSGBox3D" parent="Course"]
+position = Vector3(0, 24.5, 8)
 use_collision = true
-size = Vector3(8, 1, 13.5164)
-material = SubResource("grid")
-
-[node name="Landing" type="CSGBox3D" parent="Course"]
-position = Vector3(0, 13.5, 23)
-use_collision = true
-size = Vector3(12, 1, 12)
-material = SubResource("grid")
-
-[node name="NarrowRamp" type="CSGBox3D" parent="Course"]
-position = Vector3(13.8509, 11.0228, 23)
-rotation = Vector3(0, 0, -0.3029)
-use_collision = true
-size = Vector3(16.8631, 1, 4)
-material = SubResource("grid")
-
-[node name="Corner" type="CSGBox3D" parent="Course"]
-position = Vector3(26, 8.5, 23)
-use_collision = true
-size = Vector3(8, 1, 12)
-material = SubResource("grid")
-
-[node name="Bridge1" type="CSGBox3D" parent="Course"]
-position = Vector3(26, 8.5, 33.625)
-use_collision = true
-size = Vector3(2.5, 1, 9.25)
+size = Vector3(8, 1, 6)
 material = SubResource("bridge")
 
-[node name="Bridge2" type="CSGBox3D" parent="Course"]
-position = Vector3(29, 8.5, 37)
+[node name="Step2" type="CSGBox3D" parent="Course"]
+position = Vector3(0, 23.5, 14)
 use_collision = true
-size = Vector3(8.5, 1, 2.5)
+size = Vector3(8, 1, 6)
 material = SubResource("bridge")
 
-[node name="Bridge3" type="CSGBox3D" parent="Course"]
-position = Vector3(32, 8.5, 40.875)
+[node name="Step3" type="CSGBox3D" parent="Course"]
+position = Vector3(0, 22.5, 20)
 use_collision = true
-size = Vector3(2.5, 1, 10.25)
+size = Vector3(8, 1, 6)
 material = SubResource("bridge")
 
-[node name="Plateau" type="CSGBox3D" parent="Course"]
-position = Vector3(32, 8.5, 51)
+[node name="Step4" type="CSGBox3D" parent="Course"]
+position = Vector3(0, 21.5, 26)
+use_collision = true
+size = Vector3(8, 1, 6)
+material = SubResource("bridge")
+
+[node name="Landing1" type="CSGBox3D" parent="Course"]
+position = Vector3(0, 20.5, 34)
 use_collision = true
 size = Vector3(12, 1, 10)
 material = SubResource("grid")
 
-[node name="SlalomRamp" type="CSGBox3D" parent="Course"]
-position = Vector3(45.7996, 5.0419, 51)
-rotation = Vector3(0, 0, -0.4124)
+[node name="Rail1" type="CSGBox3D" parent="Course"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 21.15, 39)
 use_collision = true
-size = Vector3(17.5642, 1, 10)
+size = Vector3(12.4, 1.3, 0.4)
+material = SubResource("rail")
+
+[node name="BankedRamp1" type="CSGBox3D" parent="Course"]
+transform = Transform3D(0.9701, 0.2408, -0.029, -0.2425, 0.9632, -0.1161, 0, 0.1197, 0.9928, 13.8796, 18.5184, 33.9401)
+use_collision = true
+size = Vector3(16.5924, 1, 5)
 material = SubResource("grid")
 
-[node name="FinishArea" type="CSGBox3D" parent="Course"]
-position = Vector3(62, 1.5, 51)
+[node name="Corner1" type="CSGBox3D" parent="Course"]
+position = Vector3(26, 16.5, 34)
 use_collision = true
-size = Vector3(16, 1, 14)
+size = Vector3(8, 1, 10)
+material = SubResource("grid")
+
+[node name="Rail2" type="CSGBox3D" parent="Course"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 30, 17.15, 34)
+use_collision = true
+size = Vector3(10.4, 1.3, 0.4)
+material = SubResource("rail")
+
+[node name="Bridge1" type="CSGBox3D" parent="Course"]
+transform = Transform3D(0, 0, -1, -0.1414, 0.9899, 0, 0.9899, 0.1414, 0, 26, 15.505, 45.9293)
+use_collision = true
+size = Vector3(14.2421, 1, 2.4)
+material = SubResource("bridge")
+
+[node name="Island1" type="CSGBox3D" parent="Course"]
+position = Vector3(26, 14.5, 57)
+use_collision = true
+size = Vector3(10, 1, 8)
+material = SubResource("grid")
+
+[node name="SlalomRamp1" type="CSGBox3D" parent="Course"]
+transform = Transform3D(0.9545, 0.2983, 0, -0.2983, 0.9545, 0, 0, 0, 1, 38.8509, 12.0228, 57)
+use_collision = true
+size = Vector3(16.8631, 1, 9)
 material = SubResource("grid")
 
 [node name="Post1" type="CSGCylinder3D" parent="Course"]
-position = Vector3(42, 8, 48.5)
+position = Vector3(34.5, 15.1562, 55)
 use_collision = true
 radius = 0.6
 height = 3.5
@@ -130,7 +152,7 @@ sides = 16
 material = SubResource("post")
 
 [node name="Post2" type="CSGCylinder3D" parent="Course"]
-position = Vector3(46, 6.25, 53)
+position = Vector3(38, 14.0625, 59.2)
 use_collision = true
 radius = 0.6
 height = 3.5
@@ -138,21 +160,35 @@ sides = 16
 material = SubResource("post")
 
 [node name="Post3" type="CSGCylinder3D" parent="Course"]
-position = Vector3(50, 4.5, 49.5)
+position = Vector3(41.5, 12.9688, 54.8)
 use_collision = true
 radius = 0.6
 height = 3.5
 sides = 16
 material = SubResource("post")
 
+[node name="Post4" type="CSGCylinder3D" parent="Course"]
+position = Vector3(45, 11.875, 59)
+use_collision = true
+radius = 0.6
+height = 3.5
+sides = 16
+material = SubResource("post")
+
+[node name="FinishArea1" type="CSGBox3D" parent="Course"]
+position = Vector3(53, 9.5, 57)
+use_collision = true
+size = Vector3(12, 1, 12)
+material = SubResource("grid")
+
 [node name="Checkpoints" type="Node3D" parent="."]
 
 [node name="Checkpoint1" type="Area3D" parent="Checkpoints" groups=["checkpoint"]]
-position = Vector3(0, 14, 23)
+position = Vector3(0, 21, 31)
 
 [node name="Shape" type="CollisionShape3D" parent="Checkpoints/Checkpoint1"]
 position = Vector3(0, 1.5, 0)
-shape = SubResource("checkpoint_shape")
+shape = SubResource("checkpoint1_shape")
 
 [node name="Stripe" type="CSGBox3D" parent="Checkpoints/Checkpoint1"]
 position = Vector3(0, 0.01, 0)
@@ -160,19 +196,19 @@ size = Vector3(12, 0.02, 2)
 material = SubResource("checkpoint")
 
 [node name="Checkpoint2" type="Area3D" parent="Checkpoints" groups=["checkpoint"]]
-position = Vector3(32, 9, 47.5)
+position = Vector3(26, 15, 54.5)
 
 [node name="Shape" type="CollisionShape3D" parent="Checkpoints/Checkpoint2"]
 position = Vector3(0, 1.5, 0)
-shape = SubResource("checkpoint_shape")
+shape = SubResource("checkpoint2_shape")
 
 [node name="Stripe" type="CSGBox3D" parent="Checkpoints/Checkpoint2"]
 position = Vector3(0, 0.01, 0)
-size = Vector3(12, 0.02, 2)
+size = Vector3(10, 0.02, 2)
 material = SubResource("checkpoint")
 
 [node name="Goal" type="Area3D" parent="." groups=["goal"]]
-position = Vector3(64, 2, 51)
+position = Vector3(55, 10, 57)
 
 [node name="Shape" type="CollisionShape3D" parent="Goal"]
 position = Vector3(0, 1, 0)
@@ -203,49 +239,52 @@ visible = false
 position = Vector3(0, 0, 0)
 
 [node name="P01" type="Marker3D" parent="Route"]
-position = Vector3(0, 0, 12)
+position = Vector3(0, 0, 10)
 
 [node name="P02" type="Marker3D" parent="Route"]
-position = Vector3(0, 0, 23)
+position = Vector3(0, 0, 22)
 
 [node name="P03" type="Marker3D" parent="Route"]
-position = Vector3(8, 0, 23)
+position = Vector3(0, 0, 30)
 
 [node name="P04" type="Marker3D" parent="Route"]
-position = Vector3(20, 0, 23)
+position = Vector3(0, 0, 34)
 
 [node name="P05" type="Marker3D" parent="Route"]
-position = Vector3(26, 0, 23)
+position = Vector3(8, 0, 33.5)
 
 [node name="P06" type="Marker3D" parent="Route"]
-position = Vector3(26, 0, 37)
+position = Vector3(21, 0, 33.5)
 
 [node name="P07" type="Marker3D" parent="Route"]
-position = Vector3(32, 0, 37)
+position = Vector3(26, 0, 34)
 
 [node name="P08" type="Marker3D" parent="Route"]
-position = Vector3(32, 0, 46)
+position = Vector3(26, 0, 40)
 
 [node name="P09" type="Marker3D" parent="Route"]
-position = Vector3(32, 0, 51)
+position = Vector3(26, 0, 52)
 
 [node name="P10" type="Marker3D" parent="Route"]
-position = Vector3(38, 0, 51)
+position = Vector3(26, 0, 57)
 
 [node name="P11" type="Marker3D" parent="Route"]
-position = Vector3(40, 0, 51)
+position = Vector3(31, 0, 57)
 
 [node name="P12" type="Marker3D" parent="Route"]
-position = Vector3(44, 0, 51.5)
+position = Vector3(33, 0, 57.5)
 
 [node name="P13" type="Marker3D" parent="Route"]
-position = Vector3(48, 0, 50.5)
+position = Vector3(36, 0, 56.8)
 
 [node name="P14" type="Marker3D" parent="Route"]
-position = Vector3(52, 0, 52)
+position = Vector3(39.8, 0, 57)
 
 [node name="P15" type="Marker3D" parent="Route"]
-position = Vector3(56, 0, 51)
+position = Vector3(43.2, 0, 56.9)
 
 [node name="P16" type="Marker3D" parent="Route"]
-position = Vector3(64, 0, 51)
+position = Vector3(47, 0, 57)
+
+[node name="P17" type="Marker3D" parent="Route"]
+position = Vector3(55, 0, 57)

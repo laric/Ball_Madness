@@ -3,16 +3,20 @@ using Godot;
 namespace BallMadness;
 
 /// <summary>
-/// Runs one level: countdown, race timer, falling off and respawning at the
-/// last checkpoint, reaching the goal, and running out of time.
+/// Runs one level: loads it from the <see cref="Levels"/> list, then handles
+/// the countdown, race timer, falling off and respawning at the last
+/// checkpoint, reaching the goal, running out of time, and moving on to the
+/// next level.
 ///
 /// The level only needs Area3D nodes in the "checkpoint" and "goal" groups and
-/// a Marker3D named "Spawn"; everything else is plain geometry.
+/// a Marker3D named "Spawn"; everything else is plain geometry. A
+/// <see cref="LevelInfo"/> script on its root sets the time limit.
 /// </summary>
 public partial class Game : Node3D
 {
-	public enum State { Countdown, Playing, Falling, Finished, TimeUp }
+	public enum State { Countdown, Playing, Falling, Finished, TimeUp, GameComplete }
 
+	/// <summary>Used when the level has no <see cref="LevelInfo"/> on its root.</summary>
 	[Export] public float TimeLimit = 60.0f;
 	[Export] public float CountdownTime = 3.0f;
 	[Export] public float RespawnDelay = 1.2f;
@@ -27,7 +31,10 @@ public partial class Game : Node3D
 	private Ball _ball;
 	private CameraRig _cameraRig;
 	private Label _timeLabel;
+	private Label _levelLabel;
 	private Label _messageLabel;
+	private Control _dim;
+	private string _levelName = "";
 
 	private State _state;
 	private float _timeLeft;
@@ -35,13 +42,18 @@ public partial class Game : Node3D
 	private Vector3 _respawnPoint;
 	private Node _lastCheckpoint;
 	private float _flashTimer;
+	private bool _leaving;
 
 	public override void _Ready()
 	{
 		_ball = GetNode<Ball>("Ball");
 		_cameraRig = GetNode<CameraRig>("CameraRig");
 		_timeLabel = GetNode<Label>("Hud/TimeLabel");
+		_levelLabel = GetNode<Label>("Hud/LevelLabel");
 		_messageLabel = GetNode<Label>("Hud/MessageLabel");
+		_dim = GetNode<Control>("Hud/Dim");
+
+		LoadLevel();
 
 		var spawn = GetNode<Node3D>("Level/Spawn");
 		_respawnPoint = spawn.GlobalPosition;
@@ -66,10 +78,61 @@ public partial class Game : Node3D
 			AddChild(new AutoPilot());
 	}
 
+	private void LoadLevel()
+	{
+		Levels.ApplyCommandLine();
+		var level = Levels.LoadCurrent().Instantiate<Node3D>();
+		level.Name = "Level";
+		AddChild(level);
+
+		if (level is LevelInfo info)
+		{
+			TimeLimit = info.TimeLimit;
+			KillHeight = info.KillHeight;
+			_levelName = info.DisplayName;
+		}
+		_levelLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
+	}
+
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (@event.IsActionPressed("restart"))
+		{
+			if (_state == State.GameComplete)
+				Levels.StartNewRun();
 			GetTree().ReloadCurrentScene();
+		}
+		else if (@event.IsActionPressed("next"))
+		{
+			Continue();
+		}
+	}
+
+	/// <summary>
+	/// Leaves an end-of-level screen: next level after finishing, the same
+	/// level after running out of time, level 1 after beating the game.
+	/// </summary>
+	public void Continue()
+	{
+		if (_leaving)
+			return;
+
+		switch (_state)
+		{
+			case State.Finished:
+				Levels.CompleteCurrent(TimeLimit - _timeLeft, Falls);
+				break;
+			case State.TimeUp:
+				break;
+			case State.GameComplete:
+				Levels.StartNewRun();
+				break;
+			default:
+				return;
+		}
+		// The reload happens at the end of the frame; don't bank the level twice.
+		_leaving = true;
+		GetTree().ReloadCurrentScene();
 	}
 
 	public override void _Process(double delta)
@@ -81,7 +144,7 @@ public partial class Game : Node3D
 		{
 			case State.Countdown:
 				int remaining = Mathf.CeilToInt(CountdownTime - _stateTimer);
-				_messageLabel.Text = remaining > 0 ? remaining.ToString() : "";
+				_messageLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}\n{_levelName}\n\n{remaining}";
 				if (_stateTimer >= CountdownTime)
 				{
 					EnterState(State.Playing);
@@ -132,6 +195,7 @@ public partial class Game : Node3D
 		_state = next;
 		_stateTimer = 0;
 		_ball.ControlEnabled = next == State.Playing;
+		_dim.Visible = next is State.Finished or State.TimeUp or State.GameComplete;
 
 		switch (next)
 		{
@@ -141,10 +205,19 @@ public partial class Game : Node3D
 				_messageLabel.Text = "Oops!";
 				break;
 			case State.Finished:
-				_messageLabel.Text = $"FINISHED!\n{_timeLeft:0.0} seconds to spare\n\nPress R to race again";
+				_messageLabel.Text =
+					$"LEVEL {Levels.CurrentIndex + 1} COMPLETE!\n" +
+					$"{TimeLimit - _timeLeft:0.0}s  ·  {_timeLeft:0.0}s to spare  ·  {FallsText(Falls)}\n\n" +
+					$"Enter for level {Levels.CurrentIndex + 2}  ·  R to replay";
+				break;
+			case State.GameComplete:
+				_messageLabel.Text =
+					$"YOU BEAT ALL {Levels.Count} LEVELS!\n" +
+					$"Total time {Levels.RunTime:0.0}s  ·  {FallsText(Levels.RunFalls)}\n\n" +
+					"Enter to play again";
 				break;
 			case State.TimeUp:
-				_messageLabel.Text = "TIME'S UP\n\nPress R to try again";
+				_messageLabel.Text = "TIME'S UP\n\nEnter or R to try again";
 				break;
 		}
 	}
@@ -168,7 +241,19 @@ public partial class Game : Node3D
 
 	private void OnGoalEntered(Node3D body)
 	{
-		if (body == _ball && _state == State.Playing)
+		if (body != _ball || _state != State.Playing)
+			return;
+
+		if (Levels.IsLastLevel)
+		{
+			Levels.CompleteCurrent(TimeLimit - _timeLeft, Falls);
+			EnterState(State.GameComplete);
+		}
+		else
+		{
 			EnterState(State.Finished);
+		}
 	}
+
+	private static string FallsText(int falls) => falls == 1 ? "1 fall" : $"{falls} falls";
 }
