@@ -1,0 +1,119 @@
+name: Windows build
+
+# Pushing a version tag (v1.0, v0.2.1, ...) builds the Windows .exe and
+# attaches it to the GitHub Release for that tag, next to the Linux AppImage.
+# Running the workflow by hand from the Actions tab builds it from the chosen
+# branch and keeps it as a downloadable workflow artifact instead.
+#
+# The export runs on Linux like the AppImage build; a Windows runner then
+# plays the exported .exe through the last level before it is published.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      exe: ${{ steps.version.outputs.exe }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Cache Godot
+        id: godot-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_VERSION }}-mono-linux-windows-template
+
+      - name: Download Godot and export template
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          base=https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable
+          mkdir -p ~/godot/templates
+          cd ~/godot
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip"
+          unzip -q godot.zip && rm godot.zip
+          # The full template bundle is over 1 GB; only the Windows release template is needed.
+          curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_mono_export_templates.tpz"
+          unzip -q -j templates.tpz templates/windows_release_x86_64.exe templates/version.txt -d templates
+          rm templates.tpz
+
+      - name: Install Godot
+        run: |
+          echo "GODOT=$(echo ~/godot/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64)" >> "$GITHUB_ENV"
+          dest=~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+          mkdir -p "$dest"
+          cp ~/godot/templates/* "$dest/"
+
+      # Not VERSION: MSBuild reads environment variables as properties, and a
+      # VERSION like "main-265d62f" breaks the C# build.
+      - name: Pick version
+        id: version
+        run: |
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            app_version=$GITHUB_REF_NAME
+          else
+            app_version=${GITHUB_REF_NAME//\//-}-${GITHUB_SHA::7}
+          fi
+          echo "APP_VERSION=$app_version" >> "$GITHUB_ENV"
+          echo "exe=Ball_Madness-$app_version-windows-x86_64.exe" >> "$GITHUB_OUTPUT"
+
+      - name: Build Windows executable
+        run: packaging/windows/build-windows.sh "$APP_VERSION"
+
+      - name: Upload executable for testing
+        uses: actions/upload-artifact@v7
+        with:
+          # Upload the .exe as-is rather than zipped; the file name is the artifact name.
+          path: build/${{ steps.version.outputs.exe }}
+          archive: false
+          if-no-files-found: error
+
+  test-and-publish:
+    needs: build
+    runs-on: windows-2025
+    env:
+      EXE: ${{ needs.build.outputs.exe }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: levels
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ env.EXE }}
+
+      # The .exe is a windowed program, so its output goes to a log file
+      # rather than the console.
+      - name: Smoke test (autopilot through the last level)
+        shell: pwsh
+        run: |
+          $last = [int]((Get-ChildItem levels/level*.tscn | Sort-Object Name | Select-Object -Last 1).BaseName -replace '\D', '')
+          $log = "$PWD\autopilot.log"
+          $p = Start-Process -FilePath ".\$env:EXE" -PassThru `
+            -ArgumentList '--headless', '--log-file', "`"$log`"", '--', '--level', "$last", '--autopilot'
+          $exited = $p.WaitForExit(300000)
+          if (-not $exited) { $p.Kill() }
+          if (Test-Path $log) { Get-Content $log }
+          if (-not $exited) { throw "The game did not finish within 5 minutes." }
+          if (-not (Select-String -Path $log -Pattern 'GAME COMPLETE' -Quiet)) { throw "The autopilot did not finish the game." }
+
+      - name: Attach to GitHub Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ env.EXE }}
+          generate_release_notes: true
