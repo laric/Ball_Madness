@@ -90,7 +90,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          sparse-checkout: levels
+          sparse-checkout: packs
 
       - uses: actions/download-artifact@v8
         with:
