@@ -1,12 +1,12 @@
 # Ball Madness
 
-A Marble Madness-style game built with **Godot 4.7 (.NET / C#)**. Roll the ball down a series of isometric obstacle courses, each before its clock runs out. Desktop targets: Windows and Linux.
+A Marble Madness-style game built with **Godot 4.7.2 (.NET / C#)**. Roll the ball down a series of isometric obstacle courses, each before its clock runs out. Desktop targets: Windows and Linux.
 
 ![Prototype level](docs/screenshot.png)
 
 ## Requirements
 
-- [Godot 4.7 .NET edition](https://godotengine.org/download) (the "Godot Engine - .NET" build, not the standard one)
+- [Godot 4.7.2 .NET edition](https://godotengine.org/download) (the "Godot Engine - .NET" build, not the standard one)
 - [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 ## Running
