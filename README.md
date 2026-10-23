@@ -7,7 +7,7 @@ A Marble Madness-style game built with **Godot 4.7 (.NET / C#)**. Roll the ball 
 ## Requirements
 
 - [Godot 4.7 .NET edition](https://godotengine.org/download) (the "Godot Engine - .NET" build, not the standard one)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 ## Running
 
