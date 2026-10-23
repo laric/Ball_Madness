@@ -1,0 +1,14 @@
+# Godot
+.godot/
+/android/
+*.translation
+
+# .NET
+.mono/
+bin/
+obj/
+*.user
+
+# Exports
+/build/
+export_credentials.cfg
