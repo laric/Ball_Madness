@@ -8,9 +8,9 @@ namespace BallMadness;
 /// checkpoint, reaching the goal, running out of time, and moving on to the
 /// next level.
 ///
-/// The level only needs Area3D nodes in the "checkpoint" and "goal" groups and
-/// a Marker3D named "Spawn"; everything else is plain geometry. A
-/// <see cref="LevelInfo"/> script on its root sets the time limit.
+/// The level is built from its file by <see cref="LevelFormat.LevelBuilder"/>:
+/// Area3D nodes in the "checkpoint" and "goal" groups, a Marker3D named
+/// "Spawn", and a <see cref="LevelInfo"/> root with the time limit.
 /// </summary>
 public partial class Game : Node3D
 {
@@ -46,13 +46,6 @@ public partial class Game : Node3D
 
 	public override void _Ready()
 	{
-		if (System.Array.IndexOf(OS.GetCmdlineUserArgs(), "--convert-levels") >= 0)
-		{
-			LevelFormat.SceneConverter.ConvertAll();
-			GetTree().Quit();
-			return;
-		}
-
 		_ball = GetNode<Ball>("Ball");
 		_cameraRig = GetNode<CameraRig>("CameraRig");
 		_timeLabel = GetNode<Label>("Hud/TimeLabel");

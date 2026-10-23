@@ -3,8 +3,8 @@ using Godot;
 namespace BallMadness;
 
 /// <summary>
-/// Goes on the root node of every level scene (res://levels/levelNN.tscn) and
-/// holds the per-level settings the game reads when it loads the level.
+/// The root node of a built level (see <see cref="LevelFormat.LevelBuilder"/>),
+/// holding the per-level settings the game reads when it loads the level.
 /// </summary>
 public partial class LevelInfo : Node3D
 {
