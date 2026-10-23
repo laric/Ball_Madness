@@ -1,0 +1,171 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using BallMadness.LevelFormat;
+using BallMadness.LevelGen;
+using Godot;
+
+namespace BallMadness.Tools;
+
+/// <summary>
+/// Command line tools for making level packs, run headless from the project
+/// folder (they write into res://packs/, which is the project's packs/ folder):
+/// <code>
+/// godot --headless --path . res://Scenes/Tools.tscn -- COMMAND ...
+///
+/// --generate-pack ID --count N [--seed S] [--from D] [--to D] [--name NAME]
+///     Writes a pack of N generated levels whose difficulty rises from D to D
+///     (0 to 1 by default). Level i uses seed S*1000+i.
+/// --regenerate ID INDEX SEED
+///     Replaces level INDEX (1-based) of the pack with one from another seed,
+///     keeping its name and difficulty.
+/// --set-time ID INDEX SECONDS
+///     Sets the level's time limit from the autopilot's time on it.
+/// </code>
+/// tools/build-pack.sh runs these with the autopilot to make a pack where
+/// every level is known to be finishable.
+/// </summary>
+public partial class ToolRunner : Node
+{
+	public override void _Ready()
+	{
+		int code;
+		try
+		{
+			code = Run(OS.GetCmdlineUserArgs());
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr($"[tools] {e.Message}");
+			code = 1;
+		}
+		GetTree().Quit(code);
+	}
+
+	private static int Run(string[] args)
+	{
+		if (args.Length == 0)
+		{
+			GD.PrintErr("[tools] No command; see Scripts/Tools/ToolRunner.cs");
+			return 2;
+		}
+		switch (args[0])
+		{
+			case "--generate-pack":
+				GeneratePack(args[1], Int(Option(args, "--count") ?? "10"), Int(Option(args, "--seed") ?? "1"),
+					Float(Option(args, "--from") ?? "0"), Float(Option(args, "--to") ?? "1"), Option(args, "--name"));
+				return 0;
+			case "--regenerate":
+				Regenerate(args[1], Int(args[2]), Int(args[3]));
+				return 0;
+			case "--set-time":
+				SetTime(args[1], Int(args[2]), Float(args[3]));
+				return 0;
+			default:
+				GD.PrintErr($"[tools] Unknown command {args[0]}");
+				return 2;
+		}
+	}
+
+	private static void GeneratePack(string id, int count, int seed, float from, float to, string name)
+	{
+		if (!Packs.IsValidId(id))
+			throw new InvalidOperationException($"Bad pack id \"{id}\"");
+		string folder = $"{Packs.BuiltInRoot}/{id}";
+		DirAccess.MakeDirRecursiveAbsolute($"{folder}/levels");
+
+		var names = new LevelNames(seed);
+		var files = new List<string>();
+		for (int i = 0; i < count; i++)
+		{
+			float d = count == 1 ? from : Mathf.Lerp(from, to, (float)i / (count - 1));
+			var level = LevelGenerator.Generate(seed * 1000 + i, d, names.Next());
+			string file = $"{i + 1:000}.json";
+			Write($"{folder}/levels/{file}", Packs.Serialize(level));
+			files.Add(file);
+			GD.Print($"[tools] {file}: {level.Name}, difficulty {d:0.00}, {level.Course.Count} parts, {level.Hazards.Count} hazards");
+		}
+
+		var pack = new PackFile { Id = id, Name = name ?? id, Author = "Ball Madness", Version = "1", Levels = files };
+		Write($"{folder}/pack.json", Packs.Serialize(pack));
+	}
+
+	private static void Regenerate(string id, int index, int seed)
+	{
+		string path = LevelPath(id, index);
+		var old = Packs.LoadLevel(path);
+		var level = LevelGenerator.Generate(seed, old.Difficulty ?? 0, old.Name);
+		Write(path, Packs.Serialize(level));
+		GD.Print($"[tools] {path}: regenerated from seed {seed}");
+	}
+
+	private static void SetTime(string id, int index, float seconds)
+	{
+		string path = LevelPath(id, index);
+		var level = Packs.LoadLevel(path);
+		level.TimeLimit = LevelGenerator.TimeLimitFor(seconds, level.Difficulty ?? 0.5f);
+		Write(path, Packs.Serialize(level));
+		GD.Print($"[tools] {path}: time limit {level.TimeLimit}s (autopilot {seconds:0.0}s)");
+	}
+
+	private static string LevelPath(string id, int index)
+	{
+		var pack = Packs.Find(id) ?? throw new InvalidOperationException($"No pack \"{id}\"");
+		if (index < 1 || index > pack.LevelPaths.Count)
+			throw new InvalidOperationException($"Pack {id} has no level {index}");
+		return pack.LevelPaths[index - 1];
+	}
+
+	private static void Write(string path, string text)
+	{
+		using var file = FileAccess.Open(path, FileAccess.ModeFlags.Write)
+			?? throw new InvalidOperationException($"Can't write {path}: {FileAccess.GetOpenError()}");
+		file.StoreString(text);
+	}
+
+	private static string Option(string[] args, string name)
+	{
+		int i = Array.IndexOf(args, name);
+		return i >= 0 && i + 1 < args.Length ? args[i + 1] : null;
+	}
+
+	private static int Int(string s) => int.Parse(s, CultureInfo.InvariantCulture);
+	private static float Float(string s) => float.Parse(s, CultureInfo.InvariantCulture);
+}
+
+/// <summary>Made-up level names like "Copper Cascade", never the same one twice in a pack.</summary>
+public class LevelNames
+{
+	private static readonly string[] First =
+	{
+		"Amber", "Basalt", "Cobalt", "Copper", "Crystal", "Dizzy", "Echo", "Ember", "Frost", "Glass",
+		"Granite", "Hollow", "Iron", "Jade", "Lazy", "Lunar", "Marble", "Misty", "Neon", "Onyx",
+		"Polar", "Quartz", "Rusty", "Silent", "Silver", "Slate", "Steel", "Sunny", "Tidal", "Velvet",
+		"Violet", "Wobbly", "Zigzag", "Brass", "Cloud", "Dusky", "Gilded", "Hazel", "Indigo", "Paper",
+	};
+
+	private static readonly string[] Second =
+	{
+		"Alley", "Avenue", "Canyon", "Cascade", "Causeway", "Chute", "Circuit", "Climb", "Crossing", "Descent",
+		"Drift", "Drop", "Falls", "Funnel", "Gallery", "Gauntlet", "Glide", "Gorge", "Highway", "Hollow",
+		"Junction", "Ladder", "Maze", "Mesa", "Overpass", "Pass", "Plunge", "Promenade", "Ramble", "Ridge",
+		"Run", "Slide", "Spiral", "Steps", "Switchback", "Terrace", "Tumble", "Viaduct", "Walk", "Way",
+	};
+
+	private readonly Random _rng;
+	private readonly HashSet<string> _used = new();
+
+	public LevelNames(int seed) => _rng = new Random(seed);
+
+	public string Next()
+	{
+		for (int tries = 0; tries < 1000; tries++)
+		{
+			string name = $"{First[_rng.Next(First.Length)]} {Second[_rng.Next(Second.Length)]}";
+			if (_used.Add(name))
+				return name;
+		}
+		return $"Level {_used.Count + 1}";
+	}
+}

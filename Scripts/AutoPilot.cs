@@ -65,14 +65,14 @@ public partial class AutoPilot : Node
 		switch (_game.CurrentState)
 		{
 			case Game.State.Finished:
-				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
+				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} in {_game.TimeLimit - _game.TimeLeft:0.00}s with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
 				if (_allLevels)
 					_game.Continue();
 				else
 					GetTree().Quit(0);
 				return;
 			case Game.State.GameComplete:
-				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
+				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} in {_game.TimeLimit - _game.TimeLeft:0.00}s with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
 				GD.Print($"[autopilot] GAME COMPLETE: {Levels.Count} level(s) in {Levels.RunTime:0.0}s, {Levels.RunFalls} fall(s)");
 				GetTree().Quit(0);
 				return;

@@ -60,6 +60,8 @@ A pack can be shared as a zip of its folder (or of its contents). Importing a zi
 | `format` | optional | `1`. A file with a newer format than the game knows is refused. |
 | `name` | required | Shown on the HUD and the level select. |
 | `author` | optional | |
+| `difficulty` | optional | From 0 (gentlest) to 1 (hardest). Set by the level generator. |
+| `generator` | optional | Generator version and seed of a generated level. |
 | `timeLimit` | optional | Seconds on the clock. Default 60. |
 | `killHeight` | optional | Falling below this height counts as a fall. Default -12. Put it a few metres under the lowest part of the course. |
 | `materials` | optional | Named looks, see below. |

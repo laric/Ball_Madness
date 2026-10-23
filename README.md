@@ -98,6 +98,8 @@ Scripts/Ball.cs     Camera-relative rolling controls
 Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom, optional follow-the-ball yaw
 Scripts/Settings.cs Player preferences (camera mode) in user://settings.cfg
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
+Scripts/LevelGen/   Level generator: course sections chained into a level with an autopilot route
+Scripts/Tools/      Command line tools for packs (Scenes/Tools.tscn); tools/*.sh drive them
 Scripts/Hazards/    Moving obstacles: Mover (pistons, sliding bridges), Spinner (sweeper bars), Chaser (enemy steelies)
 Shaders/            World-space grid for the course, two-tone ball
 ```
@@ -115,7 +117,20 @@ godot --headless --path . -- --level 5 --autopilot   # one level
 godot --headless --path . -- --autopilot --all       # every level in a row
 ```
 
-For levels with timed hazards, a `Route` waypoint can tell the autopilot to wait: give the marker the metadata `wait_area` (a NodePath to an `Area3D` over the danger zone) and `wait_for` (`clear` or `occupied`). The pilot holds at the previous waypoint and sets off the moment the area empties of moving bodies (a piston pulls back) or a moving body arrives in it (a sliding bridge fills the gap). A `speed` metadata value caps the pilot's speed on the way to that waypoint, for thin beams.
+For levels with timed hazards, a route waypoint can tell the autopilot to wait for a gate (an invisible box over the danger zone) to be `clear` of moving bodies (a piston pulls back) or `occupied` (a sliding bridge fills the gap), and a waypoint `speed` caps the pilot's speed for thin beams. See [docs/level-format.md](docs/level-format.md).
+
+Add `--fixed-fps 60` to run the autopilot as fast as the machine allows; physics still steps 60 times per game second, so the results are the same. `tools/check-pack.sh [ID]` plays every level of a pack this way (the `main` pack takes under a minute), and the CI workflow runs it for every built-in pack on each pull request.
+
+## Level generator
+
+`Scripts/LevelGen/` builds levels from a seed and a difficulty from 0 (gentlest) to 1 (hardest). It chains course sections together: runs, ramps, steps, a slalom, zig-zag beams, swaying planks, a sweeper bar, thin beams, a sliding bridge, pistons and enemy steelies. Each section appears from a set difficulty and gets narrower, steeper or faster as difficulty rises. The course always heads down and away from the camera, every level gets an autopilot route, and the same seed always gives the same level.
+
+```sh
+dotnet build
+GODOT=godot-mono tools/build-pack.sh my-pack 20 1 0 1 "My pack"   # ID COUNT SEED FROM TO NAME
+```
+
+That writes `packs/my-pack/` with 20 levels whose difficulty rises from 0 to 1, then plays each one with the autopilot. A level the autopilot can't finish without falling is generated again from another seed, and every level's time limit is set from the autopilot's time on it: about 2.6 times as long on the easiest levels, down to 1.3 times on the hardest. The lower-level commands it uses are in `Scripts/Tools/ToolRunner.cs`.
 
 ## Linux release builds (AppImage)
 

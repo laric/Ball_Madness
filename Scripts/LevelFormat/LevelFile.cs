@@ -25,6 +25,12 @@ public class LevelFile
 	public string Name { get; set; } = "";
 	public string Author { get; set; }
 
+	/// <summary>From 0 (gentlest) to 1 (hardest). Optional; set on generated levels.</summary>
+	public float? Difficulty { get; set; }
+
+	/// <summary>How a generated level was made (generator version and seed), so it can be made again.</summary>
+	public string Generator { get; set; }
+
 	/// <summary>Seconds on the clock when the level starts.</summary>
 	public float TimeLimit { get; set; } = 60.0f;
 
