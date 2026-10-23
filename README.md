@@ -92,3 +92,18 @@ godot --headless --path . -- --autopilot --all       # every level in a row
 ```
 
 For levels with timed hazards, a `Route` waypoint can tell the autopilot to wait: give the marker the metadata `wait_area` (a NodePath to an `Area3D` over the danger zone) and `wait_for` (`clear` or `occupied`). The pilot holds at the previous waypoint and sets off the moment the area empties of moving bodies (a piston pulls back) or a moving body arrives in it (a sliding bridge fills the gap). A `speed` metadata value caps the pilot's speed on the way to that waypoint, for thin beams.
+
+## Linux release builds (AppImage)
+
+`.github/workflows/release-linux.yml` exports a release build with Godot 4.7.2 .NET and packs it into a single-file AppImage that runs on most Linux desktops without installing anything:
+
+- **Push a version tag** (`git tag v0.1.0 && git push origin v0.1.0`) and the AppImage is attached to a GitHub Release for that tag.
+- **Run it by hand** from the Actions tab ("Linux AppImage" → "Run workflow") to build any branch. The AppImage is then a workflow artifact on the run page (GitHub zips it, so unzip it and `chmod +x` it first).
+
+Either way the workflow plays the last level with the autopilot inside the built AppImage before publishing it. Release builds hide the "Next level" testing button.
+
+To build one locally, install the Linux release export template for Godot 4.7.2 (Editor → Manage Export Templates), [appimagetool](https://github.com/AppImage/appimagetool/releases) and `desktop-file-utils`, then:
+
+```sh
+GODOT=godot-mono packaging/linux/build-appimage.sh dev   # writes build/Ball_Madness-dev-x86_64.AppImage
+```
