@@ -13,7 +13,7 @@ public partial class SettingsMenu : Control
 
 	public override void _Ready()
 	{
-		SetAnchorsPreset(LayoutPreset.FullRect);
+		SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 		Theme = MenuUi.Theme;
 
 		var column = MenuUi.CenteredColumn(this, "SETTINGS", 520);

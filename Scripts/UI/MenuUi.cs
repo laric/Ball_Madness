@@ -55,7 +55,7 @@ public static class MenuUi
 	public static VBoxContainer CenteredColumn(Control parent, string heading = null, int width = 420)
 	{
 		var center = new CenterContainer();
-		center.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+		center.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
 		parent.AddChild(center);
 
 		var panel = new PanelContainer();

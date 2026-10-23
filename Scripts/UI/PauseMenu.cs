@@ -20,11 +20,11 @@ public partial class PauseMenu : CanvasLayer
 		Layer = 10;
 
 		_root = new Control { Theme = MenuUi.Theme, Visible = false };
-		_root.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+		_root.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
 		AddChild(_root);
 
 		var dim = new ColorRect { Color = new Color(0, 0, 0, 0.5f), MouseFilter = Control.MouseFilterEnum.Ignore };
-		dim.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+		dim.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
 		_root.AddChild(dim);
 	}
 
