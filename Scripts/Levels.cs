@@ -77,6 +77,15 @@ public static class Levels
 			CurrentIndex++;
 	}
 
+	/// <summary>
+	/// Testing shortcut: moves to the next level without banking anything,
+	/// wrapping round to level 1 after the last one.
+	/// </summary>
+	public static void SkipCurrent()
+	{
+		CurrentIndex = IsLastLevel ? 0 : CurrentIndex + 1;
+	}
+
 	public static void StartNewRun()
 	{
 		CurrentIndex = 0;
