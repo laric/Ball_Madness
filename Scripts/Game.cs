@@ -123,6 +123,20 @@ public partial class Game : Node3D
 		{
 			Continue();
 		}
+		else if (@event.IsActionPressed("toggle_camera"))
+		{
+			ToggleCameraMode();
+		}
+	}
+
+	/// <summary>Switches between the fixed and follow cameras and remembers the choice.</summary>
+	private void ToggleCameraMode()
+	{
+		Settings.CameraMode = Settings.CameraMode == Settings.CameraModes.Fixed ? Settings.CameraModes.Follow : Settings.CameraModes.Fixed;
+		Settings.Save();
+		_cameraRig.ResetFollow();
+		if (_state == State.Playing)
+			Flash($"Camera: {Settings.CameraMode}");
 	}
 
 	/// <summary>
@@ -187,6 +201,7 @@ public partial class Game : Node3D
 				if (_state == State.Falling && _stateTimer >= RespawnDelay)
 				{
 					_ball.Respawn(_respawnPoint);
+					_cameraRig.ResetFollow();
 					_cameraRig.Following = true;
 					EnterState(State.Playing);
 					_messageLabel.Text = "";

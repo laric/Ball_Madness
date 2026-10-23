@@ -25,11 +25,14 @@ godot --path .
 | Roll    | WASD / arrows   | Left stick, D-pad |
 | Rotate camera | Hold right mouse button and move the mouse | |
 | Zoom    | Mouse wheel     |                  |
+| Switch camera mode (fixed / follow) | C | |
 | Restart level | R         | Start            |
 | Continue (next level / retry) | Enter / Space | A |
 | Skip to next level (testing) | Click "Next level" at the top right (debug builds and the editor only) | |
 
 Movement is relative to the camera: "up" always rolls the ball towards the top of the screen, however the camera is turned.
+
+The camera has two modes, saved in `user://settings.cfg`. **Fixed** (the default) keeps its angle until you turn it. **Follow** slowly swings round to look the way the ball is rolling; it pauses while you right-drag and for two seconds after, and holds still while the ball falls.
 
 ## Levels
 
@@ -72,13 +75,14 @@ Scripts/Game.cs     Loads the level; countdown, timer, falling/respawn, checkpoi
 Scripts/Levels.cs   Finds the levels, tracks which one is being played and the run's total time
 Scripts/LevelInfo.cs Per-level settings on the level's root: name, time limit, kill height
 Scripts/Ball.cs     Camera-relative rolling controls
-Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom
+Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom, optional follow-the-ball yaw
+Scripts/Settings.cs Player preferences (camera mode) in user://settings.cfg
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Scripts/Hazards/    Moving obstacles: Mover (pistons, sliding bridges), Spinner (sweeper bars), Chaser (enemy steelies)
 Shaders/            World-space grid for the course, two-tone ball
 ```
 
-Tuning knobs are exported properties: `TimeLimit` and `KillHeight` on each level's root, `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's starting orthographic `size` on `CameraRig/Camera3D` (plus `MinZoom`, `MaxZoom`, `ZoomStep` and `MouseSensitivity` on `CameraRig`).
+Tuning knobs are exported properties: `TimeLimit` and `KillHeight` on each level's root, `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's starting orthographic `size` on `CameraRig/Camera3D` (plus `MinZoom`, `MaxZoom`, `ZoomStep` and `MouseSensitivity` on `CameraRig`, and the `Follow*` knobs for follow mode).
 
 ## Smoke test
 
