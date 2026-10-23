@@ -4,7 +4,7 @@
 # Usage: packaging/windows/build-windows.sh [version]
 #
 # Needs: Godot 4.7 .NET as $GODOT (default: godot) with the Windows export
-# templates installed, and the .NET 8 SDK. Runs on Linux. Writes
+# templates installed, and the .NET 10 SDK. Runs on Linux. Writes
 # build/Ball_Madness-<version>-windows-x86_64.exe.
 #
 # The "Windows" preset embeds the game data (PCK) and the .NET assemblies and

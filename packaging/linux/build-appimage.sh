@@ -4,7 +4,7 @@
 # Usage: packaging/linux/build-appimage.sh [version]
 #
 # Needs: Godot 4.7 .NET as $GODOT (default: godot) with its export templates
-# installed, the .NET 8 SDK, desktop-file-utils, and appimagetool as
+# installed, the .NET 10 SDK, desktop-file-utils, and appimagetool as
 # $APPIMAGETOOL (default: appimagetool). Writes
 # build/Ball_Madness-<version>-x86_64.AppImage.
 set -eu
