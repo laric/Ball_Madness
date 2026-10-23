@@ -165,6 +165,21 @@ public partial class CameraRig : Node3D
 		Rotation = new Vector3(_pitch, _yaw, 0);
 	}
 
+	public float Yaw => _yaw;
+	public float Pitch => _pitch;
+	public float Zoom => _targetZoom;
+
+	/// <summary>Sets the view straight away, e.g. to put the editor's camera back where it was.</summary>
+	public void SetView(float yaw, float pitch, float zoom)
+	{
+		_yaw = yaw;
+		_pitch = Mathf.Clamp(pitch, Mathf.DegToRad(MinPitchDegrees), Mathf.DegToRad(MaxPitchDegrees));
+		_targetZoom = Mathf.Clamp(zoom, MinZoom, MaxZoom);
+		if (_camera != null)
+			_camera.Size = _targetZoom;
+		Rotation = new Vector3(_pitch, _yaw, 0);
+	}
+
 	public void SnapToTarget()
 	{
 		if (Target != null)

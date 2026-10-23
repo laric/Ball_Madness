@@ -14,6 +14,10 @@ public static class MenuUi
 
 	public static Theme Theme => _theme ??= CreateTheme();
 
+	private static Theme _compactTheme;
+
+	public static Theme CompactTheme => _compactTheme ??= CreateCompactTheme();
+
 	private static Theme CreateTheme()
 	{
 		var theme = new Theme { DefaultFontSize = 26 };
@@ -35,7 +39,26 @@ public static class MenuUi
 		return theme;
 	}
 
-	private static StyleBoxFlat Box(Color fill, Color border, int borderWidth = 2, int padding = 10)
+	/// <summary>The same look at a smaller size, for the editor and pack manager.</summary>
+	private static Theme CreateCompactTheme()
+	{
+		var theme = new Theme { DefaultFontSize = 16 };
+		theme.SetStylebox("normal", "Button", Box(new Color(0.12f, 0.1f, 0.28f, 0.9f), new Color(0.45f, 0.4f, 0.8f), 1, 4));
+		theme.SetStylebox("hover", "Button", Box(new Color(0.22f, 0.18f, 0.48f, 0.95f), new Color(0.7f, 0.65f, 1f), 1, 4));
+		theme.SetStylebox("pressed", "Button", Box(new Color(0.35f, 0.28f, 0.7f, 1f), new Color(1f, 0.85f, 0.3f), 2, 4));
+		theme.SetStylebox("hover_pressed", "Button", Box(new Color(0.4f, 0.32f, 0.75f, 1f), new Color(1f, 0.85f, 0.3f), 2, 4));
+		theme.SetStylebox("disabled", "Button", Box(new Color(0.08f, 0.08f, 0.1f, 0.75f), new Color(0.25f, 0.25f, 0.3f), 1, 4));
+		theme.SetStylebox("focus", "Button", Box(new Color(0, 0, 0, 0), new Color(1f, 0.85f, 0.3f), 2, 4));
+		theme.SetColor("font_disabled_color", "Button", new Color(0.45f, 0.45f, 0.5f));
+		theme.SetColor("font_outline_color", "Label", Colors.Black);
+		theme.SetConstant("outline_size", "Label", 4);
+		theme.SetStylebox("panel", "PanelContainer", Box(new Color(0.04f, 0.03f, 0.1f, 0.85f), new Color(0.45f, 0.4f, 0.8f), 1, 6));
+		foreach (string state in new[] { "normal", "hover", "pressed", "hover_pressed", "focus" })
+			theme.SetStylebox(state, "CheckBox", new StyleBoxEmpty());
+		return theme;
+	}
+
+	public static StyleBoxFlat Box(Color fill, Color border, int borderWidth = 2, int padding = 10)
 	{
 		var box = new StyleBoxFlat
 		{

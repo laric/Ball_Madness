@@ -37,8 +37,21 @@ public static class Levels
 
 	public static string CurrentPath => CurrentPack.LevelPaths[CurrentIndex];
 
-	/// <summary>Reads the current level's file and builds its nodes.</summary>
-	public static LevelInfo BuildCurrent() => LevelBuilder.Build(Packs.LoadLevel(CurrentPath));
+	/// <summary>
+	/// A level from the editor being test played, or null. While it's set the
+	/// game plays only this level, saves nothing and returns to the editor.
+	/// </summary>
+	public static LevelFile TestLevel { get; private set; }
+
+	public static bool Testing => TestLevel != null;
+
+	public static void StartTest(LevelFile level) => TestLevel = level;
+
+	public static void EndTest() => TestLevel = null;
+
+	/// <summary>Reads the current level's file (or the level under test) and builds its nodes.</summary>
+	public static LevelInfo BuildCurrent() =>
+		LevelBuilder.Build(TestLevel ?? Packs.LoadLevel(CurrentPath));
 
 	/// <summary>Display name of a level in the current pack, read from its file.</summary>
 	public static string NameAt(int index)
@@ -88,6 +101,17 @@ public static class Levels
 		_pack = pack;
 		StartNewRun();
 		return true;
+	}
+
+	/// <summary>Picks up changes to the current pack's files (after the pack manager or editor saved).</summary>
+	public static void ReloadPack()
+	{
+		if (_pack == null)
+			return;
+		_pack = Packs.Find(_pack.Id);
+		if (_pack != null && _pack.LevelPaths.Count == 0)
+			_pack = null;
+		CurrentIndex = Mathf.Clamp(CurrentIndex, 0, Mathf.Max(Count - 1, 0));
 	}
 
 	/// <summary>Banks the finished level's time and falls and moves on to the next level.</summary>

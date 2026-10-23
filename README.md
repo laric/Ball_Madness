@@ -37,9 +37,9 @@ The camera has two modes, saved in `user://settings.cfg`. **Fixed** (the default
 
 ## Title screen and saves
 
-The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, and **Settings** has the camera mode. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
+The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, **Pack** picks which level pack to play (shown once you have a pack of your own), **Level editor** opens the pack manager and editor (see below), and **Settings** has the camera mode. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
 
-Progress is saved to `user://save.json` (on Linux `~/.local/share/godot/app_userdata/Ball Madness/`, on Windows `%APPDATA%\Godot\app_userdata\Ball Madness\`) as soon as you reach a goal. It is stored per level pack (`main` for now) and per level index: the furthest level completed, and each level's best time and fewest falls. Delete the file to start over.
+Progress is saved to `user://save.json` (on Linux `~/.local/share/godot/app_userdata/Ball Madness/`, on Windows `%APPDATA%\Godot\app_userdata\Ball Madness\`) as soon as you reach a goal. It is stored per level pack id and per level index: the furthest level completed, and each level's best time and fewest falls. Delete the file to start over.
 
 Starting with `-- --level N` or `-- --autopilot` skips the title screen. Autopilot runs don't write the save file unless you pass one with `-- --save PATH`.
 
@@ -60,7 +60,7 @@ A level file is plain JSON: the time limit, colours, the course's boxes, cylinde
 
 Reach the goal and the level-complete screen shows your time; press Enter for the next level. Run out of time and Enter or R retries the same level. After the last level the game-complete screen shows your total time and falls, and Enter starts again from level 1.
 
-To make a level for now, copy one of the files in `packs/main/levels/`, edit it, and add its name to `pack.json`. (An in-game level editor is planned.)
+To make levels, use the in-game editor below, or copy one of the files in `packs/main/levels/`, edit it, and add its name to `pack.json`.
 
 To jump straight to a level: `godot --path . -- --level 5`. To play another pack: `-- --pack ID`.
 
@@ -80,17 +80,40 @@ A turntable with a long sweeper bar (follow it round, don't meet it head on), a 
 
 The finale: faster pistons on a 2.5 m walkway, a sliding bridge, an arena guarded by two black steelies that chase you and try to knock you off, a fast turntable sweeper, and thin beams to the finish. 48 seconds.
 
+## Level editor
+
+**Level editor** on the title screen opens the pack manager. It lists your own packs (the built-in pack can't be changed): **New pack** makes one, the Name and Author boxes rename it, and the level list has **New level**, **Edit** (or double-click), **Move up**/**Move down** for the play order and **Delete level**. **Play pack** plays it from the selected level, **Export zip…** saves the pack as a zip to share, **Import zip…** adds one someone sent you (replacing an older copy of the same pack), and **Delete pack** removes it.
+
+The editor shows the level as the game builds it, with hazards frozen where they start, over a build grid with 0.5 m steps. The camera works like the game's: right-drag to orbit, wheel to zoom, WASD or middle-drag to pan, F to frame the selection.
+
+| Action | Mouse | Keys |
+|---|---|---|
+| Place a part, hazard or marker | Pick it in the palette (or press 1 to 9), then click a part or the grid; Shift+click places more | |
+| Select | Click it | Esc deselects |
+| Move | Drag it across the grid; drag the green cone up and down | Arrows (0.5 m, Shift for 2 m), PgUp/PgDn |
+| Turn | Drag the orange ball round its ring (15° steps) | R / Shift+R 90°, Q/E 15°, T/G tilt 15° |
+| Grid height | Shift+click an object to put the grid on its top | Shift+PgUp/PgDn, or the box in the toolbar |
+| Duplicate, delete | | Ctrl+D, Delete |
+| Undo, redo | Toolbar | Ctrl+Z, Ctrl+Y (or Ctrl+Shift+Z) |
+| Save, test | Toolbar | Ctrl+S, F5 |
+
+The panel on the right edits the selection's position, rotation, size, material (from a small preset palette) and hazard settings, or the level's name, time limit and kill height when nothing is selected. Underneath it, the editor checks the level as you go: it needs a name, a goal, ground under the spawn, and everything above the kill height before it will save. **Test** plays the level as it is now, saved or not; finish it or pick **Back to editor** in the pause menu to return with the camera, selection and undo history as you left them.
+
+Palette entries come from one list in `Scripts/Editing/EditorCatalog.cs`; a new hazard type needs an entry there (with its property rows) and a case in `LevelBuilder`.
+
 ## Project layout
 
 ```
 Scenes/Title.tscn   Title screen (the main scene): menus over a turning view of level 1
+Scenes/Editor.tscn  Level editor: camera rig over the level being edited (the UI is built in code)
 Scenes/Main.tscn    Game root: environment, light, ball, camera rig, HUD (the level is loaded at runtime)
 Scenes/Ball.tscn    The player ball (RigidBody3D)
 packs/main/          The built-in levels as JSON (see docs/level-format.md)
 Scripts/Game.cs     Loads the level; countdown, timer, falling/respawn, checkpoints, goal, end screens
-Scripts/Title.cs    Title screen: Continue, Level select, Settings, Quit
+Scripts/Title.cs    Title screen: Continue, Level select, Pack, Level editor, Settings, Quit
 Scripts/SaveGame.cs Progress in user://save.json: furthest level, best times, fewest falls
-Scripts/UI/         Menu theme, level select, settings screen, pause menu
+Scripts/UI/         Menu theme, level select, settings screen, pause menu, pack manager
+Scripts/Editing/    Level editor: palette catalog, item helpers and checks, property panel, session kept across test plays
 Scripts/Levels.cs   The pack and level being played and the run's total time
 Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file to nodes), Packs (finding, importing, exporting)
 Scripts/LevelInfo.cs Per-level settings on the built level's root: name, time limit, kill height
@@ -101,7 +124,7 @@ Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Scripts/LevelGen/   Level generator: course sections chained into a level with an autopilot route
 Scripts/Tools/      Command line tools for packs (Scenes/Tools.tscn); tools/*.sh drive them
 Scripts/Hazards/    Moving obstacles: Mover (pistons, sliding bridges), Spinner (sweeper bars), Chaser (enemy steelies)
-Shaders/            World-space grid for the course, two-tone ball
+Shaders/            World-space grid for the course, the editor's build grid, two-tone ball
 ```
 
 Tuning knobs: `timeLimit` and `killHeight` in each level file, and exported properties: `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's starting orthographic `size` on `CameraRig/Camera3D` (plus `MinZoom`, `MaxZoom`, `ZoomStep` and `MouseSensitivity` on `CameraRig`, and the `Follow*` knobs for follow mode).

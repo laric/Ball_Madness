@@ -61,7 +61,7 @@ public partial class Game : Node3D
 
 		// Testing aid: only in debug builds (the editor and debug exports).
 		var skipButton = GetNode<Button>("Hud/SkipButton");
-		skipButton.Visible = OS.IsDebugBuild();
+		skipButton.Visible = OS.IsDebugBuild() && !Levels.Testing;
 		skipButton.Pressed += SkipLevel;
 
 		_pauseMenu = new PauseMenu();
@@ -102,7 +102,9 @@ public partial class Game : Node3D
 		TimeLimit = level.TimeLimit;
 		KillHeight = level.KillHeight;
 		_levelName = level.DisplayName;
-		_levelLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
+		_levelLabel.Text = Levels.Testing
+			? $"TEST  {_levelName}"
+			: $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
 		GetNode<Button>("Hud/SkipButton").Text = Levels.IsLastLevel ? "Back to level 1 ▶" : "Next level ▶";
 	}
 
@@ -159,6 +161,13 @@ public partial class Game : Node3D
 		if (_leaving)
 			return;
 
+		if (Levels.Testing && _state == State.Finished)
+		{
+			_leaving = true;
+			ReturnToEditor();
+			return;
+		}
+
 		switch (_state)
 		{
 			case State.Finished:
@@ -177,6 +186,14 @@ public partial class Game : Node3D
 		GetTree().ReloadCurrentScene();
 	}
 
+	/// <summary>Ends a test play and goes back to the level editor where it left off.</summary>
+	public void ReturnToEditor()
+	{
+		Levels.EndTest();
+		GetTree().Paused = false;
+		GetTree().ChangeSceneToFile(Editing.LevelEditor.ScenePath);
+	}
+
 	public override void _Process(double delta)
 	{
 		float dt = (float)delta;
@@ -186,7 +203,9 @@ public partial class Game : Node3D
 		{
 			case State.Countdown:
 				int remaining = Mathf.CeilToInt(CountdownTime - _stateTimer);
-				_messageLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}\n{_levelName}\n\n{remaining}";
+				_messageLabel.Text = Levels.Testing
+					? $"TEST\n{_levelName}\n\n{remaining}"
+					: $"LEVEL {Levels.CurrentIndex + 1}\n{_levelName}\n\n{remaining}";
 				if (_stateTimer >= CountdownTime)
 				{
 					EnterState(State.Playing);
@@ -247,6 +266,12 @@ public partial class Game : Node3D
 				_cameraRig.Following = false;
 				_messageLabel.Text = "Oops!";
 				break;
+			case State.Finished when Levels.Testing:
+				_messageLabel.Text =
+					"TEST COMPLETE!\n" +
+					$"{TimeLimit - _timeLeft:0.0}s  ·  {_timeLeft:0.0}s to spare  ·  {FallsText(Falls)}\n\n" +
+					"Enter to go back to the editor  ·  R to try again";
+				break;
 			case State.Finished:
 				_messageLabel.Text =
 					$"LEVEL {Levels.CurrentIndex + 1} COMPLETE!\n" +
@@ -286,6 +311,12 @@ public partial class Game : Node3D
 	{
 		if (body != _ball || _state != State.Playing)
 			return;
+
+		if (Levels.Testing)
+		{
+			EnterState(State.Finished);
+			return;
+		}
 
 		SaveGame.RecordCompletion(SaveGame.CurrentPack, Levels.CurrentIndex, TimeLimit - _timeLeft, Falls);
 		if (Levels.IsLastLevel)
