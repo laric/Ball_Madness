@@ -1,0 +1,4 @@
+#!/bin/sh
+# Entry point of the AppImage: runs the exported game from inside the image.
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/BallMadness.x86_64" "$@"

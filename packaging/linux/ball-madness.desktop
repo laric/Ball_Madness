@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Ball Madness
+Comment=Roll the ball down isometric obstacle courses before time runs out
+Exec=BallMadness
+Icon=ball-madness
+Categories=Game;ArcadeGame;
+Terminal=false

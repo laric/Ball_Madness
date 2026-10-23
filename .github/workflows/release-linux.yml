@@ -1,0 +1,97 @@
+name: Linux AppImage
+
+# Pushing a version tag (v1.0, v0.2.1, ...) builds the AppImage and attaches
+# it to a GitHub Release for that tag. Running the workflow by hand from the
+# Actions tab builds it from the chosen branch and keeps it as a downloadable
+# workflow artifact instead.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.7.2
+  APPIMAGETOOL_VERSION: 1.9.0
+
+jobs:
+  appimage:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install packaging tools
+        run: sudo apt-get update && sudo apt-get install -y desktop-file-utils
+
+      - name: Cache Godot
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_VERSION }}-mono-linux-appimagetool-${{ env.APPIMAGETOOL_VERSION }}
+
+      - name: Download Godot, export template and appimagetool
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          base=https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable
+          mkdir -p ~/godot/templates
+          cd ~/godot
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip"
+          unzip -q godot.zip && rm godot.zip
+          # The full template bundle is over 1 GB; only the Linux release template is needed.
+          curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_mono_export_templates.tpz"
+          unzip -q -j templates.tpz templates/linux_release.x86_64 templates/version.txt -d templates
+          rm templates.tpz
+          curl -fsSL -o appimagetool "https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}/appimagetool-x86_64.AppImage"
+          chmod +x appimagetool
+
+      - name: Install Godot
+        run: |
+          echo "GODOT=$(echo ~/godot/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64)" >> "$GITHUB_ENV"
+          echo "APPIMAGETOOL=$HOME/godot/appimagetool" >> "$GITHUB_ENV"
+          dest=~/.local/share/godot/export_templates/${GODOT_VERSION}.stable.mono
+          mkdir -p "$dest"
+          cp ~/godot/templates/* "$dest/"
+
+      - name: Pick version
+        run: |
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            echo "VERSION=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
+          else
+            echo "VERSION=${GITHUB_REF_NAME//\//-}-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build AppImage
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+        run: packaging/linux/build-appimage.sh "$VERSION"
+
+      - name: Smoke test (autopilot through the last level)
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: 1
+        run: |
+          last=$(ls levels/level*.tscn | tail -1 | sed 's/.*level0*\([0-9]*\)\.tscn/\1/')
+          timeout 300 build/Ball_Madness-$VERSION-x86_64.AppImage --headless -- --level "$last" --autopilot | tee autopilot.log
+          grep -q "GAME COMPLETE" autopilot.log
+
+      - name: Upload workflow artifact
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ball_Madness-${{ env.VERSION }}-x86_64.AppImage
+          path: build/Ball_Madness-${{ env.VERSION }}-x86_64.AppImage
+          if-no-files-found: error
+
+      - name: Attach to GitHub Release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/Ball_Madness-${{ env.VERSION }}-x86_64.AppImage
+          generate_release_notes: true
