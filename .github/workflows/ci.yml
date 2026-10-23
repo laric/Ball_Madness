@@ -1,0 +1,59 @@
+name: CI
+
+# Builds the game and has the autopilot play every level of every built-in
+# pack, so a change that breaks a level (or the level format) shows up on
+# the pull request.
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  levels:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache Godot
+        id: godot-cache
+        uses: actions/cache@v6
+        with:
+          path: ~/godot-editor
+          key: godot-${{ env.GODOT_VERSION }}-mono-linux-editor
+
+      - name: Download Godot
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          base=https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable
+          mkdir -p ~/godot-editor
+          cd ~/godot-editor
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64.zip"
+          unzip -q godot.zip && rm godot.zip
+
+      - name: Build
+        run: |
+          echo "GODOT=$(echo ~/godot-editor/Godot_v${GODOT_VERSION}-stable_mono_linux_x86_64/Godot_v${GODOT_VERSION}-stable_mono_linux.x86_64)" >> "$GITHUB_ENV"
+          dotnet build -warnaserror
+
+      - name: Import
+        run: timeout 300 "$GODOT" --headless --path . --import || true
+
+      - name: Play every level with the autopilot
+        run: |
+          failed=0
+          for pack in packs/*/; do
+            tools/check-pack.sh "$(basename "$pack")" || failed=1
+          done
+          exit $failed
