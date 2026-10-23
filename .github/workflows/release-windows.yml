@@ -101,7 +101,7 @@ jobs:
       - name: Smoke test (autopilot through the last level)
         shell: pwsh
         run: |
-          $last = [int]((Get-ChildItem levels/level*.tscn | Sort-Object Name | Select-Object -Last 1).BaseName -replace '\D', '')
+          $last = (Get-Content packs/main/pack.json -Raw | ConvertFrom-Json).levels.Count
           $log = "$PWD\autopilot.log"
           $p = Start-Process -FilePath ".\$env:EXE" -PassThru `
             -ArgumentList '--headless', '--log-file', "`"$log`"", '--', '--level', "$last", '--autopilot'
