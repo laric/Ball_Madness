@@ -1,0 +1,96 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Game.cs" id="1_game"]
+[ext_resource type="PackedScene" path="res://Scenes/Level.tscn" id="2_level"]
+[ext_resource type="PackedScene" path="res://Scenes/Ball.tscn" id="3_ball"]
+[ext_resource type="Script" path="res://Scripts/CameraRig.cs" id="4_rig"]
+
+[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
+sky_top_color = Color(0.08, 0.06, 0.2, 1)
+sky_horizon_color = Color(0.35, 0.3, 0.55, 1)
+ground_bottom_color = Color(0.02, 0.02, 0.05, 1)
+ground_horizon_color = Color(0.35, 0.3, 0.55, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_mat")
+
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 3
+ambient_light_energy = 0.6
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_game")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.95, 0.55, 0)
+position = Vector3(0, 30, 0)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 80.0
+
+[node name="Level" parent="." instance=ExtResource("2_level")]
+
+[node name="Ball" parent="." instance=ExtResource("3_ball")]
+
+[node name="CameraRig" type="Node3D" parent="." node_paths=PackedStringArray("Target")]
+rotation = Vector3(-0.6155, 0.7854, 0)
+script = ExtResource("4_rig")
+Target = NodePath("../Ball")
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+position = Vector3(0, 0, 40)
+projection = 1
+size = 22.0
+near = 0.5
+far = 150.0
+
+[node name="Hud" type="CanvasLayer" parent="."]
+
+[node name="TimeLabel" type="Label" parent="Hud"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 16.0
+offset_right = 150.0
+offset_bottom = 72.0
+grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+text = "TIME 60.0"
+horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="Hud"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HelpLabel" type="Label" parent="Hud"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -40.0
+offset_right = 600.0
+offset_bottom = -12.0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+text = "WASD / arrows / left stick to roll   ·   R to restart"

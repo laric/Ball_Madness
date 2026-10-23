@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/Ball.cs" id="1_ball"]
+[ext_resource type="Shader" path="res://Shaders/ball.gdshader" id="2_shader"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ball"]
+friction = 0.9
+bounce = 0.15
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ball"]
+radius = 0.5
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ball"]
+render_priority = 0
+shader = ExtResource("2_shader")
+
+[sub_resource type="SphereMesh" id="SphereMesh_ball"]
+material = SubResource("ShaderMaterial_ball")
+radius = 0.5
+height = 1.0
+radial_segments = 48
+rings = 24
+
+[node name="Ball" type="RigidBody3D"]
+mass = 1.0
+physics_material_override = SubResource("PhysicsMaterial_ball")
+can_sleep = false
+continuous_cd = true
+angular_damp = 0.6
+script = ExtResource("1_ball")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ball")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ball")
