@@ -90,13 +90,6 @@ public static class Levels
 		return true;
 	}
 
-	/// <summary>Starts a new run on the level at <paramref name="index"/>.</summary>
-	public static void StartAt(int index)
-	{
-		StartNewRun();
-		CurrentIndex = Mathf.Clamp(index, 0, Count - 1);
-	}
-
 	/// <summary>Banks the finished level's time and falls and moves on to the next level.</summary>
 	public static void CompleteCurrent(float time, int falls)
 	{
@@ -113,6 +106,14 @@ public static class Levels
 	public static void SkipCurrent()
 	{
 		CurrentIndex = IsLastLevel ? 0 : CurrentIndex + 1;
+	}
+
+	/// <summary>Starts a new run at the level with this index (from the title screen or level select).</summary>
+	public static void StartAt(int index)
+	{
+		StartNewRun();
+		CurrentIndex = Mathf.Clamp(index, 0, Count - 1);
+		_argsApplied = true;
 	}
 
 	public static void StartNewRun()

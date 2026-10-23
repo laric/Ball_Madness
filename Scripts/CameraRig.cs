@@ -7,6 +7,10 @@ namespace BallMadness;
 /// the child Camera3D is pushed back along the rig's local Z axis.
 /// Hold the right mouse button and move the mouse to orbit around the ball;
 /// scroll the mouse wheel to zoom.
+///
+/// In <see cref="Settings.CameraModes.Follow"/> (see <see cref="Settings"/>) the yaw also
+/// eases round to look the way the ball is rolling, gently enough that the
+/// camera-relative controls don't feel like they're shifting under you.
 /// </summary>
 public partial class CameraRig : Node3D
 {
@@ -29,6 +33,21 @@ public partial class CameraRig : Node3D
 	/// <summary>How much one wheel notch zooms (1.1 = 10% per notch).</summary>
 	[Export] public float ZoomStep = 1.1f;
 
+	/// <summary>Follow mode: below this horizontal speed (m/s) the camera doesn't turn.</summary>
+	[Export] public float FollowMinSpeed = 2.5f;
+
+	/// <summary>Follow mode: how quickly the tracked travel direction reacts to the ball's velocity.</summary>
+	[Export] public float FollowVelocitySmoothing = 2.0f;
+
+	/// <summary>Follow mode: how quickly the yaw closes the gap to the travel direction.</summary>
+	[Export] public float FollowYawSharpness = 1.2f;
+
+	/// <summary>Follow mode: the fastest the camera will ever turn by itself, in degrees per second.</summary>
+	[Export] public float FollowMaxTurnDegrees = 75.0f;
+
+	/// <summary>Follow mode: seconds after a right-drag before the camera starts following again.</summary>
+	[Export] public float FollowOrbitHoldSeconds = 2.0f;
+
 	/// <summary>When false the camera stays where it is (e.g. while the ball falls off the course).</summary>
 	public bool Following { get; set; } = true;
 
@@ -37,6 +56,8 @@ public partial class CameraRig : Node3D
 	private float _pitch;
 	private Camera3D _camera;
 	private float _targetZoom;
+	private Vector3 _travel;
+	private float _orbitHold;
 
 	public override void _Ready()
 	{
@@ -61,6 +82,7 @@ public partial class CameraRig : Node3D
 		else if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Right } button)
 		{
 			_orbiting = button.Pressed;
+			_orbitHold = FollowOrbitHoldSeconds;
 			// Hide and lock the cursor while orbiting so the mouse can't leave the window.
 			Input.MouseMode = _orbiting ? Input.MouseModeEnum.Captured : Input.MouseModeEnum.Visible;
 		}
@@ -92,6 +114,55 @@ public partial class CameraRig : Node3D
 			return;
 
 		GlobalPosition = GlobalPosition.Lerp(Target.GlobalPosition, t);
+
+		if (Settings.CameraMode == Settings.CameraModes.Follow)
+			FollowTravelDirection((float)delta);
+	}
+
+	/// <summary>Forgets the ball's previous travel direction, e.g. after it respawns.</summary>
+	public void ResetFollow()
+	{
+		_travel = Vector3.Zero;
+		_orbitHold = 0;
+	}
+
+	private void FollowTravelDirection(float delta)
+	{
+		if (Target is not RigidBody3D body)
+			return;
+
+		// Right-drag wins: hold off while orbiting and for a moment after.
+		if (_orbiting)
+		{
+			_orbitHold = FollowOrbitHoldSeconds;
+			return;
+		}
+		if (_orbitHold > 0)
+		{
+			_orbitHold -= delta;
+			_travel = Vector3.Zero;
+			return;
+		}
+
+		Vector3 velocity = body.LinearVelocity with { Y = 0 };
+		_travel = _travel.Lerp(velocity, 1.0f - Mathf.Exp(-FollowVelocitySmoothing * delta));
+
+		float speed = _travel.Length();
+		if (speed < FollowMinSpeed)
+			return;
+
+		// The camera looks along the rig's -Z, which for yaw y is (-sin y, 0, -cos y).
+		float wantedYaw = Mathf.Atan2(-_travel.X, -_travel.Z);
+		float gap = Mathf.Wrap(wantedYaw - _yaw, -Mathf.Pi, Mathf.Pi);
+
+		// Ease in just above the minimum speed instead of snapping into motion.
+		float strength = Mathf.Clamp((speed - FollowMinSpeed) / FollowMinSpeed, 0.0f, 1.0f);
+		float step = gap * (1.0f - Mathf.Exp(-FollowYawSharpness * strength * delta));
+		float maxStep = Mathf.DegToRad(FollowMaxTurnDegrees) * delta;
+		step = Mathf.Clamp(step, -maxStep, maxStep);
+
+		_yaw = Mathf.Wrap(_yaw + step, -Mathf.Pi, Mathf.Pi);
+		Rotation = new Vector3(_pitch, _yaw, 0);
 	}
 
 	public void SnapToTarget()

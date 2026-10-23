@@ -123,4 +123,4 @@ grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 18
-text = "WASD / arrows / left stick to roll   ·   right-drag to turn camera   ·   wheel to zoom   ·   R to restart   ·   Enter to continue"
+text = "WASD / arrows / left stick to roll   ·   right-drag to turn camera   ·   wheel to zoom   ·   C camera mode   ·   R to restart   ·   Esc to pause"

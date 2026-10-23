@@ -11,10 +11,15 @@ namespace BallMadness;
 /// The level is built from its file by <see cref="LevelFormat.LevelBuilder"/>:
 /// Area3D nodes in the "checkpoint" and "goal" groups, a Marker3D named
 /// "Spawn", and a <see cref="LevelInfo"/> root with the time limit.
+///
+/// Completed levels are written to the save file as soon as the goal is
+/// reached. Esc or the gamepad's Start button opens the <see cref="PauseMenu"/>.
 /// </summary>
 public partial class Game : Node3D
 {
 	public enum State { Countdown, Playing, Falling, Finished, TimeUp, GameComplete }
+
+	public const string ScenePath = "res://Scenes/Main.tscn";
 
 	/// <summary>Seconds on the clock; set from the level's file when it loads.</summary>
 	[Export] public float TimeLimit = 60.0f;
@@ -34,6 +39,7 @@ public partial class Game : Node3D
 	private Label _levelLabel;
 	private Label _messageLabel;
 	private Control _dim;
+	private PauseMenu _pauseMenu;
 	private string _levelName = "";
 
 	private State _state;
@@ -57,6 +63,9 @@ public partial class Game : Node3D
 		var skipButton = GetNode<Button>("Hud/SkipButton");
 		skipButton.Visible = OS.IsDebugBuild();
 		skipButton.Pressed += SkipLevel;
+
+		_pauseMenu = new PauseMenu();
+		AddChild(_pauseMenu);
 
 		LoadLevel();
 
@@ -110,7 +119,12 @@ public partial class Game : Node3D
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (@event.IsActionPressed("restart"))
+		if (@event.IsActionPressed("pause"))
+		{
+			GetViewport().SetInputAsHandled();
+			_pauseMenu.Open();
+		}
+		else if (@event.IsActionPressed("restart"))
 		{
 			if (_state == State.GameComplete)
 				Levels.StartNewRun();
@@ -120,6 +134,20 @@ public partial class Game : Node3D
 		{
 			Continue();
 		}
+		else if (@event.IsActionPressed("toggle_camera"))
+		{
+			ToggleCameraMode();
+		}
+	}
+
+	/// <summary>Switches between the fixed and follow cameras and remembers the choice.</summary>
+	private void ToggleCameraMode()
+	{
+		Settings.CameraMode = Settings.CameraMode == Settings.CameraModes.Fixed ? Settings.CameraModes.Follow : Settings.CameraModes.Fixed;
+		Settings.Save();
+		_cameraRig.ResetFollow();
+		if (_state == State.Playing)
+			Flash($"Camera: {Settings.CameraMode}");
 	}
 
 	/// <summary>
@@ -184,6 +212,7 @@ public partial class Game : Node3D
 				if (_state == State.Falling && _stateTimer >= RespawnDelay)
 				{
 					_ball.Respawn(_respawnPoint);
+					_cameraRig.ResetFollow();
 					_cameraRig.Following = true;
 					EnterState(State.Playing);
 					_messageLabel.Text = "";
@@ -222,16 +251,16 @@ public partial class Game : Node3D
 				_messageLabel.Text =
 					$"LEVEL {Levels.CurrentIndex + 1} COMPLETE!\n" +
 					$"{TimeLimit - _timeLeft:0.0}s  ·  {_timeLeft:0.0}s to spare  ·  {FallsText(Falls)}\n\n" +
-					$"Enter for level {Levels.CurrentIndex + 2}  ·  R to replay";
+					$"Enter for level {Levels.CurrentIndex + 2}  ·  R to replay  ·  Esc for menu";
 				break;
 			case State.GameComplete:
 				_messageLabel.Text =
 					$"YOU BEAT ALL {Levels.Count} LEVELS!\n" +
 					$"Total time {Levels.RunTime:0.0}s  ·  {FallsText(Levels.RunFalls)}\n\n" +
-					"Enter to play again";
+					"Enter to play again  ·  Esc for menu";
 				break;
 			case State.TimeUp:
-				_messageLabel.Text = "TIME'S UP\n\nEnter or R to try again";
+				_messageLabel.Text = "TIME'S UP\n\nEnter or R to try again  ·  Esc for menu";
 				break;
 		}
 	}
@@ -258,6 +287,7 @@ public partial class Game : Node3D
 		if (body != _ball || _state != State.Playing)
 			return;
 
+		SaveGame.RecordCompletion(SaveGame.CurrentPack, Levels.CurrentIndex, TimeLimit - _timeLeft, Falls);
 		if (Levels.IsLastLevel)
 		{
 			Levels.CompleteCurrent(TimeLimit - _timeLeft, Falls);

@@ -25,26 +25,44 @@ godot --path .
 | Roll    | WASD / arrows   | Left stick, D-pad |
 | Rotate camera | Hold right mouse button and move the mouse | |
 | Zoom    | Mouse wheel     |                  |
-| Restart level | R         | Start            |
+| Switch camera mode (fixed / follow) | C | |
+| Pause menu | Esc          | Start            |
+| Restart level | R         | Back             |
 | Continue (next level / retry) | Enter / Space | A |
 | Skip to next level (testing) | Click "Next level" at the top right (debug builds and the editor only) | |
 
 Movement is relative to the camera: "up" always rolls the ball towards the top of the screen, however the camera is turned.
 
+The camera has two modes, saved in `user://settings.cfg`. **Fixed** (the default) keeps its angle until you turn it. **Follow** slowly swings round to look the way the ball is rolling; it pauses while you right-drag and for two seconds after, and holds still while the ball falls.
+
+## Title screen and saves
+
+The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, and **Settings** has the camera mode. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
+
+Progress is saved to `user://save.json` (on Linux `~/.local/share/godot/app_userdata/Ball Madness/`, on Windows `%APPDATA%\Godot\app_userdata\Ball Madness\`) as soon as you reach a goal. It is stored per level pack (`main` for now) and per level index: the furthest level completed, and each level's best time and fewest falls. Delete the file to start over.
+
+Starting with `-- --level N` or `-- --autopilot` skips the title screen. Autopilot runs don't write the save file unless you pass one with `-- --save PATH`.
+
 ## Levels
 
-The game plays every `levels/levelNN.tscn` in number order (`level01` up to `level99`; there is no list to edit, adding the file is enough). Reach the goal and the level-complete screen shows your time; press Enter for the next level. Run out of time and Enter or R retries the same level. After the last level the game-complete screen shows your total time and falls, and Enter starts again from level 1.
+Levels come in **packs**. The game ships with the `main` pack in `packs/main/`; players' own packs go in the user data folder under `packs/` (`~/.local/share/godot/app_userdata/Ball Madness/packs/` on Linux, `%APPDATA%\Godot\app_userdata\Ball Madness\packs\` on Windows). Each pack is a folder with a `pack.json` and a `levels/` folder of level files:
 
-To make a level, copy `levels/level01.tscn` and keep its structure:
+```
+packs/main/
+  pack.json            id, name, author, and the level files in play order
+  levels/
+    01-first-descent.json
+    02-switchbacks.json
+    ...
+```
 
-- The root is a `Node3D` with `Scripts/LevelInfo.cs` attached. Its exports set `DisplayName`, `TimeLimit` (seconds) and `KillHeight` (falling below it counts as a fall).
-- A `Spawn` marker where the ball starts.
-- `Area3D` nodes in the `checkpoint` and `goal` groups.
-- A `Route` node of `Marker3D` waypoints for the autopilot.
+A level file is plain JSON: the time limit, colours, the course's boxes, cylinders and ramps, moving hazards, checkpoints, goal and the autopilot's route. The game builds the level from it when it loads, and a level file can't contain code, so packs from other players are safe to play. [docs/level-format.md](docs/level-format.md) describes every field.
 
-Everything else is plain geometry, so the course can be edited directly in the Godot editor.
+Reach the goal and the level-complete screen shows your time; press Enter for the next level. Run out of time and Enter or R retries the same level. After the last level the game-complete screen shows your total time and falls, and Enter starts again from level 1.
 
-To jump straight to a level: `godot --path . -- --level 5`.
+To make a level for now, copy one of the files in `packs/main/levels/`, edit it, and add its name to `pack.json`. (An in-game level editor is planned.)
+
+To jump straight to a level: `godot --path . -- --level 5`. To play another pack: `-- --pack ID`.
 
 ### Level 1: First Descent
 
@@ -65,20 +83,26 @@ The finale: faster pistons on a 2.5 m walkway, a sliding bridge, an arena guarde
 ## Project layout
 
 ```
+Scenes/Title.tscn   Title screen (the main scene): menus over a turning view of level 1
 Scenes/Main.tscn    Game root: environment, light, ball, camera rig, HUD (the level is loaded at runtime)
 Scenes/Ball.tscn    The player ball (RigidBody3D)
-levels/levelNN.tscn The courses (CSG boxes with collision), checkpoints, goal, autopilot route
+packs/main/          The built-in levels as JSON (see docs/level-format.md)
 Scripts/Game.cs     Loads the level; countdown, timer, falling/respawn, checkpoints, goal, end screens
-Scripts/Levels.cs   Finds the levels, tracks which one is being played and the run's total time
-Scripts/LevelInfo.cs Per-level settings on the level's root: name, time limit, kill height
+Scripts/Title.cs    Title screen: Continue, Level select, Settings, Quit
+Scripts/SaveGame.cs Progress in user://save.json: furthest level, best times, fewest falls
+Scripts/UI/         Menu theme, level select, settings screen, pause menu
+Scripts/Levels.cs   The pack and level being played and the run's total time
+Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file to nodes), Packs (finding, importing, exporting)
+Scripts/LevelInfo.cs Per-level settings on the built level's root: name, time limit, kill height
 Scripts/Ball.cs     Camera-relative rolling controls
-Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom
+Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom, optional follow-the-ball yaw
+Scripts/Settings.cs Player preferences (camera mode) in user://settings.cfg
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Scripts/Hazards/    Moving obstacles: Mover (pistons, sliding bridges), Spinner (sweeper bars), Chaser (enemy steelies)
 Shaders/            World-space grid for the course, two-tone ball
 ```
 
-Tuning knobs are exported properties: `TimeLimit` and `KillHeight` on each level's root, `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's starting orthographic `size` on `CameraRig/Camera3D` (plus `MinZoom`, `MaxZoom`, `ZoomStep` and `MouseSensitivity` on `CameraRig`).
+Tuning knobs: `timeLimit` and `killHeight` in each level file, and exported properties: `RollTorque`, `PushForce`, `AirControl` and `MaxSpeed` on the ball, and the camera's starting orthographic `size` on `CameraRig/Camera3D` (plus `MinZoom`, `MaxZoom`, `ZoomStep` and `MouseSensitivity` on `CameraRig`, and the `Follow*` knobs for follow mode).
 
 ## Smoke test
 
