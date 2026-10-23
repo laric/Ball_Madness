@@ -11,7 +11,6 @@ on:
   push:
     tags:
       - "v*"
-    branches: [claude/project-thread-qi1209]  # TEMP: verify before merge
   workflow_dispatch:
 
 permissions:
