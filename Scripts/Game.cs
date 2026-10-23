@@ -16,7 +16,7 @@ public partial class Game : Node3D
 {
 	public enum State { Countdown, Playing, Falling, Finished, TimeUp, GameComplete }
 
-	/// <summary>Used when the level has no <see cref="LevelInfo"/> on its root.</summary>
+	/// <summary>Seconds on the clock; set from the level's file when it loads.</summary>
 	[Export] public float TimeLimit = 60.0f;
 	[Export] public float CountdownTime = 3.0f;
 	[Export] public float RespawnDelay = 1.2f;
@@ -46,6 +46,13 @@ public partial class Game : Node3D
 
 	public override void _Ready()
 	{
+		if (System.Array.IndexOf(OS.GetCmdlineUserArgs(), "--convert-levels") >= 0)
+		{
+			LevelFormat.SceneConverter.ConvertAll();
+			GetTree().Quit();
+			return;
+		}
+
 		_ball = GetNode<Ball>("Ball");
 		_cameraRig = GetNode<CameraRig>("CameraRig");
 		_timeLabel = GetNode<Label>("Hud/TimeLabel");
@@ -86,16 +93,13 @@ public partial class Game : Node3D
 	private void LoadLevel()
 	{
 		Levels.ApplyCommandLine();
-		var level = Levels.LoadCurrent().Instantiate<Node3D>();
+		LevelInfo level = Levels.BuildCurrent();
 		level.Name = "Level";
 		AddChild(level);
 
-		if (level is LevelInfo info)
-		{
-			TimeLimit = info.TimeLimit;
-			KillHeight = info.KillHeight;
-			_levelName = info.DisplayName;
-		}
+		TimeLimit = level.TimeLimit;
+		KillHeight = level.KillHeight;
+		_levelName = level.DisplayName;
 		_levelLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
 		GetNode<Button>("Hud/SkipButton").Text = Levels.IsLastLevel ? "Back to level 1 ▶" : "Next level ▶";
 	}

@@ -1,0 +1,432 @@
+{
+	"format": 1,
+	"name": "Piston Falls",
+	"timeLimit": 50,
+	"killHeight": -2,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"moving_mat": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"hazard_mat": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		}
+	},
+	"spawn": [0, 24.6, 0],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, 23.5, 0],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Landing",
+			"shape": "box",
+			"pos": [0, 14.5, 29],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "SwitchbackA",
+			"shape": "box",
+			"pos": [9.8787, 13.0149, 29],
+			"rot": [14.0349, 90, 0],
+			"size": [2.2, 1, 12.3693],
+			"material": "grid"
+		},
+		{
+			"name": "Corner1",
+			"shape": "box",
+			"pos": [18.5, 11.5, 29.5],
+			"size": [5, 1, 5],
+			"material": "grid"
+		},
+		{
+			"name": "SwitchbackB",
+			"shape": "box",
+			"pos": [18.5, 10.0257, 36.3419],
+			"rot": [18.4331, 0, 0],
+			"size": [2.2, 1, 9.4868],
+			"material": "grid"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [18.25, 8.5, 43],
+			"size": [4.5, 1, 4],
+			"material": "grid"
+		},
+		{
+			"name": "Island",
+			"shape": "box",
+			"pos": [0, 8.5, 43],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Corridor",
+			"shape": "box",
+			"pos": [0, 8.5, 52],
+			"size": [3, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "RailER",
+			"shape": "box",
+			"pos": [1.65, 9.05, 50],
+			"size": [0.3, 1.1, 6.3],
+			"material": "rail"
+		},
+		{
+			"name": "RailWL",
+			"shape": "box",
+			"pos": [-1.65, 9.05, 54],
+			"size": [0.3, 1.1, 6.3],
+			"material": "rail"
+		},
+		{
+			"name": "Arena",
+			"shape": "box",
+			"pos": [0, 8.5, 62],
+			"size": [10, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "FinishArea",
+			"shape": "box",
+			"pos": [0, 8.5, 70],
+			"size": [6, 1, 6],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Step1",
+			"type": "mover",
+			"pos": [0, 22.5, 5.75],
+			"offset": [0, -0.8, 0],
+			"period": 2.5,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3.5],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Step2",
+			"type": "mover",
+			"pos": [0, 21.2, 9.25],
+			"offset": [0, -0.8, 0],
+			"period": 2.5,
+			"phase": 0.3,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3.5],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Step3",
+			"type": "mover",
+			"pos": [0, 19.9, 12.75],
+			"offset": [0, -0.8, 0],
+			"period": 2.5,
+			"phase": 0.6,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3.5],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Step4",
+			"type": "mover",
+			"pos": [0, 18.6, 16.25],
+			"offset": [0, -0.8, 0],
+			"period": 2.5,
+			"phase": 0.9,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3.5],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Step5",
+			"type": "mover",
+			"pos": [0, 17.3, 19.75],
+			"offset": [0, -0.8, 0],
+			"period": 2.5,
+			"phase": 0.2,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3.5],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Step6",
+			"type": "mover",
+			"pos": [0, 16, 23.25],
+			"offset": [0, -0.8, 0],
+			"period": 2.5,
+			"phase": 0.5,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3.5],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Plank1",
+			"type": "mover",
+			"pos": [14.5, 8.5, 41.75],
+			"offset": [0, 0, 2.5],
+			"period": 2.2,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3, 1, 4],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Plank2",
+			"type": "mover",
+			"pos": [11.5, 8.5, 44.25],
+			"offset": [0, 0, -2.5],
+			"period": 2.2,
+			"phase": 0.2,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3, 1, 4],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Plank3",
+			"type": "mover",
+			"pos": [8.5, 8.5, 41.75],
+			"offset": [0, 0, 2.5],
+			"period": 2.2,
+			"phase": 0.4,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3, 1, 4],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Plank4",
+			"type": "mover",
+			"pos": [5.5, 8.5, 44.25],
+			"offset": [0, 0, -2.5],
+			"period": 2.2,
+			"phase": 0.6,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3, 1, 4],
+					"material": "moving_mat"
+				}
+			]
+		},
+		{
+			"name": "Piston1",
+			"type": "mover",
+			"pos": [-3.5, 9.6, 50],
+			"offset": [2.5, 0, 0],
+			"period": 2,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 1.6],
+					"material": "hazard_mat"
+				}
+			]
+		},
+		{
+			"name": "Piston2",
+			"type": "mover",
+			"pos": [3.5, 9.6, 54],
+			"offset": [-2.5, 0, 0],
+			"period": 2,
+			"phase": 0.5,
+			"parts": [
+				{
+					"name": "Box",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 1.6],
+					"material": "hazard_mat"
+				}
+			]
+		},
+		{
+			"name": "Sweeper",
+			"type": "spinner",
+			"pos": [0, 9.45, 62],
+			"speed": -90,
+			"parts": [
+				{
+					"name": "Bar",
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [8, 0.8, 0.8],
+					"material": "hazard_mat"
+				},
+				{
+					"name": "Hub",
+					"shape": "cylinder",
+					"pos": [0, 0.3, 0],
+					"radius": 0.7,
+					"height": 1.6,
+					"material": "hazard_mat"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [0, 15, 27],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [18.25, 9, 42.5],
+			"size": [4.5, 3, 2]
+		},
+		{
+			"pos": [0, 9, 43],
+			"rot": [0, 90.0002, 0],
+			"size": [8, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [0, 9, 70]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0, 0]
+		},
+		{
+			"pos": [0, 0, 4]
+		},
+		{
+			"pos": [0, 0, 25]
+		},
+		{
+			"pos": [0, 0, 29]
+		},
+		{
+			"pos": [4, 0, 29]
+		},
+		{
+			"pos": [10, 0, 29]
+		},
+		{
+			"pos": [15, 0, 29]
+		},
+		{
+			"pos": [18.5, 0, 29.5]
+		},
+		{
+			"pos": [18.5, 0, 32]
+		},
+		{
+			"pos": [18.5, 0, 34.5]
+		},
+		{
+			"pos": [18.5, 0, 37]
+		},
+		{
+			"pos": [18.5, 0, 41]
+		},
+		{
+			"pos": [18, 0, 43]
+		},
+		{
+			"pos": [16, 0, 43]
+		},
+		{
+			"pos": [4, 0, 43]
+		},
+		{
+			"pos": [0, 0, 43]
+		},
+		{
+			"pos": [0, 0, 47]
+		},
+		{
+			"pos": [0, 0, 57]
+		},
+		{
+			"pos": [-4.3, 0, 59]
+		},
+		{
+			"pos": [-4.3, 0, 65]
+		},
+		{
+			"pos": [0, 0, 67]
+		},
+		{
+			"pos": [0, 0, 70]
+		}
+	]
+}

@@ -1,0 +1,201 @@
+{
+	"format": 1,
+	"name": "First Descent",
+	"timeLimit": 60,
+	"killHeight": -12,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		}
+	},
+	"spawn": [0, 20.6, 0],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, 19.5, 0],
+			"size": [10, 1, 10],
+			"material": "start"
+		},
+		{
+			"name": "FirstRamp",
+			"shape": "box",
+			"pos": [0, 16.5528, 10.7764],
+			"rot": [26.5623, 0, 0],
+			"size": [8, 1, 13.5164],
+			"material": "grid"
+		},
+		{
+			"name": "Landing",
+			"shape": "box",
+			"pos": [0, 13.5, 23],
+			"size": [12, 1, 12],
+			"material": "grid"
+		},
+		{
+			"name": "NarrowRamp",
+			"shape": "box",
+			"pos": [13.8509, 11.0228, 23],
+			"rot": [0, 0, -17.3549],
+			"size": [16.8631, 1, 4],
+			"material": "grid"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [26, 8.5, 23],
+			"size": [8, 1, 12],
+			"material": "grid"
+		},
+		{
+			"name": "Bridge1",
+			"shape": "box",
+			"pos": [26, 8.5, 33.625],
+			"size": [2.5, 1, 9.25],
+			"material": "bridge"
+		},
+		{
+			"name": "Bridge2",
+			"shape": "box",
+			"pos": [29, 8.5, 37],
+			"size": [8.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Bridge3",
+			"shape": "box",
+			"pos": [32, 8.5, 40.875],
+			"size": [2.5, 1, 10.25],
+			"material": "bridge"
+		},
+		{
+			"name": "Plateau",
+			"shape": "box",
+			"pos": [32, 8.5, 51],
+			"size": [12, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "SlalomRamp",
+			"shape": "box",
+			"pos": [45.7996, 5.0419, 51],
+			"rot": [0, 0, -23.6288],
+			"size": [17.5642, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "FinishArea",
+			"shape": "box",
+			"pos": [62, 1.5, 51],
+			"size": [16, 1, 14],
+			"material": "grid"
+		},
+		{
+			"name": "Post1",
+			"shape": "cylinder",
+			"pos": [42, 8, 48.5],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post2",
+			"shape": "cylinder",
+			"pos": [46, 6.25, 53],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post3",
+			"shape": "cylinder",
+			"pos": [50, 4.5, 49.5],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		}
+	],
+	"hazards": [],
+	"checkpoints": [
+		{
+			"pos": [0, 14, 23],
+			"size": [12, 3, 2]
+		},
+		{
+			"pos": [32, 9, 47.5],
+			"size": [12, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [64, 2, 51]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0, 0]
+		},
+		{
+			"pos": [0, 0, 12]
+		},
+		{
+			"pos": [0, 0, 23]
+		},
+		{
+			"pos": [8, 0, 23]
+		},
+		{
+			"pos": [20, 0, 23]
+		},
+		{
+			"pos": [26, 0, 23]
+		},
+		{
+			"pos": [26, 0, 37]
+		},
+		{
+			"pos": [32, 0, 37]
+		},
+		{
+			"pos": [32, 0, 46]
+		},
+		{
+			"pos": [32, 0, 51]
+		},
+		{
+			"pos": [38, 0, 51]
+		},
+		{
+			"pos": [40, 0, 51]
+		},
+		{
+			"pos": [44, 0, 51.5]
+		},
+		{
+			"pos": [48, 0, 50.5]
+		},
+		{
+			"pos": [52, 0, 52]
+		},
+		{
+			"pos": [56, 0, 51]
+		},
+		{
+			"pos": [64, 0, 51]
+		}
+	]
+}

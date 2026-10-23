@@ -1,31 +1,32 @@
 using System.Collections.Generic;
+using BallMadness.LevelFormat;
 using Godot;
 
 namespace BallMadness;
 
 /// <summary>
-/// The ordered list of levels and the progress of the current run.
+/// The pack being played, which of its levels is current, and the progress
+/// of the current run.
 ///
-/// Levels are found by file name: every res://levels/levelNN.tscn that exists
-/// (level01 up to level99) is played in number order, so adding a level is
-/// just adding its scene. The run state is static so it survives reloading
-/// the main scene between levels.
+/// Levels come from packs (see <see cref="Packs"/>): the built-in campaign is
+/// res://packs/main/, and players' packs live in user://packs/. The run state
+/// is static so it survives reloading the main scene between levels.
 /// </summary>
 public static class Levels
 {
-	private const int MaxLevelNumber = 99;
+	private static Pack _pack;
 
-	private static List<int> _numbers;
+	/// <summary>The pack being played; the main campaign unless another was picked.</summary>
+	public static Pack CurrentPack => _pack ??= Packs.Find(Packs.MainPackId) ?? Packs.All[0];
 
-	/// <summary>Level numbers that exist, in play order.</summary>
-	public static IReadOnlyList<int> Numbers => _numbers ??= Discover();
+	public static int Count => CurrentPack.LevelPaths.Count;
 
-	public static int Count => Numbers.Count;
-
-	/// <summary>Index into <see cref="Numbers"/> of the level being played.</summary>
+	/// <summary>Index into the pack's levels of the level being played.</summary>
 	public static int CurrentIndex { get; private set; }
 
-	public static int CurrentNumber => Numbers[CurrentIndex];
+	/// <summary>The level's number as players see it (1 for the first level).</summary>
+	public static int CurrentNumber => CurrentIndex + 1;
+
 	public static bool IsLastLevel => CurrentIndex >= Count - 1;
 
 	/// <summary>Seconds spent on the levels finished so far in this run.</summary>
@@ -34,13 +35,29 @@ public static class Levels
 
 	private static bool _argsApplied;
 
-	public static string PathFor(int number) => $"res://levels/level{number:00}.tscn";
+	public static string CurrentPath => CurrentPack.LevelPaths[CurrentIndex];
 
-	public static PackedScene LoadCurrent() => GD.Load<PackedScene>(PathFor(CurrentNumber));
+	/// <summary>Reads the current level's file and builds its nodes.</summary>
+	public static LevelInfo BuildCurrent() => LevelBuilder.Build(Packs.LoadLevel(CurrentPath));
+
+	/// <summary>Display name of a level in the current pack, read from its file.</summary>
+	public static string NameAt(int index)
+	{
+		try
+		{
+			return Packs.LoadLevel(CurrentPack.LevelPaths[index]).Name;
+		}
+		catch (System.Exception e)
+		{
+			GD.PushWarning(e.Message);
+			return "";
+		}
+	}
 
 	/// <summary>
-	/// Picks the starting level from <c>-- --level N</c> the first time it's
-	/// called; later calls (after a scene reload) do nothing.
+	/// Picks the pack and starting level from <c>-- --pack ID</c> and
+	/// <c>-- --level N</c> the first time it's called; later calls (after a
+	/// scene reload) do nothing.
 	/// </summary>
 	public static void ApplyCommandLine()
 	{
@@ -48,24 +65,36 @@ public static class Levels
 			return;
 		_argsApplied = true;
 
-		string[] args = OS.GetCmdlineUserArgs();
-		for (int i = 0; i < args.Length; i++)
-		{
-			string value = null;
-			if (args[i] == "--level" && i + 1 < args.Length)
-				value = args[i + 1];
-			else if (args[i].StartsWith("--level="))
-				value = args[i]["--level=".Length..];
+		string pack = Arg("--pack");
+		if (pack != null && !SelectPack(pack))
+			GD.PushWarning($"No pack \"{pack}\", playing {CurrentPack.Id}");
 
-			if (value != null && int.TryParse(value, out int number))
-			{
-				int index = ((List<int>)Numbers).IndexOf(number);
-				if (index >= 0)
-					CurrentIndex = index;
-				else
-					GD.PushWarning($"No level {number}, starting at level {CurrentNumber}");
-			}
+		string level = Arg("--level");
+		if (level != null && int.TryParse(level, out int number))
+		{
+			if (number >= 1 && number <= Count)
+				CurrentIndex = number - 1;
+			else
+				GD.PushWarning($"No level {number}, starting at level {CurrentNumber}");
 		}
+	}
+
+	/// <summary>Switches to another pack and starts a new run on its first level.</summary>
+	public static bool SelectPack(string id)
+	{
+		var pack = Packs.Find(id);
+		if (pack == null)
+			return false;
+		_pack = pack;
+		StartNewRun();
+		return true;
+	}
+
+	/// <summary>Starts a new run on the level at <paramref name="index"/>.</summary>
+	public static void StartAt(int index)
+	{
+		StartNewRun();
+		CurrentIndex = Mathf.Clamp(index, 0, Count - 1);
 	}
 
 	/// <summary>Banks the finished level's time and falls and moves on to the next level.</summary>
@@ -93,16 +122,16 @@ public static class Levels
 		RunFalls = 0;
 	}
 
-	private static List<int> Discover()
+	private static string Arg(string name)
 	{
-		var numbers = new List<int>();
-		for (int n = 1; n <= MaxLevelNumber; n++)
+		string[] args = OS.GetCmdlineUserArgs();
+		for (int i = 0; i < args.Length; i++)
 		{
-			if (ResourceLoader.Exists(PathFor(n)))
-				numbers.Add(n);
+			if (args[i] == name && i + 1 < args.Length)
+				return args[i + 1];
+			if (args[i].StartsWith(name + "="))
+				return args[i][(name.Length + 1)..];
 		}
-		if (numbers.Count == 0)
-			GD.PushError("No levels found in res://levels/");
-		return numbers;
+		return null;
 	}
 }

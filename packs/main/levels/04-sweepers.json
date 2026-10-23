@@ -1,0 +1,303 @@
+{
+	"format": 1,
+	"name": "Sweepers",
+	"timeLimit": 50,
+	"killHeight": -12,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"rail": {
+			"color": [0.7, 0.45, 0.85],
+			"line": [0.3, 0.15, 0.4]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"sweeper_mat": {
+			"color": [0.95, 0.35, 0.2],
+			"roughness": 0.4,
+			"metallic": 0.3
+		}
+	},
+	"spawn": [0, 28.6, 0],
+	"course": [
+		{
+			"name": "StartPad1",
+			"shape": "box",
+			"pos": [0, 27.5, 0],
+			"size": [10, 1, 10],
+			"material": "start"
+		},
+		{
+			"name": "RailRamp1",
+			"shape": "box",
+			"pos": [0, 25.0385, 10.8077],
+			"rot": [0, -90, -22.6185],
+			"size": [13.1, 1, 7],
+			"material": "grid"
+		},
+		{
+			"name": "Rail1",
+			"shape": "box",
+			"pos": [3.3, 25.3615, 10.9423],
+			"rot": [0, -90, -22.6185],
+			"size": [13.1, 1.7, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Rail2",
+			"shape": "box",
+			"pos": [-3.3, 25.3615, 10.9423],
+			"rot": [0, -90, -22.6185],
+			"size": [13.1, 1.7, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Plaza1",
+			"shape": "box",
+			"pos": [0, 22.5, 25],
+			"size": [16, 1, 16],
+			"material": "grid"
+		},
+		{
+			"name": "Rail3",
+			"shape": "box",
+			"pos": [-5.75, 23.15, 17],
+			"size": [4.9, 1.3, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Rail4",
+			"shape": "box",
+			"pos": [5.75, 23.15, 17],
+			"size": [4.9, 1.3, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Rail5",
+			"shape": "box",
+			"pos": [-8, 23.15, 25],
+			"rot": [0, -90, 0],
+			"size": [16.4, 1.3, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Rail6",
+			"shape": "box",
+			"pos": [0, 23.15, 33],
+			"size": [16.4, 1.3, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Rail7",
+			"shape": "box",
+			"pos": [8, 23.15, 21.75],
+			"rot": [0, -90, 0],
+			"size": [9.9, 1.3, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Ramp1",
+			"shape": "box",
+			"pos": [14.8626, 20.5192, 29.5],
+			"rot": [0, 0, -15.9446],
+			"size": [14.6602, 1, 5],
+			"material": "grid"
+		},
+		{
+			"name": "Pad1",
+			"shape": "box",
+			"pos": [27, 18.5, 29.5],
+			"size": [10, 1, 9],
+			"material": "grid"
+		},
+		{
+			"name": "Rail8",
+			"shape": "box",
+			"pos": [32, 19.15, 29.5],
+			"rot": [0, -90, 0],
+			"size": [9.4, 1.3, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "Step1",
+			"shape": "box",
+			"pos": [27, 17.5, 36.5],
+			"size": [7, 1, 5],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [27, 16.5, 41.5],
+			"size": [7, 1, 5],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [27, 15.5, 46.5],
+			"size": [7, 1, 5],
+			"material": "bridge"
+		},
+		{
+			"name": "SweeperPad1",
+			"shape": "box",
+			"pos": [27, 15.5, 56],
+			"size": [14, 1, 14],
+			"material": "grid"
+		},
+		{
+			"name": "BankedRamp1",
+			"shape": "box",
+			"pos": [41.8513, 13.0243, 59.96],
+			"rot": [4.3739, -1.3697, -17.4074],
+			"size": [16.8631, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Rail9",
+			"shape": "box",
+			"pos": [41.8887, 13.1437, 62.7791],
+			"rot": [4.3739, -1.3697, -17.4074],
+			"size": [16.8631, 1.7, 0.4],
+			"material": "rail"
+		},
+		{
+			"name": "FinishArea1",
+			"shape": "box",
+			"pos": [56, 10.5, 60],
+			"size": [12, 1, 12],
+			"material": "grid"
+		},
+		{
+			"name": "Hub",
+			"shape": "cylinder",
+			"pos": [0, 23.6, 25],
+			"radius": 0.7,
+			"height": 1.2,
+			"material": "post"
+		},
+		{
+			"name": "Hub",
+			"shape": "cylinder",
+			"pos": [27, 16.6, 56],
+			"radius": 0.7,
+			"height": 1.2,
+			"material": "post"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Arm",
+			"type": "spinner",
+			"pos": [0, 23.5, 25],
+			"speed": 51.4287,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [10, 0.8, 0.8],
+					"material": "sweeper_mat"
+				}
+			]
+		},
+		{
+			"name": "Arm",
+			"type": "spinner",
+			"pos": [27, 16.5, 56],
+			"speed": -45.0001,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [8, 0.8, 0.8],
+					"material": "sweeper_mat"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [27, 19, 29.5],
+			"size": [2, 3, 9]
+		},
+		{
+			"pos": [27, 16, 50],
+			"size": [14, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [58, 11, 60]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0, 0]
+		},
+		{
+			"pos": [0, 0, 12]
+		},
+		{
+			"pos": [0, 0, 17.5]
+		},
+		{
+			"pos": [6, 0, 19.5]
+		},
+		{
+			"pos": [6.5, 0, 27]
+		},
+		{
+			"pos": [10, 0, 29.5]
+		},
+		{
+			"pos": [22, 0, 29.5]
+		},
+		{
+			"pos": [27, 0, 29.5]
+		},
+		{
+			"pos": [27, 0, 34]
+		},
+		{
+			"pos": [27, 0, 45]
+		},
+		{
+			"pos": [27, 0, 49.5]
+		},
+		{
+			"pos": [21.8, 0, 51]
+		},
+		{
+			"pos": [21.5, 0, 56]
+		},
+		{
+			"pos": [22.5, 0, 60.5]
+		},
+		{
+			"pos": [27, 0, 61.6]
+		},
+		{
+			"pos": [34, 0, 60]
+		},
+		{
+			"pos": [50, 0, 60]
+		},
+		{
+			"pos": [58, 0, 60]
+		}
+	]
+}
