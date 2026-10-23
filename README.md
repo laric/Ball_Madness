@@ -27,6 +27,7 @@ godot --path .
 | Zoom    | Mouse wheel     |                  |
 | Restart level | R         | Start            |
 | Continue (next level / retry) | Enter / Space | A |
+| Skip to next level (testing) | Click "Next level" at the top right (debug builds and the editor only) | |
 
 Movement is relative to the camera: "up" always rolls the ball towards the top of the screen, however the camera is turned.
 

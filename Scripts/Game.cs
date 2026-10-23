@@ -53,6 +53,11 @@ public partial class Game : Node3D
 		_messageLabel = GetNode<Label>("Hud/MessageLabel");
 		_dim = GetNode<Control>("Hud/Dim");
 
+		// Testing aid: only in debug builds (the editor and debug exports).
+		var skipButton = GetNode<Button>("Hud/SkipButton");
+		skipButton.Visible = OS.IsDebugBuild();
+		skipButton.Pressed += SkipLevel;
+
 		LoadLevel();
 
 		var spawn = GetNode<Node3D>("Level/Spawn");
@@ -92,6 +97,18 @@ public partial class Game : Node3D
 			_levelName = info.DisplayName;
 		}
 		_levelLabel.Text = $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
+		GetNode<Button>("Hud/SkipButton").Text = Levels.IsLastLevel ? "Back to level 1 ▶" : "Next level ▶";
+	}
+
+	/// <summary>Testing shortcut: jumps straight to the next level from any state.</summary>
+	public void SkipLevel()
+	{
+		if (_leaving)
+			return;
+
+		_leaving = true;
+		Levels.SkipCurrent();
+		GetTree().ReloadCurrentScene();
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
