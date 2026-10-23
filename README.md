@@ -49,6 +49,18 @@ To jump straight to a level: `godot --path . -- --level 5`.
 
 Start high on the blue pad and work your way down: a wide ramp, a narrow ramp with no rails, a zig-zag bridge, then a slalom ramp with posts before the green goal pad. You have 60 seconds. Fall off and you respawn at the last yellow checkpoint, but the clock keeps running while you fall.
 
+### Level 8: Piston Alley
+
+A thin walkway with three pistons that shoot out across it from alternating sides. Wait for a piston to pull back, then go. After that, a narrow ramp with no rails and a zig-zag of beams only 1.4 m wide. 45 seconds.
+
+### Level 9: Sweeper Works
+
+A turntable with a long sweeper bar (follow it round, don't meet it head on), a bridge that slides in and out of a gap, a wiper bar that swings across the next bridge, a steep narrow ramp, and one more sliding bridge before the goal. 45 seconds.
+
+### Level 10: The Gauntlet
+
+The finale: faster pistons on a 2.5 m walkway, a sliding bridge, an arena guarded by two black steelies that chase you and try to knock you off, a fast turntable sweeper, and thin beams to the finish. 48 seconds.
+
 ## Project layout
 
 ```
@@ -61,6 +73,7 @@ Scripts/LevelInfo.cs Per-level settings on the level's root: name, time limit, k
 Scripts/Ball.cs     Camera-relative rolling controls
 Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
+Scripts/Hazards/    Moving obstacles: Mover (pistons, sliding bridges), Spinner (sweeper bars), Chaser (enemy steelies)
 Shaders/            World-space grid for the course, two-tone ball
 ```
 
@@ -76,3 +89,5 @@ godot --headless --path . -- --autopilot             # level 1
 godot --headless --path . -- --level 5 --autopilot   # one level
 godot --headless --path . -- --autopilot --all       # every level in a row
 ```
+
+For levels with timed hazards, a `Route` waypoint can tell the autopilot to wait: give the marker the metadata `wait_area` (a NodePath to an `Area3D` over the danger zone) and `wait_for` (`clear` or `occupied`). The pilot holds at the previous waypoint and sets off the moment the area empties of moving bodies (a piston pulls back) or a moving body arrives in it (a sliding bridge fills the gap). A `speed` metadata value caps the pilot's speed on the way to that waypoint, for thin beams.
