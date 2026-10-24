@@ -29,6 +29,9 @@ public partial class Game : Node3D
 	/// <summary>Anything below this height counts as having fallen off the course.</summary>
 	[Export] public float KillHeight = -12.0f;
 
+	/// <summary>The clock ticks every second once this few are left.</summary>
+	[Export] public float WarningTime = 10.0f;
+
 	public State CurrentState => _state;
 	public float TimeLeft => _timeLeft;
 	public int Falls { get; private set; }
@@ -49,6 +52,7 @@ public partial class Game : Node3D
 	private Node _lastCheckpoint;
 	private float _flashTimer;
 	private bool _leaving;
+	private int _lastCountdownBeep;
 
 	public override void _Ready()
 	{
@@ -140,6 +144,14 @@ public partial class Game : Node3D
 		{
 			ToggleCameraMode();
 		}
+		else if (@event.IsActionPressed("toggle_mute"))
+		{
+			Settings.Muted = !Settings.Muted;
+			Settings.Save();
+			Sfx.ApplySettings();
+			if (_state == State.Playing)
+				Flash(Settings.Muted ? "Sound off" : "Sound on");
+		}
 	}
 
 	/// <summary>Switches between the fixed and follow cameras and remembers the choice.</summary>
@@ -203,12 +215,18 @@ public partial class Game : Node3D
 		{
 			case State.Countdown:
 				int remaining = Mathf.CeilToInt(CountdownTime - _stateTimer);
+				if (remaining != _lastCountdownBeep && remaining > 0)
+				{
+					_lastCountdownBeep = remaining;
+					Sfx.Play("countdown");
+				}
 				_messageLabel.Text = Levels.Testing
 					? $"TEST\n{_levelName}\n\n{remaining}"
 					: $"LEVEL {Levels.CurrentIndex + 1}\n{_levelName}\n\n{remaining}";
 				if (_stateTimer >= CountdownTime)
 				{
 					EnterState(State.Playing);
+					Sfx.Play("go");
 					Flash("GO!");
 				}
 				break;
@@ -231,6 +249,7 @@ public partial class Game : Node3D
 				if (_state == State.Falling && _stateTimer >= RespawnDelay)
 				{
 					_ball.Respawn(_respawnPoint);
+					Sfx.Play("respawn");
 					_cameraRig.ResetFollow();
 					_cameraRig.Following = true;
 					EnterState(State.Playing);
@@ -244,7 +263,11 @@ public partial class Game : Node3D
 
 	private void TickClock(float dt)
 	{
+		float before = _timeLeft;
 		_timeLeft -= dt;
+		// A tick each time the clock passes a whole second near the end, higher for the last three.
+		if (_timeLeft > 0 && Mathf.Ceil(_timeLeft) <= WarningTime && Mathf.Ceil(_timeLeft) < Mathf.Ceil(before))
+			Sfx.Play("timer_warning", 0, _timeLeft < 3 ? 1.35f : 1.0f);
 		if (_timeLeft <= 0)
 		{
 			_timeLeft = 0;
@@ -263,6 +286,7 @@ public partial class Game : Node3D
 		{
 			case State.Falling:
 				Falls++;
+				Sfx.Play("fall");
 				_cameraRig.Following = false;
 				_messageLabel.Text = "Oops!";
 				break;
@@ -285,6 +309,7 @@ public partial class Game : Node3D
 					"Enter to play again  ·  Esc for menu";
 				break;
 			case State.TimeUp:
+				Sfx.Play("time_up");
 				_messageLabel.Text = "TIME'S UP\n\nEnter or R to try again  ·  Esc for menu";
 				break;
 		}
@@ -297,6 +322,7 @@ public partial class Game : Node3D
 
 		_lastCheckpoint = checkpoint;
 		_respawnPoint = checkpoint.GlobalPosition + Vector3.Up * 1.0f;
+		Sfx.Play("checkpoint");
 		Flash("Checkpoint!");
 	}
 
@@ -312,6 +338,7 @@ public partial class Game : Node3D
 		if (body != _ball || _state != State.Playing)
 			return;
 
+		Sfx.Play("goal");
 		if (Levels.Testing)
 		{
 			EnterState(State.Finished);

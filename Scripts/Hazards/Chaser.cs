@@ -8,7 +8,7 @@ namespace BallMadness;
 /// bump it off the course, and rolls back home otherwise. If it falls off it
 /// reappears at home.
 /// </summary>
-public partial class Chaser : RigidBody3D
+public partial class Chaser : RigidBody3D, IImpactSound
 {
 	[Export] public float ChaseRadius = 10.0f;
 	[Export] public float PushForce = 6.0f;
@@ -20,6 +20,9 @@ public partial class Chaser : RigidBody3D
 	private Game _game;
 	private Node3D _ball;
 	private Vector3 _home;
+	private bool _chasing;
+
+	public string ImpactSound => "chaser_hit";
 
 	public override void _Ready()
 	{
@@ -41,10 +44,12 @@ public partial class Chaser : RigidBody3D
 		if (_ball == null || _game.CurrentState != Game.State.Playing)
 			return;
 
-		Vector3 target = _home;
 		Vector3 ballPos = _ball.GlobalPosition;
-		if (Flat(ballPos - _home).Length() < ChaseRadius && Mathf.Abs(ballPos.Y - _home.Y) < 3.0f)
-			target = ballPos;
+		bool chasing = Flat(ballPos - _home).Length() < ChaseRadius && Mathf.Abs(ballPos.Y - _home.Y) < 3.0f;
+		if (chasing && !_chasing)
+			Sfx.PlayAt("chaser_alert", GlobalPosition);
+		_chasing = chasing;
+		Vector3 target = chasing ? ballPos : _home;
 
 		Vector3 toTarget = Flat(target - GlobalPosition);
 		if (toTarget.Length() < 0.3f)

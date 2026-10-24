@@ -22,6 +22,7 @@ public static class Settings
 	public const string Path = "user://settings.cfg";
 
 	private const string CameraSection = "camera";
+	private const string AudioSection = "audio";
 
 	private static ConfigFile _file;
 
@@ -41,6 +42,40 @@ public static class Settings
 			? mode
 			: CameraModes.Fixed;
 		set => File.SetValue(CameraSection, "mode", value.ToString());
+	}
+
+	/// <summary>Overall volume, 0 to 1. Apply changes with <see cref="Sfx.ApplySettings"/>.</summary>
+	public static float MasterVolume
+	{
+		get => Volume("master", 1.0f);
+		set => File.SetValue(AudioSection, "master", Mathf.Clamp(value, 0, 1));
+	}
+
+	/// <summary>Volume of the gameplay sounds, 0 to 1.</summary>
+	public static float EffectsVolume
+	{
+		get => Volume("effects", 1.0f);
+		set => File.SetValue(AudioSection, "effects", Mathf.Clamp(value, 0, 1));
+	}
+
+	/// <summary>Volume of the menu clicks, 0 to 1.</summary>
+	public static float MenuVolume
+	{
+		get => Volume("menu", 0.7f);
+		set => File.SetValue(AudioSection, "menu", Mathf.Clamp(value, 0, 1));
+	}
+
+	/// <summary>Silences everything without losing the volume levels.</summary>
+	public static bool Muted
+	{
+		get => File.GetValue(AudioSection, "muted", false).VariantType == Variant.Type.Bool && (bool)File.GetValue(AudioSection, "muted", false);
+		set => File.SetValue(AudioSection, "muted", value);
+	}
+
+	private static float Volume(string key, float fallback)
+	{
+		Variant value = File.GetValue(AudioSection, key, fallback);
+		return value.VariantType is Variant.Type.Float or Variant.Type.Int ? Mathf.Clamp((float)value, 0, 1) : fallback;
 	}
 
 	/// <summary>(Re)reads the settings file. A missing or broken file means all defaults.</summary>
