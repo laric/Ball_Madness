@@ -1,0 +1,22 @@
+{
+	"format": 1,
+	"id": "w05-ice",
+	"name": "World 5: Frozen Peaks",
+	"author": "Ball Madness",
+	"version": "1",
+	"levels": [
+		"001.json",
+		"002.json",
+		"003.json",
+		"004.json",
+		"005.json",
+		"006.json",
+		"007.json",
+		"008.json",
+		"009.json",
+		"010.json"
+	],
+	"theme": {
+		"base": "ice"
+	}
+}

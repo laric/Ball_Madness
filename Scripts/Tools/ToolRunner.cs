@@ -22,6 +22,9 @@ namespace BallMadness.Tools;
 /// --regenerate ID INDEX SEED
 ///     Replaces level INDEX (1-based) of the pack with one from another seed,
 ///     keeping its name and difficulty.
+/// --rename-levels ID [SEED]
+///     Gives every level of the pack a new name in the style of its world
+///     (Meadow levels get names like "Clover Glide"); the courses don't change.
 /// --set-time ID INDEX SECONDS
 ///     Sets the level's time limit from the autopilot's time on it.
 /// --validate [ID ...]
@@ -66,6 +69,9 @@ public partial class ToolRunner : Node
 			case "--regenerate":
 				Regenerate(args[1], Int(args[2]), Int(args[3]));
 				return 0;
+			case "--rename-levels":
+				RenameLevels(args[1], args.Length > 2 ? Int(args[2]) : 1);
+				return 0;
 			case "--set-time":
 				SetTime(args[1], Int(args[2]), Float(args[3]));
 				return 0;
@@ -86,7 +92,7 @@ public partial class ToolRunner : Node
 		string folder = $"{Packs.BuiltInRoot}/{id}";
 		DirAccess.MakeDirRecursiveAbsolute($"{folder}/levels");
 
-		var names = new LevelNames(seed);
+		var names = new LevelNames(seed, theme);
 		var files = new List<string>();
 		for (int i = 0; i < count; i++)
 		{
@@ -142,6 +148,19 @@ public partial class ToolRunner : Node
 		var level = LevelGenerator.Generate(seed, old.Difficulty ?? 0, old.Name, LevelGenerator.FeatureOf(old));
 		Write(path, Packs.Serialize(level));
 		GD.Print($"[tools] {path}: regenerated from seed {seed}");
+	}
+
+	private static void RenameLevels(string id, int seed)
+	{
+		var pack = Packs.Find(id) ?? throw new InvalidOperationException($"No pack \"{id}\"");
+		var names = new LevelNames(seed, pack.Info.Theme?.Base);
+		foreach (string path in pack.LevelPaths)
+		{
+			var level = Packs.LoadLevel(path);
+			level.Name = names.Next();
+			Write(path, Packs.Serialize(level));
+			GD.Print($"[tools] {path}: {level.Name}");
+		}
 	}
 
 	private static void SetTime(string id, int index, float seconds)
@@ -209,7 +228,11 @@ public partial class ToolRunner : Node
 	private static float Float(string s) => float.Parse(s, CultureInfo.InvariantCulture);
 }
 
-/// <summary>Made-up level names like "Copper Cascade", never the same one twice in a pack.</summary>
+/// <summary>
+/// Made-up level names like "Copper Cascade", never the same one twice in a
+/// pack. A world theme gives the first word its flavour ("Clover Glide" in
+/// the Meadow, "Magma Chute" in Lava).
+/// </summary>
 public class LevelNames
 {
 	private static readonly string[] First =
@@ -218,6 +241,21 @@ public class LevelNames
 		"Granite", "Hollow", "Iron", "Jade", "Lazy", "Lunar", "Marble", "Misty", "Neon", "Onyx",
 		"Polar", "Quartz", "Rusty", "Silent", "Silver", "Slate", "Steel", "Sunny", "Tidal", "Velvet",
 		"Violet", "Wobbly", "Zigzag", "Brass", "Cloud", "Dusky", "Gilded", "Hazel", "Indigo", "Paper",
+	};
+
+	/// <summary>First words for each built-in world, by theme id.</summary>
+	private static readonly Dictionary<string, string[]> ThemeFirst = new()
+	{
+		["meadow"] = new[] { "Clover", "Daisy", "Buttercup", "Honey", "Bramble", "Willow", "Dandelion", "Bluebell", "Hedgerow", "Primrose", "Thistle", "Meadow" },
+		["desert"] = new[] { "Dune", "Mirage", "Cactus", "Sandstone", "Sunbaked", "Oasis", "Saffron", "Dusty", "Scarab", "Sirocco", "Golden", "Sandy" },
+		["forest"] = new[] { "Mossy", "Oak", "Fern", "Pine", "Acorn", "Toadstool", "Bark", "Owl", "Thicket", "Cedar", "Badger", "Woodland" },
+		["ocean"] = new[] { "Coral", "Tidal", "Driftwood", "Lagoon", "Seashell", "Harbour", "Kelp", "Breaker", "Pebble", "Gull", "Anchor", "Salty" },
+		["ice"] = new[] { "Frost", "Glacier", "Polar", "Snowy", "Icicle", "Blizzard", "Frozen", "Arctic", "Sleet", "Winter", "Tundra", "Avalanche" },
+		["neon-city"] = new[] { "Neon", "Laser", "Pixel", "Chrome", "Electric", "Disco", "Arcade", "Midnight", "Turbo", "Synth", "Glow", "Static" },
+		["clockwork"] = new[] { "Brass", "Cog", "Gear", "Copper", "Rusty", "Pendulum", "Spring", "Ticking", "Iron", "Piston", "Sprocket", "Steam" },
+		["crystal-cave"] = new[] { "Crystal", "Amethyst", "Quartz", "Geode", "Glimmer", "Echo", "Sapphire", "Opal", "Prism", "Shimmer", "Gem", "Deep" },
+		["lava"] = new[] { "Ember", "Magma", "Cinder", "Molten", "Inferno", "Obsidian", "Ash", "Blaze", "Smoulder", "Basalt", "Fire", "Lava" },
+		["space"] = new[] { "Comet", "Lunar", "Nebula", "Orbit", "Rocket", "Stellar", "Cosmic", "Meteor", "Galaxy", "Quasar", "Solar", "Zero-G" },
 	};
 
 	private static readonly string[] Second =
@@ -229,16 +267,23 @@ public class LevelNames
 	};
 
 	private readonly Random _rng;
+	private readonly string[] _first;
 	private readonly HashSet<string> _used = new();
 
-	public LevelNames(int seed) => _rng = new Random(seed);
+	public LevelNames(int seed, string theme = null)
+	{
+		_rng = new Random(seed);
+		_first = theme != null && ThemeFirst.TryGetValue(theme, out var words) ? words : First;
+	}
 
 	public string Next()
 	{
 		for (int tries = 0; tries < 1000; tries++)
 		{
-			string name = $"{First[_rng.Next(First.Length)]} {Second[_rng.Next(Second.Length)]}";
-			if (_used.Add(name))
+			string first = _first[_rng.Next(_first.Length)];
+			string second = Second[_rng.Next(Second.Length)];
+			string name = $"{first} {second}";
+			if (first != second && _used.Add(name))
 				return name;
 		}
 		return $"Level {_used.Count + 1}";

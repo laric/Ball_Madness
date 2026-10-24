@@ -42,7 +42,7 @@ public enum Section
 public static class LevelGenerator
 {
 	/// <summary>Bumped when a change makes the same seed give a different level.</summary>
-	public const int Version = 2;
+	public const int Version = 3;
 
 	/// <summary>Time limit written before the autopilot has measured the level.</summary>
 	public const float UnmeasuredTimeLimit = 300;
@@ -92,7 +92,7 @@ public static class LevelGenerator
 	/// </summary>
 	public static float TimeLimitFor(float autopilotSeconds, float difficulty)
 	{
-		float slack = Mathf.Lerp(2.6f, 1.3f, Mathf.Clamp(difficulty, 0, 1));
+		float slack = Mathf.Lerp(2.2f, 1.25f, Mathf.Clamp(difficulty, 0, 1));
 		return Mathf.Ceil(autopilotSeconds * slack / 5) * 5;
 	}
 
@@ -153,7 +153,7 @@ public static class LevelGenerator
 			if (!available.Contains(featured))
 				available.Add(featured);
 		}
-		int count = Mathf.RoundToInt(Mathf.Lerp(3, 7, d)) + c.Range(0, 1);
+		int count = Mathf.RoundToInt(Mathf.Lerp(5, 10, d)) + c.Range(0, 2);
 
 		var sections = new List<Section>();
 		for (int i = 0; i < count; i++)
@@ -225,11 +225,11 @@ public static class LevelGenerator
 		{
 			// Favour the newest section a little, so each level shows off what it introduces.
 			Section s = c.Chance(0.25f) ? newest : available[c.Range(0, available.Count - 1)];
-			// No hazard twice in a row, nothing twice in a row, and nothing
-			// more than twice in a level.
+			// No hazard twice in a row, nothing twice in a row, nothing more
+			// than three times in a level, and few plain runs.
 			if (sofar.Count > 0 && (s == sofar[^1] || (IsHazard(s) && IsHazard(sofar[^1]))))
 				continue;
-			if (sofar.Count(x => x == s) >= 2)
+			if (sofar.Count(x => x == s) >= 3 || (s == Section.Run && sofar.Contains(Section.Run)))
 				continue;
 			return s;
 		}
@@ -238,7 +238,7 @@ public static class LevelGenerator
 
 	/// <summary>Course width for difficulty <paramref name="d"/>: wide and railed at first, narrow later.</summary>
 	private static float Width(CourseWriter c, float d) =>
-		Mathf.Snapped(Mathf.Lerp(6.5f, 2.6f, d) + c.Range(-0.4f, 0.4f), 0.1f);
+		Mathf.Snapped(Mathf.Lerp(5.5f, 2.2f, d) + c.Range(-0.4f, 0.4f), 0.1f);
 
 	private static void Build(CourseWriter c, Section section, float d)
 	{
@@ -270,7 +270,7 @@ public static class LevelGenerator
 		float w = Width(c, d);
 		float len = Mathf.Round(c.Range(6, 12));
 		c.Slab("Run", 0, len, 0, w, "grid");
-		if (d < 0.25f)
+		if (d < 0.15f)
 			c.Rails(0, len, 0, w, "rail");
 		c.Waypoint(len);
 		c.Advance(len);
@@ -283,7 +283,7 @@ public static class LevelGenerator
 		float slope = Mathf.DegToRad(Mathf.Lerp(12, 26, d) + c.Range(-2, 2));
 		float drop = Mathf.Snapped(len * Mathf.Tan(slope), 0.5f);
 		c.Slab("Ramp", 0, len, drop, w, "ramp");
-		if (d < 0.25f)
+		if (d < 0.15f)
 			c.Rails(0, len, drop, w, "rail");
 		c.Waypoint(len, 0, -drop, speed: w < 3 ? 5 : null);
 		c.Advance(len, drop);
@@ -303,28 +303,41 @@ public static class LevelGenerator
 		c.Advance(n * tread, n - 1);
 	}
 
-	/// <summary>A wide ramp with posts to weave between.</summary>
+	/// <summary>
+	/// A wide ramp crossed by rows of posts, each row with one gap to roll
+	/// through; the gaps switch sides, so there's no straight line down it.
+	/// </summary>
 	private static void Slalom(CourseWriter c, float d)
 	{
-		const float w = 8;
-		int posts = c.Range(3, 5);
-		float gap = Mathf.Lerp(5, 3.5f, d);
-		float len = posts * gap + 3;
+		const float w = 8, radius = 0.45f, spacing = 1.5f;
+		int rows = c.Range(3, Mathf.RoundToInt(Mathf.Lerp(4, 6, d)));
+		float rowGap = Mathf.Lerp(5.5f, 4.5f, d);
+		float len = rows * rowGap + 3;
 		float slope = Mathf.Tan(Mathf.DegToRad(Mathf.Lerp(8, 14, d)));
 		float drop = Mathf.Snapped(len * slope, 0.5f);
 		c.Slab("Slalom", 0, len, drop, w, "ramp");
+		c.Rails(0, len, drop, w, "rail");
+		// The opening between two posts, edge to edge.
+		float opening = Mathf.Snapped(Mathf.Lerp(3.0f, 2.0f, d), 0.1f);
+		float shift = Mathf.Lerp(1.6f, 2.2f, d);
 		int side = c.Sign();
-		float offset = Mathf.Lerp(1.6f, 2.2f, d);
-		for (int i = 0; i < posts; i++)
+		for (int i = 0; i < rows; i++)
 		{
-			float u = 2 + i * gap + gap / 2;
+			float u = 2 + i * rowGap + rowGap / 2;
 			float floor = -u * drop / len;
-			c.Post(u, side * offset, floor, 0.6f, 3.5f, "post");
-			// Pass on the other side of each post.
-			c.Waypoint(u, -side * 2.6f, floor, speed: 5);
+			float gapV = side * shift + c.Range(-0.3f, 0.3f);
+			// Posts from the gap outwards to both edges.
+			for (float v = gapV + opening / 2 + radius; v < w / 2; v += spacing)
+				c.Post(u, v, floor, radius, 2.5f, "post");
+			for (float v = gapV - opening / 2 - radius; v > -w / 2; v -= spacing)
+				c.Post(u, v, floor, radius, 2.5f, "post");
+			// Line up with the gap first, then roll straight through it.
+			float before = u - 1.4f, after = u + 0.9f;
+			c.Waypoint(before, gapV, -before * drop / len, speed: 3.5f);
+			c.Waypoint(after, gapV, -after * drop / len, speed: 3.5f);
 			side = -side;
 		}
-		c.Waypoint(len, 0, -drop);
+		c.Waypoint(len, 0, -drop, speed: 5);
 		c.Advance(len, drop);
 	}
 
@@ -333,7 +346,7 @@ public static class LevelGenerator
 	{
 		float beam = Mathf.Snapped(Mathf.Lerp(3, 1.6f, d), 0.1f);
 		float speed = beam < 2 ? 2.5f : beam < 2.4f ? 3 : 4;
-		int legs = c.Range(1, 2);
+		int legs = c.Range(1, d < 0.5f ? 2 : 3);
 		float v = 0;
 		float u = 0;
 		int side = c.Sign();
@@ -559,7 +572,8 @@ public static class LevelGenerator
 		if (d < 0.4f)
 			c.Rails(0, len, 0, w, "rail");
 		int side = c.Sign();
-		float offset = w / 2 - 2.6f;
+		// Close enough to the middle that rolling straight down hits every one.
+		float offset = Mathf.Lerp(1.0f, 0.4f, d);
 		for (int i = 0; i < n; i++)
 		{
 			float u = 1.5f + i * gap + gap / 2;
@@ -588,7 +602,7 @@ public static class LevelGenerator
 		for (int i = 0; i < n; i++)
 		{
 			float u = 1.5f + i * gap + gap / 2;
-			var hole = c.AddHazard("Hole", "hole", u, side * Mathf.Lerp(1.6f, 0.5f, d), 0);
+			var hole = c.AddHazard("Hole", "hole", u, side * Mathf.Lerp(1.0f, 0.3f, d), 0);
 			hole.Rot = null;
 			hole.Radius = r;
 			hole.Parts = null;

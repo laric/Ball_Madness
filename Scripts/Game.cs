@@ -239,7 +239,7 @@ public partial class Game : Node3D
 				}
 				_messageLabel.Text = Levels.Testing
 					? $"TEST\n{_levelName}\n\n{remaining}"
-					: $"LEVEL {Levels.CurrentIndex + 1}\n{_levelName}\n\n{remaining}";
+					: $"{LevelTitle()}\n{_levelName}\n\n{remaining}";
 				if (_stateTimer >= CountdownTime)
 				{
 					EnterState(State.Playing);
@@ -315,7 +315,7 @@ public partial class Game : Node3D
 				break;
 			case State.Finished:
 				_messageLabel.Text =
-					$"LEVEL {Levels.CurrentIndex + 1} COMPLETE!\n" +
+					$"{LevelTitle()} COMPLETE!\n" +
 					$"{TimeLimit - _timeLeft:0.0}s  ·  {_timeLeft:0.0}s to spare  ·  {FallsText(Falls)}\n\n" +
 					$"Enter for level {Levels.CurrentIndex + 2}  ·  R to replay  ·  Esc for menu";
 				break;
@@ -427,6 +427,13 @@ public partial class Game : Node3D
 		{
 			EnterState(State.Finished);
 		}
+	}
+
+	/// <summary>"WORLD 3-4" in the campaign, "LEVEL 4" in any other pack.</summary>
+	private static string LevelTitle()
+	{
+		int world = Campaign.IndexOf(Levels.CurrentPack);
+		return world >= 0 ? $"WORLD {world + 1}-{Levels.CurrentIndex + 1}" : $"LEVEL {Levels.CurrentIndex + 1}";
 	}
 
 	private static string FallsText(int falls) => falls == 1 ? "1 fall" : $"{falls} falls";

@@ -1,0 +1,573 @@
+{
+	"format": 1,
+	"name": "Tidal Mesa",
+	"difficulty": 0.36,
+	"generator": "v3 seed 104006",
+	"timeLimit": 80,
+	"killHeight": -14,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Landing",
+			"shape": "box",
+			"pos": [0, -0.5, 19],
+			"size": [6, 1, 4],
+			"material": "grid"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [0, -0.5, 24],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp",
+			"shape": "box",
+			"pos": [0, -1.9789, 31.8563],
+			"rot": [16.6992, 0, 0],
+			"size": [4, 1, 10.4403],
+			"material": "ramp"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -3.5, 41],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Beam",
+			"shape": "box",
+			"pos": [7.5, -3.5, 41],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 7],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [12.25, -3.5, 41],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam2",
+			"shape": "box",
+			"pos": [12.25, -3.5, 39],
+			"rot": [0, 90, 0],
+			"size": [1.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner3",
+			"shape": "box",
+			"pos": [12.25, -3.5, 37],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam3",
+			"shape": "box",
+			"pos": [15.5, -3.5, 37],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 4],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner4",
+			"shape": "box",
+			"pos": [18.75, -3.5, 37],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam4",
+			"shape": "box",
+			"pos": [18.75, -3.5, 39],
+			"rot": [0, 90, 0],
+			"size": [1.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner5",
+			"shape": "box",
+			"pos": [18.75, -3.5, 41],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam5",
+			"shape": "box",
+			"pos": [21.5, -3.5, 41],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 3],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner6",
+			"shape": "box",
+			"pos": [27, -3.5, 41],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [27, -3.5, 58.5],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp2",
+			"shape": "box",
+			"pos": [27, -4.7318, 65.8662],
+			"rot": [15.5241, 0, 0],
+			"size": [4.3, 1, 9.3408],
+			"material": "ramp"
+		},
+		{
+			"name": "Corner7",
+			"shape": "box",
+			"pos": [27, -6, 74.5],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Landing2",
+			"shape": "box",
+			"pos": [45, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [6, 1, 4],
+			"material": "grid"
+		},
+		{
+			"name": "Pad3",
+			"shape": "box",
+			"pos": [50, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Beam6",
+			"shape": "box",
+			"pos": [57, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 8],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner8",
+			"shape": "box",
+			"pos": [62.25, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam7",
+			"shape": "box",
+			"pos": [62.25, -6, 76],
+			"rot": [0, 90, 0],
+			"size": [0.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner9",
+			"shape": "box",
+			"pos": [62.25, -6, 77.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam8",
+			"shape": "box",
+			"pos": [65.5, -6, 77.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 4],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner10",
+			"shape": "box",
+			"pos": [68.75, -6, 77.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam9",
+			"shape": "box",
+			"pos": [68.75, -6, 76],
+			"rot": [0, 90, 0],
+			"size": [0.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner11",
+			"shape": "box",
+			"pos": [68.75, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 2.5],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam10",
+			"shape": "box",
+			"pos": [71.5, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [2.5, 1, 3],
+			"material": "bridge"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [77, -6, 74.5],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Plank",
+			"type": "mover",
+			"pos": [-1.18, -0.5, 9.5],
+			"offset": [2.36, 0, 0],
+			"period": 3.2,
+			"phase": 0,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank2",
+			"type": "mover",
+			"pos": [-1.18, -0.5, 12.5],
+			"offset": [2.36, 0, 0],
+			"period": 3.2,
+			"phase": 0.33,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank3",
+			"type": "mover",
+			"pos": [-1.18, -0.5, 15.5],
+			"offset": [2.36, 0, 0],
+			"period": 3.2,
+			"phase": 0.67,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Belt",
+			"type": "conveyor",
+			"pos": [27, -3.5, 46.75],
+			"rot": [0, -90, 0],
+			"speed": 2.1,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3.5, 1, 4.4]
+				}
+			]
+		},
+		{
+			"name": "Belt2",
+			"type": "conveyor",
+			"pos": [27, -3.5, 50.25],
+			"rot": [0, 90, 0],
+			"speed": 2.1,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3.5, 1, 4.4]
+				}
+			]
+		},
+		{
+			"name": "Belt3",
+			"type": "conveyor",
+			"pos": [27, -3.5, 53.75],
+			"rot": [0, -90, 0],
+			"speed": 2.1,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [3.5, 1, 4.4]
+				}
+			]
+		},
+		{
+			"name": "Plank4",
+			"type": "mover",
+			"pos": [32.5, -6, 75.68],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -2.36],
+			"period": 3.2,
+			"phase": 0,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank5",
+			"type": "mover",
+			"pos": [35.5, -6, 75.68],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -2.36],
+			"period": 3.2,
+			"phase": 0.25,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank6",
+			"type": "mover",
+			"pos": [38.5, -6, 75.68],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -2.36],
+			"period": 3.2,
+			"phase": 0.5,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank7",
+			"type": "mover",
+			"pos": [41.5, -6, 75.68],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -2.36],
+			"period": 3.2,
+			"phase": 0.75,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [27, -3, 41],
+			"rot": [0, 90, 0],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [27, -5.5, 74.5],
+			"size": [8, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [77, -5.5, 74.5]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [0, 0.5, 18],
+			"speed": 4
+		},
+		{
+			"pos": [0, 0.5, 20]
+		},
+		{
+			"pos": [0, 0.5, 24]
+		},
+		{
+			"pos": [0, -2.5, 37]
+		},
+		{
+			"pos": [0, -2.5, 41]
+		},
+		{
+			"pos": [12.25, -2.5, 41],
+			"speed": 4
+		},
+		{
+			"pos": [12.25, -2.5, 37],
+			"speed": 4
+		},
+		{
+			"pos": [18.75, -2.5, 37],
+			"speed": 4
+		},
+		{
+			"pos": [18.75, -2.5, 41],
+			"speed": 4
+		},
+		{
+			"pos": [23, -2.5, 41],
+			"speed": 4
+		},
+		{
+			"pos": [27, -2.5, 41]
+		},
+		{
+			"pos": [27, -2.5, 48.5],
+			"speed": 4.5
+		},
+		{
+			"pos": [27, -2.5, 52],
+			"speed": 4.5
+		},
+		{
+			"pos": [27, -2.5, 55.5],
+			"speed": 4.5
+		},
+		{
+			"pos": [27, -2.5, 58.5]
+		},
+		{
+			"pos": [27, -5, 70.5]
+		},
+		{
+			"pos": [27, -5, 74.5]
+		},
+		{
+			"pos": [44, -5, 74.5],
+			"speed": 4
+		},
+		{
+			"pos": [46, -5, 74.5]
+		},
+		{
+			"pos": [50, -5, 74.5]
+		},
+		{
+			"pos": [62.25, -5, 74.5],
+			"speed": 4
+		},
+		{
+			"pos": [62.25, -5, 77.5],
+			"speed": 4
+		},
+		{
+			"pos": [68.75, -5, 77.5],
+			"speed": 4
+		},
+		{
+			"pos": [68.75, -5, 74.5],
+			"speed": 4
+		},
+		{
+			"pos": [73, -5, 74.5],
+			"speed": 4
+		},
+		{
+			"pos": [77, -5, 74.5]
+		}
+	]
+}
