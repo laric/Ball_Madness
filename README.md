@@ -194,7 +194,7 @@ GODOT=godot-mono tools/build-pack.sh my-pack 20 1 0 1 "My pack"   # ID COUNT SEE
 GODOT=godot-mono tools/build-pack.sh ice-world 10 1 0.3 0.7 "Ice" Ice ice   # every level has an Ice section, in the Ice world
 ```
 
-That writes `packs/my-pack/` with 20 levels whose difficulty rises from 0 to 1, then plays each one with the autopilot. A level the autopilot can't finish without falling is generated again from another seed, and every level's time limit is set from the autopilot's time on it: about 2.6 times as long on the easiest levels, down to 1.3 times on the hardest. Level names follow the pack's world (Meadow levels get names like "Clover Glide"); `--rename-levels ID [SEED]` renames a pack's levels without changing them. The lower-level commands it uses are in `Scripts/Tools/ToolRunner.cs`.
+That writes `packs/my-pack/` with 20 levels whose difficulty rises from 0 to 1, then plays each one with the autopilot. A level the autopilot can't finish without falling is generated again from another seed, and every level's time limit is set from the autopilot's time on it: about 2.2 times as long on the easiest levels, down to 1.25 times on the hardest. Level names follow the pack's world (Meadow levels get names like "Clover Glide"); `--rename-levels ID [SEED]` renames a pack's levels without changing them. The lower-level commands it uses are in `Scripts/Tools/ToolRunner.cs`.
 
 ## Linux release builds (AppImage)
 
