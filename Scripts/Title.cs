@@ -103,15 +103,29 @@ public partial class Title : Node3D
 		if (Levels.CurrentPack.Theme.Id != Themes.ClassicId || PlayablePacks().Count > 1)
 			AddWorldLine(column, Levels.CurrentPack);
 
-		string pack = SaveGame.CurrentPack;
-		int next = ContinueIndex();
-		string continueText = SaveGame.FurthestCompleted(pack) < 0
-			? "Start"
-			: $"Continue  ·  level {next + 1}";
-		MenuUi.AddButton(column, continueText, () => StartLevel(next));
-		MenuUi.AddButton(column, "Level select", ShowLevelSelect);
+		if (Campaign.IsWorld(Levels.CurrentPack))
+		{
+			// The campaign carries on from the first world not yet finished.
+			var world = Campaign.ContinueWorld();
+			int level = ContinueIndex(world);
+			string text = Campaign.IndexOf(world) == 0 && SaveGame.FurthestCompleted(world.Id) < 0
+				? "Start"
+				: $"Continue  ·  world {Campaign.IndexOf(world) + 1}-{level + 1}";
+			MenuUi.AddButton(column, text, () => StartLevel(world, level));
+			MenuUi.AddButton(column, "Level select", ShowWorldSelect);
+		}
+		else
+		{
+			var pack = Levels.CurrentPack;
+			int next = ContinueIndex(pack);
+			string continueText = SaveGame.FurthestCompleted(pack.Id) < 0
+				? "Start"
+				: $"Continue  ·  level {next + 1}";
+			MenuUi.AddButton(column, continueText, () => StartLevel(pack, next));
+			MenuUi.AddButton(column, "Level select", ShowLevelSelect);
+		}
 		if (PlayablePacks().Count > 1)
-			MenuUi.AddButton(column, $"Pack: {Levels.CurrentPack.Name}", ShowPackSelect);
+			MenuUi.AddButton(column, Campaign.IsWorld(Levels.CurrentPack) ? "Pack: Campaign" : $"Pack: {Levels.CurrentPack.Name}", ShowPackSelect);
 		MenuUi.AddButton(column, "Level editor", () => ShowPackManager(null));
 		MenuUi.AddButton(column, "Settings", ShowSettings);
 		MenuUi.AddButton(column, "Quit", () => GetTree().Quit());
@@ -125,18 +139,81 @@ public partial class Title : Node3D
 		line.AddThemeColorOverride("font_color", MenuUi.Accent.Lerp(Colors.White, 0.3f));
 	}
 
-	/// <summary>The level after the last one completed (the last level once all are done).</summary>
-	public static int ContinueIndex() =>
-		Mathf.Clamp(SaveGame.FurthestCompleted(SaveGame.CurrentPack) + 1, 0, Mathf.Max(Levels.Count - 1, 0));
+	/// <summary>The level after the last one completed in the pack (its last level once all are done).</summary>
+	public static int ContinueIndex(Pack pack) =>
+		Mathf.Clamp(SaveGame.FurthestCompleted(pack.Id) + 1, 0, Mathf.Max(pack.LevelPaths.Count - 1, 0));
 
 	public void ShowLevelSelect()
 	{
-		var select = new LevelSelect { LevelChosen = StartLevel, Closed = BackToMainMenu };
+		var pack = Levels.CurrentPack;
+		var select = new LevelSelect { LevelChosen = i => StartLevel(pack, i), Closed = BackToMainMenu };
 		OpenSubmenu(select);
 	}
 
-	/// <summary>Packs with at least one level: the built-in ones first, then the player's.</summary>
-	private static List<Pack> PlayablePacks() => Packs.All.Where(p => p.LevelPaths.Count > 0).ToList();
+	/// <summary>The campaign's worlds, each in its own colours; locked worlds are greyed out.</summary>
+	public void ShowWorldSelect()
+	{
+		var page = new Control();
+		page.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+		var column = MenuUi.CenteredColumn(page, "CHOOSE A WORLD", 900);
+		var grid = new GridContainer { Columns = 2 };
+		grid.AddThemeConstantOverride("h_separation", 14);
+		grid.AddThemeConstantOverride("v_separation", 10);
+		column.AddChild(grid);
+		var focus = Campaign.ContinueWorld();
+		foreach (var world in Campaign.Worlds)
+		{
+			var pack = world;
+			bool unlocked = Campaign.IsUnlocked(pack);
+			int done = SaveGame.FurthestCompleted(pack.Id) + 1;
+			string status = unlocked ? $"{done}/{pack.LevelPaths.Count} completed" : "🔒 finish the world before";
+			var button = MenuUi.AddButton(grid, $"{pack.Name}\n{status}", () => ShowWorldLevels(pack));
+			button.Disabled = !unlocked;
+			button.Alignment = HorizontalAlignment.Left;
+			button.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+			button.AddThemeFontSizeOverride("font_size", 20);
+			button.Theme = MenuUi.ThemeFor(pack.Theme);
+			if (pack.Id == focus?.Id)
+				button.CallDeferred(Control.MethodName.GrabFocus);
+		}
+		MenuUi.AddButton(column, "Back", BackToMainMenu);
+		OpenSubmenu(page);
+		_packPage = page;
+	}
+
+	/// <summary>One world's levels, shown in that world's colours.</summary>
+	private void ShowWorldLevels(Pack world)
+	{
+		var previous = Levels.CurrentPack;
+		Levels.SelectPack(world.Id);
+		MenuUi.Use(world.Theme);
+		_ui.Theme = MenuUi.Theme;
+		var select = new LevelSelect
+		{
+			LevelChosen = i => StartLevel(world, i),
+			// Back to the title, redressed in this world if it changed.
+			Closed = () =>
+			{
+				if (world.Id != previous.Id)
+					GetTree().ReloadCurrentScene();
+				else
+					BackToMainMenu();
+			},
+		};
+		OpenSubmenu(select);
+	}
+
+	/// <summary>
+	/// What the pack button offers: the campaign once (as its first world),
+	/// then every other pack with at least one level.
+	/// </summary>
+	private static List<Pack> PlayablePacks()
+	{
+		var packs = Packs.All.Where(p => p.LevelPaths.Count > 0 && !Campaign.IsWorld(p)).ToList();
+		if (Campaign.Exists)
+			packs.Insert(0, Campaign.Worlds[0]);
+		return packs;
+	}
 
 	public void ShowPackSelect()
 	{
@@ -145,9 +222,14 @@ public partial class Title : Node3D
 		var column = MenuUi.CenteredColumn(page, "PLAY WHICH PACK?", 620);
 		foreach (var pack in PlayablePacks())
 		{
-			string id = pack.Id;
-			int done = SaveGame.FurthestCompleted(id) + 1;
-			string count = pack.LevelPaths.Count == 1 ? "1 level" : $"{pack.LevelPaths.Count} levels";
+			bool campaign = Campaign.IsWorld(pack);
+			// The campaign opens on the world to carry on in.
+			string id = campaign ? Campaign.ContinueWorld().Id : pack.Id;
+			int done = campaign
+				? Campaign.Worlds.Sum(w => SaveGame.FurthestCompleted(w.Id) + 1)
+				: SaveGame.FurthestCompleted(id) + 1;
+			int total = campaign ? Campaign.LevelCount : pack.LevelPaths.Count;
+			string count = total == 1 ? "1 level" : $"{total} levels";
 			var button = MenuUi.AddButton(column, $"{pack.Name}\n{count}  ·  {done} completed", () =>
 			{
 				Levels.SelectPack(id);
@@ -156,9 +238,11 @@ public partial class Title : Node3D
 			button.AddThemeFontSizeOverride("font_size", 22);
 			// Each pack's button in its own world's colours.
 			button.Theme = MenuUi.ThemeFor(pack.Theme);
-			if (pack.Theme.Id != Themes.ClassicId)
+			if (campaign)
+				button.Text = $"Campaign  ·  {Campaign.Worlds.Count} worlds\n{count}  ·  {done} completed";
+			else if (pack.Theme.Id != Themes.ClassicId)
 				button.Text = $"{pack.Name}  ·  {pack.Theme.Name}\n{count}  ·  {done} completed";
-			if (pack == Levels.CurrentPack)
+			if (pack.Id == Levels.CurrentPack.Id || (campaign && Campaign.IsWorld(Levels.CurrentPack)))
 				button.CallDeferred(Control.MethodName.GrabFocus);
 		}
 		MenuUi.AddButton(column, "Back", BackToMainMenu);
@@ -202,8 +286,10 @@ public partial class Title : Node3D
 		ShowMainMenu();
 	}
 
-	private void StartLevel(int index)
+	private void StartLevel(Pack pack, int index)
 	{
+		if (pack.Id != Levels.CurrentPack.Id)
+			Levels.SelectPack(pack.Id);
 		Levels.StartAt(index);
 		GetTree().ChangeSceneToFile(Game.ScenePath);
 	}

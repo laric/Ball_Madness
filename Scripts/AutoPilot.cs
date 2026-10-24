@@ -69,6 +69,7 @@ public partial class AutoPilot : Node
 		switch (_game.CurrentState)
 		{
 			case Game.State.Finished:
+			case Game.State.WorldComplete:
 				GD.Print($"[autopilot] FINISHED level {Levels.CurrentNumber} in {_game.TimeLimit - _game.TimeLeft:0.00}s with {_game.TimeLeft:0.0}s left, {_game.Falls} fall(s)");
 				if (_allLevels)
 					_game.Continue();

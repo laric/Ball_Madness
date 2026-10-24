@@ -1,3 +1,4 @@
+using BallMadness.LevelFormat;
 using Godot;
 
 namespace BallMadness;
@@ -17,7 +18,7 @@ namespace BallMadness;
 /// </summary>
 public partial class Game : Node3D
 {
-	public enum State { Countdown, Playing, Falling, Finished, TimeUp, GameComplete }
+	public enum State { Countdown, Playing, Falling, Finished, WorldComplete, TimeUp, GameComplete }
 
 	public const string ScenePath = "res://Scenes/Main.tscn";
 
@@ -110,10 +111,15 @@ public partial class Game : Node3D
 		KillHeight = level.KillHeight;
 		LevelFormat.Themes.ApplyEnvironment(this, Levels.CurrentTheme, KillHeight);
 		_levelName = level.DisplayName;
+		int world = Campaign.IndexOf(Levels.CurrentPack);
 		_levelLabel.Text = Levels.Testing
 			? $"TEST  {_levelName}"
-			: $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
-		GetNode<Button>("Hud/SkipButton").Text = Levels.IsLastLevel ? "Back to level 1 ▶" : "Next level ▶";
+			: world >= 0
+				? $"WORLD {world + 1}-{Levels.CurrentIndex + 1}  {_levelName}"
+				: $"LEVEL {Levels.CurrentIndex + 1}/{Levels.Count}  {_levelName}";
+		GetNode<Button>("Hud/SkipButton").Text = !Levels.IsLastLevel ? "Next level ▶"
+			: Campaign.NextWorld(Levels.CurrentPack) != null ? "Next world ▶"
+			: "Back to level 1 ▶";
 	}
 
 	/// <summary>Testing shortcut: jumps straight to the next level from any state.</summary>
@@ -189,9 +195,16 @@ public partial class Game : Node3D
 			case State.Finished:
 				Levels.CompleteCurrent(TimeLimit - _timeLeft, Falls);
 				break;
+			case State.WorldComplete:
+				Levels.CompleteCurrent(TimeLimit - _timeLeft, Falls);
+				Levels.EnterWorld(Campaign.NextWorld(Levels.CurrentPack));
+				break;
 			case State.TimeUp:
 				break;
 			case State.GameComplete:
+				// After the last world, start the campaign again from world 1.
+				if (Campaign.IsWorld(Levels.CurrentPack))
+					Levels.EnterWorld(Campaign.Worlds[0]);
 				Levels.StartNewRun();
 				break;
 			default:
@@ -284,7 +297,7 @@ public partial class Game : Node3D
 		_state = next;
 		_stateTimer = 0;
 		_ball.ControlEnabled = next == State.Playing;
-		_dim.Visible = next is State.Finished or State.TimeUp or State.GameComplete;
+		_dim.Visible = next is State.Finished or State.WorldComplete or State.TimeUp or State.GameComplete;
 
 		switch (next)
 		{
@@ -305,6 +318,19 @@ public partial class Game : Node3D
 					$"LEVEL {Levels.CurrentIndex + 1} COMPLETE!\n" +
 					$"{TimeLimit - _timeLeft:0.0}s  ·  {_timeLeft:0.0}s to spare  ·  {FallsText(Falls)}\n\n" +
 					$"Enter for level {Levels.CurrentIndex + 2}  ·  R to replay  ·  Esc for menu";
+				break;
+			case State.WorldComplete:
+				var nextWorld = Campaign.NextWorld(Levels.CurrentPack);
+				_messageLabel.Text =
+					$"WORLD {Campaign.IndexOf(Levels.CurrentPack) + 1} COMPLETE!\n" +
+					$"{TimeLimit - _timeLeft:0.0}s  ·  {_timeLeft:0.0}s to spare  ·  {FallsText(Falls)}\n\n" +
+					$"Enter for {Campaign.WorldLabel(nextWorld)}: {nextWorld.Theme.Name}  ·  R to replay  ·  Esc for menu";
+				break;
+			case State.GameComplete when Campaign.IsWorld(Levels.CurrentPack):
+				_messageLabel.Text =
+					$"YOU BEAT ALL {Campaign.Worlds.Count} WORLDS!\n" +
+					$"Total time {Levels.RunTime:0.0}s  ·  {FallsText(Levels.RunFalls)}\n\n" +
+					"Enter to play again  ·  Esc for menu";
 				break;
 			case State.GameComplete:
 				_messageLabel.Text =
@@ -388,7 +414,11 @@ public partial class Game : Node3D
 		}
 
 		SaveGame.RecordCompletion(SaveGame.CurrentPack, Levels.CurrentIndex, TimeLimit - _timeLeft, Falls);
-		if (Levels.IsLastLevel)
+		if (Levels.IsLastLevel && Campaign.NextWorld(Levels.CurrentPack) != null)
+		{
+			EnterState(State.WorldComplete);
+		}
+		else if (Levels.IsLastLevel)
 		{
 			Levels.CompleteCurrent(TimeLimit - _timeLeft, Falls);
 			EnterState(State.GameComplete);
