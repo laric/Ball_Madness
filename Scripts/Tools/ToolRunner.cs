@@ -22,6 +22,9 @@ namespace BallMadness.Tools;
 ///     keeping its name and difficulty.
 /// --set-time ID INDEX SECONDS
 ///     Sets the level's time limit from the autopilot's time on it.
+/// --validate [ID ...]
+///     Loads and builds every level of the given packs (all built-in packs by
+///     default) without playing them, and fails if any level doesn't load.
 /// </code>
 /// tools/build-pack.sh runs these with the autopilot to make a pack where
 /// every level is known to be finishable.
@@ -62,6 +65,8 @@ public partial class ToolRunner : Node
 			case "--set-time":
 				SetTime(args[1], Int(args[2]), Float(args[3]));
 				return 0;
+			case "--validate":
+				return Validate(args.Skip(1).ToArray());
 			default:
 				GD.PrintErr($"[tools] Unknown command {args[0]}");
 				return 2;
@@ -107,6 +112,35 @@ public partial class ToolRunner : Node
 		level.TimeLimit = LevelGenerator.TimeLimitFor(seconds, level.Difficulty ?? 0.5f);
 		Write(path, Packs.Serialize(level));
 		GD.Print($"[tools] {path}: time limit {level.TimeLimit}s (autopilot {seconds:0.0}s)");
+	}
+
+	private static int Validate(string[] ids)
+	{
+		var packs = ids.Length > 0
+			? ids.Select(id => Packs.Find(id) ?? throw new InvalidOperationException($"No pack \"{id}\"")).ToList()
+			: Packs.All.Where(p => p.BuiltIn).ToList();
+		int failed = 0, count = 0;
+		foreach (var pack in packs)
+		{
+			foreach (string path in pack.LevelPaths)
+			{
+				count++;
+				try
+				{
+					var level = Packs.LoadLevel(path);
+					if (level.Goals.Count == 0)
+						throw new InvalidOperationException("no goal");
+					LevelBuilder.Build(level).Free();
+				}
+				catch (Exception e)
+				{
+					GD.PrintErr($"[tools] {path}: {e.Message}");
+					failed++;
+				}
+			}
+		}
+		GD.Print($"[tools] {count - failed} of {count} levels in {packs.Count} pack(s) load");
+		return failed == 0 ? 0 : 1;
 	}
 
 	private static string LevelPath(string id, int index)

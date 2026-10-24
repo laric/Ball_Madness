@@ -35,9 +35,11 @@ Movement is relative to the camera: "up" always rolls the ball towards the top o
 
 The camera has two modes, saved in `user://settings.cfg`. **Fixed** (the default) keeps its angle until you turn it. **Follow** slowly swings round to look the way the ball is rolling; it pauses while you right-drag and for two seconds after, and holds still while the ball falls.
 
+Steering has two modes too, under Settings. **Screen direction** (the default) rolls the ball the way you push on screen. **Tank** turns the ball's heading with left and right (a yellow arrow beside the ball shows it) and pushes forward and back along it with up and down; each life starts facing along the course. With the Follow camera, tank steering keeps the camera behind the heading.
+
 ## Title screen and saves
 
-The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, **Pack** picks which level pack to play (shown once you have a pack of your own), **Level editor** opens the pack manager and editor (see below), and **Settings** has the camera mode. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
+The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, **Pack** picks which level pack to play (shown once you have a pack of your own), **Level editor** opens the pack manager and editor (see below), and **Settings** has the camera and steering modes. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
 
 Progress is saved to `user://save.json` (on Linux `~/.local/share/godot/app_userdata/Ball Madness/`, on Windows `%APPDATA%\Godot\app_userdata\Ball Madness\`) as soon as you reach a goal. It is stored per level pack id and per level index: the furthest level completed, and each level's best time and fewest falls. Delete the file to start over.
 
@@ -119,7 +121,7 @@ Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file
 Scripts/LevelInfo.cs Per-level settings on the built level's root: name, time limit, kill height
 Scripts/Ball.cs     Camera-relative rolling controls
 Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom, optional follow-the-ball yaw
-Scripts/Settings.cs Player preferences (camera mode) in user://settings.cfg
+Scripts/Settings.cs Player preferences (camera and steering modes) in user://settings.cfg
 Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Scripts/LevelGen/   Level generator: course sections chained into a level with an autopilot route
 Scripts/Tools/      Command line tools for packs (Scenes/Tools.tscn); tools/*.sh drive them
@@ -142,7 +144,7 @@ godot --headless --path . -- --autopilot --all       # every level in a row
 
 For levels with timed hazards, a route waypoint can tell the autopilot to wait for a gate (an invisible box over the danger zone) to be `clear` of moving bodies (a piston pulls back) or `occupied` (a sliding bridge fills the gap), and a waypoint `speed` caps the pilot's speed for thin beams. See [docs/level-format.md](docs/level-format.md).
 
-Add `--fixed-fps 60` to run the autopilot as fast as the machine allows; physics still steps 60 times per game second, so the results are the same. `tools/check-pack.sh [ID]` plays every level of a pack this way (the `main` pack takes under a minute), and the CI workflow runs it for every built-in pack on each pull request.
+Add `--fixed-fps 60` to run the autopilot as fast as the machine allows; physics still steps 60 times per game second, so the results are the same. `tools/check-pack.sh [ID]` plays every level of a pack this way (the `main` pack takes under a minute). Run it before opening a pull request that changes levels or gameplay: to save CI minutes, the CI workflow only builds the game and loads every level of every built-in pack (`--validate`, see `Scripts/Tools/ToolRunner.cs`) without playing them.
 
 ## Level generator
 
