@@ -9,6 +9,10 @@ namespace BallMadness;
 /// With <see cref="Settings.SteeringModes.Tank"/> steering, left and right
 /// turn a heading instead (shown by an arrow beside the ball), and up and
 /// down push the ball forward and back along it.
+///
+/// It also makes the ball's noises: a rolling rumble whose pitch and volume
+/// follow its speed, and a thud (or the other body's <see cref="IImpactSound"/>)
+/// when it hits something hard.
 /// </summary>
 public partial class Ball : RigidBody3D
 {
@@ -44,10 +48,29 @@ public partial class Ball : RigidBody3D
 	private bool _headingSet;
 	private MeshInstance3D _arrow;
 
+	/// <summary>A sudden change in velocity bigger than this (m/s) in one step makes an impact sound.</summary>
+	private const float ImpactThreshold = 2.5f;
+
+	private AudioStreamPlayer _roll;
+	private float _rollLevel;
+	private Vector3 _lastVelocity;
+	private float _impactCooldown;
+	private readonly System.Collections.Generic.List<Node> _touched = new();
+
 	public override void _Ready()
 	{
 		ContactMonitor = true;
 		MaxContactsReported = 4;
+		BodyEntered += body => _touched.Add(body);
+
+		_roll = Sfx.LoopFlat("roll");
+		if (_roll != null)
+		{
+			_roll.VolumeDb = -80;
+			AddChild(_roll);
+			_roll.Play();
+		}
+
 		_arrow = MakeArrow();
 		AddChild(_arrow);
 	}
@@ -69,6 +92,7 @@ public partial class Ball : RigidBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		OnGround = GetContactCount() > 0;
+		UpdateSounds((float)delta);
 
 		if (!ControlEnabled)
 			return;
@@ -98,6 +122,8 @@ public partial class Ball : RigidBody3D
 		GlobalTransform = new Transform3D(Basis.Identity, position);
 		LinearVelocity = Vector3.Zero;
 		AngularVelocity = Vector3.Zero;
+		_lastVelocity = Vector3.Zero;
+		_rollLevel = 0;
 		_headingSet = heading is Vector3 h && h.LengthSquared() > 0.0001f;
 		if (_headingSet)
 			_heading = heading.Value with { Y = 0 };
@@ -144,6 +170,47 @@ public partial class Ball : RigidBody3D
 			CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
 			Mesh = new PrismMesh { Size = new Vector3(0.6f, 0.7f, 0.04f), Material = material },
 		};
+	}
+
+	private void UpdateSounds(float dt)
+	{
+		// Rolling: louder and higher the faster the ball goes, silent in the air.
+		float speed = LinearVelocity.Length();
+		float target = OnGround ? Mathf.Clamp(speed / MaxSpeed, 0, 1) : 0;
+		_rollLevel = Mathf.MoveToward(_rollLevel, target, dt * (target > _rollLevel ? 3.0f : 6.0f));
+		if (_roll != null)
+		{
+			_roll.VolumeDb = _rollLevel < 0.02f ? -80 : Mathf.LinearToDb(_rollLevel * 0.9f);
+			_roll.PitchScale = 0.55f + 0.95f * Mathf.Clamp(speed / MaxSpeed, 0, 1.2f);
+		}
+
+		// Impacts: the velocity jumped since last step, more than gravity or rolling could do.
+		_impactCooldown -= dt;
+		Vector3 change = LinearVelocity - _lastVelocity;
+		_lastVelocity = LinearVelocity;
+		float hit = change.Length();
+		if (hit > ImpactThreshold && OnGround && _impactCooldown <= 0)
+		{
+			_impactCooldown = 0.12f;
+			float volume = Mathf.Clamp((hit - ImpactThreshold) / 10.0f, 0.15f, 1.0f);
+			Sfx.Play(ImpactSoundFor(change), Mathf.LinearToDb(volume), (float)GD.RandRange(0.9, 1.1));
+		}
+		_touched.Clear();
+	}
+
+	/// <summary>
+	/// What a hit sounds like: whatever was just touched, if it has a sound of
+	/// its own and the ball didn't simply land on top of it.
+	/// </summary>
+	private string ImpactSoundFor(Vector3 change)
+	{
+		bool landing = change.Y > 0.7f * change.Length();
+		foreach (Node body in _touched)
+		{
+			if (body is IImpactSound sound && !(landing && body is Mover or Spinner))
+				return sound.ImpactSound;
+		}
+		return "impact";
 	}
 
 	private Vector3 ReadInputDirection()

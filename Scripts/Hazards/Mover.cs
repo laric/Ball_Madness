@@ -7,8 +7,10 @@ namespace BallMadness;
 /// away from there, easing in and out at both ends. Use it for moving
 /// platforms (the ball rides along) and for pushers that sweep across a path.
 /// </summary>
-public partial class Mover : AnimatableBody3D
+public partial class Mover : AnimatableBody3D, IImpactSound
 {
+	public string ImpactSound => "hazard_hit";
+
 	/// <summary>How far the body travels from its starting position, in its parent's space.</summary>
 	[Export] public Vector3 Offset = new(0, 0, 4);
 
