@@ -31,6 +31,8 @@ public enum Section
 	Trapdoors,
 	Teleport,
 	Ratchet,
+	Hills,
+	Obstacles,
 }
 
 /// <summary>
@@ -42,7 +44,7 @@ public enum Section
 public static class LevelGenerator
 {
 	/// <summary>Bumped when a change makes the same seed give a different level.</summary>
-	public const int Version = 3;
+	public const int Version = 4;
 
 	/// <summary>Time limit written before the autopilot has measured the level.</summary>
 	public const float UnmeasuredTimeLimit = 300;
@@ -52,7 +54,9 @@ public static class LevelGenerator
 	{
 		[Section.Run] = 0.0f,
 		[Section.Ramp] = 0.0f,
+		[Section.Hills] = 0.02f,
 		[Section.Steps] = 0.05f,
+		[Section.Obstacles] = 0.07f,
 		[Section.Slalom] = 0.1f,
 		[Section.Conveyor] = 0.15f,
 		[Section.Zigzag] = 0.2f,
@@ -84,6 +88,8 @@ public static class LevelGenerator
 		["sweeper"] = new() { Color = new(0.9f, 0.25f, 0.15f), Roughness = 0.4f, Metallic = 0.2f },
 		["hub"] = new() { Color = new(0.25f, 0.22f, 0.3f), Roughness = 0.4f, Metallic = 0.6f },
 		["steelie"] = new() { Color = new(0.08f, 0.08f, 0.1f), Roughness = 0.25f, Metallic = 0.9f },
+		["rock"] = new() { Color = new(0.56f, 0.54f, 0.52f), Texture = "stone", Detail = new(0.32f, 0.31f, 0.3f) },
+		["crate"] = new() { Color = new(0.82f, 0.6f, 0.34f), Texture = "planks", Detail = new(0.36f, 0.22f, 0.1f) },
 	};
 
 	/// <summary>
@@ -217,7 +223,7 @@ public static class LevelGenerator
 	private static bool IsHazard(Section s) =>
 		s is Section.Planks or Section.Sweeper or Section.SlidingBridge or Section.Pistons or Section.Chasers
 			or Section.Conveyor or Section.Ice or Section.Bumpers or Section.Holes or Section.Trapdoors
-			or Section.Teleport or Section.Ratchet;
+			or Section.Teleport or Section.Ratchet or Section.Obstacles;
 
 	private static Section Pick(CourseWriter c, List<Section> available, Section newest, List<Section> sofar)
 	{
@@ -262,6 +268,8 @@ public static class LevelGenerator
 			case Section.Trapdoors: Trapdoors(c, d); break;
 			case Section.Teleport: Teleport(c, d); break;
 			case Section.Ratchet: Ratchet(c, d); break;
+			case Section.Hills: Hills(c, d); break;
+			case Section.Obstacles: Obstacles(c, d); break;
 		}
 	}
 
@@ -272,6 +280,11 @@ public static class LevelGenerator
 		c.Slab("Run", 0, len, 0, w, "grid");
 		if (d < 0.15f)
 			c.Rails(0, len, 0, w, "rail");
+		// Something to liven up a plain run: a low hump across it, or a rock off the line.
+		if (len >= 8 && c.Chance(0.5f))
+			c.Terrain("Hump", "bump", len / 2, 0, 0, new Vector3(w, Mathf.Snapped(c.Range(0.2f, 0.35f), 0.05f), 3), 0, "grid");
+		else if (w >= 4.5f && c.Chance(0.5f))
+			c.Terrain("Rock", "rock", c.Range(2, len - 2), c.Sign() * (w / 2 - 0.6f), 0, new Vector3(0.9f, 0.8f, 0.9f), 0, "rock", c.Range(0, 360), 0.1f);
 		c.Waypoint(len);
 		c.Advance(len);
 	}
@@ -286,6 +299,95 @@ public static class LevelGenerator
 		if (d < 0.15f)
 			c.Rails(0, len, drop, w, "rail");
 		c.Waypoint(len, 0, -drop, speed: w < 3 ? 5 : null);
+		c.Advance(len, drop);
+	}
+
+	/// <summary>
+	/// Rolling hills: smooth ridges across the course, flat or downhill, that
+	/// throw a fast ball into the air. Later ones are higher and closer
+	/// together, and some are round hills to one side that knock the ball off line.
+	/// </summary>
+	private static void Hills(CourseWriter c, float d)
+	{
+		float w = Mathf.Max(Width(c, d), 3.2f);
+		int n = c.Range(2, d < 0.3f ? 3 : 4);
+		float hill = Mathf.Snapped(Mathf.Lerp(3.6f, 2.6f, d), 0.1f);
+		float spacing = hill + Mathf.Lerp(2.5f, 1.5f, d);
+		float len = n * spacing + 2;
+		float drop = c.Chance(0.5f) ? Mathf.Snapped(len * Mathf.Tan(Mathf.DegToRad(c.Range(4, 6 + 6 * d))), 0.5f) : 0;
+		float pitch = Mathf.RadToDeg(Mathf.Atan2(drop, len));
+		string floor = drop > 0 ? "ramp" : "grid";
+		c.Slab("Hills", 0, len, drop, w, floor);
+		if (d < 0.15f)
+			c.Rails(0, len, drop, w, "rail");
+		int side = c.Sign();
+		for (int i = 0; i < n; i++)
+		{
+			float u = 1 + i * spacing + hill / 2;
+			float h = Mathf.Snapped(Mathf.Lerp(0.3f, 0.7f, d) + c.Range(-0.05f, 0.1f), 0.05f);
+			if (d > 0.3f && w >= 3.6f && c.Chance(0.4f))
+			{
+				// A round hill on one side; go round it on the other.
+				float across = Mathf.Snapped(w * 0.6f, 0.1f);
+				c.Terrain("Hill", "mound", u, side * (w - across) / 2, -u * drop / len, new Vector3(across, h * 1.5f, hill), pitch, floor);
+				float lane = -side * (w / 2 - (w - across) / 2);
+				c.Waypoint(u - hill / 2 - 0.5f, lane / 2, -(u - hill / 2 - 0.5f) * drop / len, speed: 4);
+				c.Waypoint(u, lane, -u * drop / len, speed: 4);
+				side = -side;
+			}
+			else
+			{
+				c.Terrain("Bump", "bump", u, 0, -u * drop / len, new Vector3(w, h, hill), pitch, floor);
+				float after = u + hill / 2 + 0.6f;
+				c.Waypoint(after, 0, -after * drop / len, speed: w < 3.6f ? 4 : 5);
+			}
+		}
+		c.Waypoint(len, 0, -drop, speed: 5);
+		c.Advance(len, drop);
+	}
+
+	/// <summary>
+	/// A field strewn with rocks and crates: each row leaves one lane free,
+	/// on alternating sides, narrower as difficulty rises.
+	/// </summary>
+	private static void Obstacles(CourseWriter c, float d)
+	{
+		float w = Mathf.Snapped(Mathf.Lerp(7, 5, d), 0.5f);
+		int rows = c.Range(3, Mathf.RoundToInt(Mathf.Lerp(4, 6, d)));
+		float gap = Mathf.Lerp(4.5f, 3.5f, d);
+		float len = rows * gap + 3;
+		float drop = c.Chance(0.4f) ? Mathf.Snapped(len * Mathf.Tan(Mathf.DegToRad(c.Range(3, 7))), 0.5f) : 0;
+		float pitch = Mathf.RadToDeg(Mathf.Atan2(drop, len));
+		c.Slab("Field", 0, len, drop, w, drop > 0 ? "ramp" : "grid");
+		if (d < 0.2f)
+			c.Rails(0, len, drop, w, "rail");
+		float lane = Mathf.Snapped(Mathf.Lerp(2.6f, 1.8f, d), 0.1f);
+		int side = c.Sign();
+		for (int i = 0; i < rows; i++)
+		{
+			float u = 1.5f + i * gap + gap / 2;
+			float floorH = -u * drop / len;
+			float laneV = -side * (w / 2 - lane / 2 - c.Range(0.2f, 1.0f));
+			// Fill from the lane's edge to the far side.
+			float v = laneV + side * lane / 2;
+			while (w / 2 - side * v > 0.7f)
+			{
+				float size = Mathf.Min(c.Range(0.9f, 1.4f), w / 2 - side * v - 0.05f);
+				float centre = v + side * size / 2;
+				float jitter = c.Range(-0.4f, 0.4f);
+				if (c.Chance(0.6f))
+					c.Terrain("Rock", "rock", u + jitter, centre, floorH - jitter * drop / len,
+						new Vector3(size, c.Range(0.75f, 1.05f) * size, c.Range(0.9f, 1.2f) * size), pitch, "rock", c.Range(0, 360), 0.1f);
+				else
+					c.Terrain("Crate", "box", u + jitter, centre, floorH - jitter * drop / len, Vector3.One * size, pitch, "crate", c.Range(-25, 25));
+				v += side * (size + c.Range(0.1f, 0.5f));
+			}
+			float before = u - 1.8f, after = u + 1.2f;
+			c.Waypoint(before, laneV, -before * drop / len, speed: 4);
+			c.Waypoint(after, laneV, -after * drop / len, speed: 4);
+			side = -side;
+		}
+		c.Waypoint(len, 0, -drop, speed: 5);
 		c.Advance(len, drop);
 	}
 

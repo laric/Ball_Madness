@@ -8,13 +8,13 @@
 	"ground": { "color": [0.05, 0.36, 0.56], "depth": 3, "roughness": 0.15, "metallic": 0.2 },
 	"ui": { "accent": [0.25, 0.78, 0.88], "panel": [0.04, 0.17, 0.27] },
 	"materials": {
-		"grid": { "color": [0.9, 0.86, 0.76], "line": [0.5, 0.62, 0.64] },
-		"start": { "color": [0.96, 0.96, 0.92], "line": [0.3, 0.56, 0.72] },
-		"ramp": { "color": [0.972, 0.929, 0.821], "line": [0.5, 0.62, 0.64] },
-		"dark": { "color": [0.54, 0.516, 0.456], "line": [0.4, 0.496, 0.512] },
+		"grid": { "color": [0.9, 0.86, 0.76], "line": [0.5, 0.62, 0.64], "texture": "sand", "detail": [0.78, 0.72, 0.6] },
+		"start": { "color": [0.96, 0.96, 0.92], "line": [0.3, 0.56, 0.72], "texture": "stone", "detail": [0.6, 0.68, 0.72] },
+		"ramp": { "color": [0.972, 0.929, 0.821], "line": [0.5, 0.62, 0.64], "texture": "sand", "detail": [0.8, 0.74, 0.62] },
+		"dark": { "color": [0.54, 0.516, 0.456], "line": [0.4, 0.496, 0.512], "texture": "stone", "detail": [0.36, 0.4, 0.4] },
 		"moss": { "color": [0.65, 0.78, 0.555], "line": [0.293, 0.351, 0.25] },
 		"rail": { "color": [0.15, 0.52, 0.62], "line": [0.06, 0.28, 0.36] },
-		"bridge": { "color": [0.62, 0.5, 0.36], "line": [0.36, 0.28, 0.18] },
+		"bridge": { "color": [0.62, 0.5, 0.36], "line": [0.36, 0.28, 0.18], "texture": "planks", "detail": [0.3, 0.22, 0.14] },
 		"post": { "color": [0.96, 0.46, 0.36], "line": [0.55, 0.2, 0.15] },
 		"moving": { "color": [1.0, 0.78, 0.3], "roughness": 0.5 },
 		"slider": { "color": [1.0, 0.78, 0.3], "roughness": 0.5 },
@@ -27,6 +27,8 @@
 		"conveyor": { "color": [0.15, 0.3, 0.38], "line": [0.95, 0.95, 0.85] },
 		"teleporter": { "color": [0.3, 0.95, 0.85] },
 		"trapdoor": { "color": [0.9, 0.7, 0.35], "roughness": 0.5, "metallic": 0.3 },
-		"gatepost": { "color": [0.22, 0.32, 0.38], "roughness": 0.4, "metallic": 0.6 }
+		"gatepost": { "color": [0.22, 0.32, 0.38], "roughness": 0.4, "metallic": 0.6 },
+		"rock": { "color": [0.56, 0.56, 0.54], "texture": "moss", "detail": [0.24, 0.46, 0.34] },
+		"crate": { "color": [0.66, 0.54, 0.38], "texture": "planks", "detail": [0.32, 0.24, 0.14] }
 	}
 }

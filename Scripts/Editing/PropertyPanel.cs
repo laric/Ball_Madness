@@ -39,7 +39,7 @@ public partial class PropertyPanel : VBoxContainer
 				yield return new TextField("Name", () => part.Name ?? "", v => part.Name = string.IsNullOrWhiteSpace(v) ? null : v.Trim());
 				foreach (var field in Placement(level, item))
 					yield return field;
-				var shapes = new[] { "box", "cylinder", "sphere" };
+				var shapes = new[] { "box", "cylinder", "sphere", "bump", "mound", "rock" };
 				yield return new ChoiceField("Shape", shapes, () => Math.Max(Array.IndexOf(shapes, part.Shape), 0), i => SetShape(part, shapes[i])) { Rebuilds = true };
 				foreach (var field in ShapeFields(part, ""))
 					yield return field;
@@ -123,8 +123,9 @@ public partial class PropertyPanel : VBoxContainer
 			return;
 		Vector3 half = EditorItems.PartHalf(part);
 		part.Shape = shape;
-		part.Size = shape == "box" ? half * 2 : null;
-		part.Radius = shape == "box" ? null : Mathf.Max(half.X, half.Z);
+		bool sized = shape == "box" || LevelFormat.Terrain.IsTerrain(shape);
+		part.Size = sized ? half * 2 : null;
+		part.Radius = sized ? null : Mathf.Max(half.X, half.Z);
 		part.Height = shape == "cylinder" ? half.Y * 2 : null;
 	}
 

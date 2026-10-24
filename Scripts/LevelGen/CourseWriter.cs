@@ -189,6 +189,30 @@ public class CourseWriter
 	}
 
 	/// <summary>
+	/// A terrain part ("bump", "mound" or "rock") or an obstacle box standing
+	/// on a slab's top surface at (u, v), where the floor is at height
+	/// <paramref name="floorH"/> and tilted down by <paramref name="pitch"/>
+	/// degrees. Size is (sideways, up, forward); <paramref name="turn"/> spins
+	/// it round the floor's normal, and <paramref name="sink"/> beds it into the floor.
+	/// </summary>
+	public void Terrain(string name, string shape, float u, float v, float floorH, Vector3 size, float pitch, string material,
+		float turn = 0, float sink = 0)
+	{
+		float a = Mathf.DegToRad(pitch);
+		float up = size.Y / 2 - sink;
+		Mark(At(u, v), Mathf.Max(size.X, size.Z) / 2, Mathf.Max(size.X, size.Z) / 2);
+		Level.Course.Add(new Part
+		{
+			Name = Name(name),
+			Shape = shape,
+			Pos = At(u + Mathf.Sin(a) * up, v, floorH + Mathf.Cos(a) * up),
+			Rot = Rot(pitch, turn),
+			Size = size,
+			Material = material,
+		});
+	}
+
+	/// <summary>
 	/// Like <see cref="Slab"/>, but the slab is a mechanic's body (ice, a
 	/// conveyor belt) whose local +Z points down the slab.
 	/// </summary>

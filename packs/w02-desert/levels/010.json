@@ -2,9 +2,9 @@
 	"format": 1,
 	"name": "Oasis Spiral",
 	"difficulty": 0.19,
-	"generator": "v3 seed 102009",
-	"timeLimit": 55,
-	"killHeight": -16,
+	"generator": "v4 seed 102009",
+	"timeLimit": 50,
+	"killHeight": -11,
 	"materials": {
 		"start": {
 			"color": [0.45, 0.7, 0.9],
@@ -56,6 +56,16 @@
 			"color": [0.08, 0.08, 0.1],
 			"roughness": 0.25,
 			"metallic": 0.9
+		},
+		"rock": {
+			"color": [0.56, 0.54, 0.52],
+			"texture": "stone",
+			"detail": [0.32, 0.31, 0.3]
+		},
+		"crate": {
+			"color": [0.82, 0.6, 0.34],
+			"texture": "planks",
+			"detail": [0.36, 0.22, 0.1]
 		}
 	},
 	"spawn": [0, 1.1, 4],
@@ -68,174 +78,152 @@
 			"material": "start"
 		},
 		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [0, -0.5, 13.5],
+			"size": [4.5, 1, 11],
+			"material": "grid"
+		},
+		{
+			"name": "Hump",
+			"shape": "bump",
+			"pos": [0, 0.1, 13.5],
+			"size": [4.5, 0.2, 3],
+			"material": "grid"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -0.5, 23],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
 			"name": "Rail",
 			"shape": "box",
-			"pos": [-2.7, 0, 13.5],
-			"size": [0.3, 1.1, 11],
+			"pos": [8, 0, 25.6],
+			"rot": [0, 90, 0],
+			"size": [0.3, 1.1, 8],
 			"material": "rail"
 		},
 		{
 			"name": "Rail2",
 			"shape": "box",
-			"pos": [2.7, 0, 13.5],
-			"size": [0.3, 1.1, 11],
+			"pos": [8, 0, 20.4],
+			"rot": [0, 90, 0],
+			"size": [0.3, 1.1, 8],
 			"material": "rail"
-		},
-		{
-			"name": "Pad",
-			"shape": "box",
-			"pos": [0, -0.5, 22],
-			"size": [7, 1, 6],
-			"material": "grid"
-		},
-		{
-			"name": "Step",
-			"shape": "box",
-			"pos": [0, -0.5, 26.655],
-			"size": [5.2, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Step2",
-			"shape": "box",
-			"pos": [0, -1.5, 29.965],
-			"size": [5.2, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Step3",
-			"shape": "box",
-			"pos": [0, -2.5, 33.275],
-			"size": [5.2, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Corner",
-			"shape": "box",
-			"pos": [0, -2.5, 38.93],
-			"size": [8, 1, 8],
-			"material": "grid"
-		},
-		{
-			"name": "Ramp",
-			"shape": "box",
-			"pos": [7.8787, -3.4851, 38.93],
-			"rot": [14.0362, 90, 0],
-			"size": [4.6, 1, 8.2462],
-			"material": "ramp"
 		},
 		{
 			"name": "Corner2",
 			"shape": "box",
-			"pos": [16, -4.5, 38.93],
+			"pos": [16, -0.5, 23],
 			"rot": [0, 90, 0],
 			"size": [8, 1, 8],
 			"material": "grid"
 		},
 		{
-			"name": "Run",
+			"name": "Hills",
 			"shape": "box",
-			"pos": [16, -4.5, 46.43],
-			"size": [4.5, 1, 7],
+			"pos": [16, -0.5, 33.71],
+			"size": [5.2, 1, 13.42],
 			"material": "grid"
 		},
 		{
-			"name": "Pad2",
+			"name": "Bump",
+			"shape": "bump",
+			"pos": [16, 0.2, 29.7],
+			"size": [5.2, 0.4, 3.4],
+			"material": "grid"
+		},
+		{
+			"name": "Bump2",
+			"shape": "bump",
+			"pos": [16, 0.225, 35.41],
+			"size": [5.2, 0.45, 3.4],
+			"material": "grid"
+		},
+		{
+			"name": "Pad",
 			"shape": "box",
-			"pos": [16, -4.5, 52.93],
+			"pos": [16, -0.5, 43.42],
 			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
 			"name": "Rail3",
 			"shape": "box",
-			"pos": [13.6, -4, 60.43],
-			"size": [0.3, 1.1, 9],
+			"pos": [13.3, 0, 51.92],
+			"size": [0.3, 1.1, 11],
 			"material": "rail"
 		},
 		{
 			"name": "Rail4",
 			"shape": "box",
-			"pos": [18.4, -4, 60.43],
-			"size": [0.3, 1.1, 9],
+			"pos": [18.7, 0, 51.92],
+			"size": [0.3, 1.1, 11],
 			"material": "rail"
 		},
 		{
-			"name": "Corner3",
+			"name": "Pad2",
 			"shape": "box",
-			"pos": [16, -4.5, 68.93],
-			"size": [8, 1, 8],
+			"pos": [16, -0.5, 60.42],
+			"size": [7, 1, 6],
 			"material": "grid"
+		},
+		{
+			"name": "Step",
+			"shape": "box",
+			"pos": [16, -0.5, 65.075],
+			"size": [4.5, 1, 3.31],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [16, -1.5, 68.385],
+			"size": [4.5, 1, 3.31],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [16, -2.5, 71.695],
+			"size": [4.5, 1, 3.31],
+			"material": "bridge"
 		},
 		{
 			"name": "Step4",
 			"shape": "box",
-			"pos": [21.655, -4.5, 68.93],
-			"rot": [0, 90, 0],
-			"size": [4.5, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Step5",
-			"shape": "box",
-			"pos": [24.965, -5.5, 68.93],
-			"rot": [0, 90, 0],
-			"size": [4.5, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Step6",
-			"shape": "box",
-			"pos": [28.275, -6.5, 68.93],
-			"rot": [0, 90, 0],
-			"size": [4.5, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Step7",
-			"shape": "box",
-			"pos": [31.585, -7.5, 68.93],
-			"rot": [0, 90, 0],
-			"size": [4.5, 1, 3.31],
-			"material": "bridge"
-		},
-		{
-			"name": "Step8",
-			"shape": "box",
-			"pos": [34.895, -8.5, 68.93],
-			"rot": [0, 90, 0],
+			"pos": [16, -3.5, 75.005],
 			"size": [4.5, 1, 3.31],
 			"material": "bridge"
 		},
 		{
 			"name": "Pad3",
 			"shape": "box",
-			"pos": [39.55, -8.5, 68.93],
-			"rot": [0, 90, 0],
+			"pos": [16, -3.5, 79.66],
 			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
 			"name": "Rail5",
 			"shape": "box",
-			"pos": [48.05, -8, 71.53],
-			"rot": [0, 90, 0],
-			"size": [0.3, 1.1, 11],
+			"pos": [13.55, -3, 87.66],
+			"size": [0.3, 1.1, 10],
 			"material": "rail"
 		},
 		{
 			"name": "Rail6",
 			"shape": "box",
-			"pos": [48.05, -8, 66.33],
-			"rot": [0, 90, 0],
-			"size": [0.3, 1.1, 11],
+			"pos": [18.45, -3, 87.66],
+			"size": [0.3, 1.1, 10],
 			"material": "rail"
 		},
 		{
 			"name": "FinishPad",
 			"shape": "box",
-			"pos": [57.55, -8.5, 68.93],
-			"rot": [0, 90, 0],
+			"pos": [16, -3.5, 96.66],
 			"size": [8, 1, 8],
 			"material": "grid"
 		}
@@ -244,7 +232,21 @@
 		{
 			"name": "Belt",
 			"type": "conveyor",
-			"pos": [0, -0.5, 13.5],
+			"pos": [8, -0.5, 23],
+			"rot": [0, 90, 0],
+			"speed": 9,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4.9, 1, 8]
+				}
+			]
+		},
+		{
+			"name": "Belt2",
+			"type": "conveyor",
+			"pos": [16, -0.5, 51.92],
 			"speed": 9,
 			"parts": [
 				{
@@ -255,48 +257,33 @@
 			]
 		},
 		{
-			"name": "Belt2",
-			"type": "conveyor",
-			"pos": [16, -4.5, 60.43],
-			"speed": 9,
-			"parts": [
-				{
-					"shape": "box",
-					"pos": [0, 0, 0],
-					"size": [4.5, 1, 9]
-				}
-			]
-		},
-		{
 			"name": "Belt3",
 			"type": "conveyor",
-			"pos": [48.05, -8.5, 68.93],
-			"rot": [0, 90, 0],
+			"pos": [16, -3.5, 87.66],
 			"speed": 9,
 			"parts": [
 				{
 					"shape": "box",
 					"pos": [0, 0, 0],
-					"size": [4.9, 1, 11]
+					"size": [4.6, 1, 10]
 				}
 			]
 		}
 	],
 	"checkpoints": [
 		{
-			"pos": [16, -4, 38.93],
+			"pos": [16, 0, 23],
 			"rot": [0, 90, 0],
 			"size": [8, 3, 2]
 		},
 		{
-			"pos": [39.55, -8, 68.93],
-			"rot": [0, 90, 0],
+			"pos": [16, 0, 60.42],
 			"size": [7, 3, 2]
 		}
 	],
 	"goals": [
 		{
-			"pos": [57.55, -8, 68.93]
+			"pos": [16, -3, 96.66]
 		}
 	],
 	"gates": [],
@@ -308,69 +295,59 @@
 			"pos": [0, 0.5, 19]
 		},
 		{
-			"pos": [0, 0.5, 22]
+			"pos": [0, 0.5, 23]
 		},
 		{
-			"pos": [0, 0.5, 26.655],
+			"pos": [12, 0.5, 23]
+		},
+		{
+			"pos": [16, 0.5, 23]
+		},
+		{
+			"pos": [16, 0.5, 32],
+			"speed": 5
+		},
+		{
+			"pos": [16, 0.5, 37.71],
+			"speed": 5
+		},
+		{
+			"pos": [16, 0.5, 40.42],
+			"speed": 5
+		},
+		{
+			"pos": [16, 0.5, 43.42]
+		},
+		{
+			"pos": [16, 0.5, 57.42]
+		},
+		{
+			"pos": [16, 0.5, 60.42]
+		},
+		{
+			"pos": [16, 0.5, 65.075],
 			"speed": 4
 		},
 		{
-			"pos": [0, -0.5, 29.965],
+			"pos": [16, -0.5, 68.385],
 			"speed": 4
 		},
 		{
-			"pos": [0, -1.5, 33.275],
+			"pos": [16, -1.5, 71.695],
 			"speed": 4
 		},
 		{
-			"pos": [0, -1.5, 38.93]
-		},
-		{
-			"pos": [12, -3.5, 38.93]
-		},
-		{
-			"pos": [16, -3.5, 38.93]
-		},
-		{
-			"pos": [16, -3.5, 49.93]
-		},
-		{
-			"pos": [16, -3.5, 52.93]
-		},
-		{
-			"pos": [16, -3.5, 64.93]
-		},
-		{
-			"pos": [16, -3.5, 68.93]
-		},
-		{
-			"pos": [21.655, -3.5, 68.93],
+			"pos": [16, -2.5, 75.005],
 			"speed": 4
 		},
 		{
-			"pos": [24.965, -4.5, 68.93],
-			"speed": 4
+			"pos": [16, -2.5, 79.66]
 		},
 		{
-			"pos": [28.275, -5.5, 68.93],
-			"speed": 4
+			"pos": [16, -2.5, 92.66]
 		},
 		{
-			"pos": [31.585, -6.5, 68.93],
-			"speed": 4
-		},
-		{
-			"pos": [34.895, -7.5, 68.93],
-			"speed": 4
-		},
-		{
-			"pos": [39.55, -7.5, 68.93]
-		},
-		{
-			"pos": [53.55, -7.5, 68.93]
-		},
-		{
-			"pos": [57.55, -7.5, 68.93]
+			"pos": [16, -2.5, 96.66]
 		}
 	]
 }

@@ -85,6 +85,7 @@ The theme's materials replace a level's materials with the same key, so one leve
 | `oneway`, `gatepost` | A one-way gate's panel and arrows (only `color` is used), and its posts. |
 | `teleporter` | Teleporter pads, rings and exits (only `color` is used). |
 | `checkpoint`, `goal`, `pole` | The checkpoint stripe, goal pad and flag, and flag pole. |
+| `rock`, `crate` | Rocks and crates on the course. |
 
 Material keys a theme doesn't know (like `sweeper_mat` in some of the built-in levels) keep the level's own look. To keep a level's look for a key the theme does know, mark it `override`:
 
@@ -140,9 +141,29 @@ To preview any pack in another world without changing it: `godot --path . -- --t
 }
 ```
 
-With `line`, the part gets the course's grid shader (base colour plus 1 m grid lines). Without it, a plain surface with optional `roughness` (default 1) and `metallic` (default 0). `glow` makes the grid lines (or the plain surface) give off their colour at that strength, for neon and lava. Colours are RGB from 0 to 1. A part with no material, or an unknown one, is the theme's `grid` (grey-blue grid in `classic`).
+With `line`, the part gets the course's grid shader (base colour plus 1 m grid lines). With `texture`, it gets a procedural surface on top (see below). With neither, a plain surface with optional `roughness` (default 1) and `metallic` (default 0). `glow` makes the grid lines (or the plain surface) give off their colour at that strength, for neon and lava. Colours are RGB from 0 to 1. A part with no material, or an unknown one, is the theme's `grid` (grey-blue grid in `classic`).
 
 The pack's [world theme](#world-themes) replaces materials it has a look for; add `"override": true` to keep the level's own.
+
+#### Textures
+
+```json
+"grid": { "color": [0.5, 0.52, 0.46], "line": [0.22, 0.3, 0.16], "texture": "moss", "detail": [0.36, 0.55, 0.24] }
+```
+
+`texture` gives a surface a pattern worked out in the shader from the part's position in the world, so neighbouring parts, and a bump on a floor, join up without seams. `color` is the main colour and `detail` the second one (half of `color` if left out). `scale` above 1 makes the pattern bigger. With a texture, `line` draws the grid faintly, and leaving `line` out drops the grid. `roughness` and `metallic` default to suit the texture, and `glow` also lights up the accents marked below.
+
+| `texture` | Looks like | `detail` is |
+|---|---|---|
+| `grass` | Patchy grass on top, soil down the sides. | The soil. |
+| `moss` | Cobbles with moss creeping over them. | The moss. |
+| `sand` | Sand with wind ripples. | The ripples. |
+| `stone` | Flagstones. | The mortar. |
+| `planks` | Half-metre boards with staggered joints. | The gaps. |
+| `ice` | Cloudy ice with fine cracks. | The cracks and clouds. |
+| `basalt` | Dark rock with cracks, which glow with `glow`. | The cracks. |
+| `metal` | 2 m riveted plates. | The seams and rivets. |
+| `crystal` | Facets, with edges that glow with `glow`. | The edges. |
 
 ### Parts
 
@@ -151,10 +172,10 @@ Used in `course` and inside hazards.
 | Field | | |
 |---|---|---|
 | `name` | optional | Node name, handy when debugging. |
-| `shape` | | `box` (default), `cylinder` or `sphere`. |
+| `shape` | | `box` (default), `cylinder` or `sphere`. In `course` also the terrain shapes `bump`, `mound` and `rock`. |
 | `pos` | required | Centre of the part. |
 | `rot` | optional | |
-| `size` | box | `[width, height, depth]`. |
+| `size` | box, terrain | `[width, height, depth]`. |
 | `radius`, `height` | cylinder | Cylinders stand upright; `height` along Y. |
 | `radius` | sphere | |
 | `material` | optional | Key into `materials`. |
@@ -162,6 +183,14 @@ Used in `course` and inside hazards.
 | `visible` | optional | `false` for an invisible wall. |
 
 A floor tile 1 m thick has its top surface at `pos.y + 0.5`.
+
+Terrain shapes fill their `size` like a box does, so one standing on a floor has `pos.y` = floor + height / 2:
+
+- `bump`: a smooth ridge right across the part's width (X), rising and falling along its depth (Z). A ball rolling over fast takes off.
+- `mound`: a round hill with an oval footprint.
+- `rock`: a lumpy boulder with a flat bottom; its shape comes from its `pos`, so it's the same every time. Sink it a little into the floor so it sits well.
+
+Bumps and mounds meet the floor at a tangent, so the ball rolls on and off smoothly. Give them the floor's material and they look like the ground swelling up. Holes don't cut terrain parts.
 
 ### Hazards
 

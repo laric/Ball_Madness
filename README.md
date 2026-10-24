@@ -73,7 +73,7 @@ packs/main/
     ...
 ```
 
-Each pack is set in a **world theme**: sky, fog, light, the ground under the course, menu colours and the course and hazard materials. There are ten built-in worlds (Meadow, Desert, Ice, Lava, Neon City, Ocean, Forest, Crystal Cave, Clockwork and Space) plus Classic, the default, in `themes/`; a pack picks one with `"theme": { "base": "lava" }` in its `pack.json` and can change any part of it. `-- --theme ID` previews any pack in another world.
+Each pack is set in a **world theme**: sky, fog, light, the ground under the course, menu colours and the course and hazard materials. There are ten built-in worlds (Meadow, Desert, Ice, Lava, Neon City, Ocean, Forest, Crystal Cave, Clockwork and Space) plus Classic, the default, in `themes/`. Most worlds give the course a procedural surface texture to match (grass in the Meadow, mossy cobbles in the Forest, sand, ice, glowing basalt, brass plates, crystal); Neon City, Space and Classic keep plain colours. A pack picks a world with `"theme": { "base": "lava" }` in its `pack.json` and can change any part of it. `-- --theme ID` previews any pack in another world.
 
 A level file is plain JSON: the time limit, colours, the course's boxes, cylinders and ramps, moving hazards, checkpoints, goal and the autopilot's route. The game builds the level from it when it loads, and a level file can't contain code, so packs from other players are safe to play. [docs/level-format.md](docs/level-format.md) describes every field.
 
@@ -184,9 +184,9 @@ Add `--fixed-fps 60` to run the autopilot as fast as the machine allows; physics
 
 ## Level generator
 
-`Scripts/LevelGen/` builds levels from a seed and a difficulty from 0 (gentlest) to 1 (hardest). It chains course sections together: runs, ramps, steps, a slalom, zig-zag beams, swaying planks, a sweeper bar, thin beams, a sliding bridge, pistons, enemy steelies, conveyor belts, ice, bumpers, holes, trapdoors, teleporters and an uphill climb with one-way gates. Each section appears from a set difficulty and gets narrower, steeper or faster as difficulty rises. The course mostly heads down and away from the camera, every level gets an autopilot route, and the same seed always gives the same level.
+`Scripts/LevelGen/` builds levels from a seed and a difficulty from 0 (gentlest) to 1 (hardest). It chains course sections together: runs (sometimes with a low hump or a rock), ramps, rolling hills, a field of rocks and crates, steps, a slalom, zig-zag beams, swaying planks, a sweeper bar, thin beams, a sliding bridge, pistons, enemy steelies, conveyor belts, ice, bumpers, holes, trapdoors, teleporters and an uphill climb with one-way gates. Each section appears from a set difficulty and gets narrower, steeper or faster as difficulty rises. The course mostly heads down and away from the camera, every level gets an autopilot route, and the same seed always gives the same level.
 
-Sections first appear at these difficulties (`LevelGenerator.Unlocks`): run and ramp 0, steps 0.05, slalom 0.1, conveyor 0.15 (a speed-up belt at first, cross belts from 0.35), zig-zag 0.2, bumpers 0.25, holes 0.3, planks 0.35, ice 0.4, sweeper 0.45, teleporter 0.5, beam 0.55, trapdoors 0.6, sliding bridge 0.65, one-way climb 0.7, pistons 0.75, steelies 0.85. The newest section unlocked is favoured, so each level tends to show off what it introduces. Pass a section name as `--feature` (or build-pack's 7th argument) to put that section in every level whatever the difficulty, for example for a world built around one mechanic.
+Sections first appear at these difficulties (`LevelGenerator.Unlocks`): run and ramp 0, hills 0.02 (round hills to one side from 0.3), steps 0.05, rocks and crates 0.07, slalom 0.1, conveyor 0.15 (a speed-up belt at first, cross belts from 0.35), zig-zag 0.2, bumpers 0.25, holes 0.3, planks 0.35, ice 0.4, sweeper 0.45, teleporter 0.5, beam 0.55, trapdoors 0.6, sliding bridge 0.65, one-way climb 0.7, pistons 0.75, steelies 0.85. The newest section unlocked is favoured, so each level tends to show off what it introduces. Pass a section name as `--feature` (or build-pack's 7th argument) to put that section in every level whatever the difficulty, for example for a world built around one mechanic.
 
 ```sh
 dotnet build
@@ -227,5 +227,7 @@ GODOT=godot-mono packaging/windows/build-windows.sh dev   # writes build/Ball_Ma
 ```
 
 ## Credits
+
+The course textures are generated in the shader (`Shaders/grid.gdshader`) from noise, so there are no texture images to license.
 
 All sound effects were synthesised for this project by `tools/make-sounds.py` and are released under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) (public domain): use them for anything, no credit needed. No third-party audio is used.

@@ -2,9 +2,9 @@
 	"format": 1,
 	"name": "Nebula Pass",
 	"difficulty": 0.9333,
-	"generator": "v3 seed 110003",
-	"timeLimit": 80,
-	"killHeight": -29,
+	"generator": "v4 seed 110003",
+	"timeLimit": 105,
+	"killHeight": -22,
 	"materials": {
 		"start": {
 			"color": [0.45, 0.7, 0.9],
@@ -56,6 +56,16 @@
 			"color": [0.08, 0.08, 0.1],
 			"roughness": 0.25,
 			"metallic": 0.9
+		},
+		"rock": {
+			"color": [0.56, 0.54, 0.52],
+			"texture": "stone",
+			"detail": [0.32, 0.31, 0.3]
+		},
+		"crate": {
+			"color": [0.82, 0.6, 0.34],
+			"texture": "planks",
+			"detail": [0.36, 0.22, 0.1]
 		}
 	},
 	"spawn": [0, 1.1, 4],
@@ -68,252 +78,31 @@
 			"material": "start"
 		},
 		{
-			"name": "Pad",
+			"name": "Landing",
 			"shape": "box",
-			"pos": [0, -1.5, 23],
-			"size": [7, 1, 6],
+			"pos": [0, -0.5, 22],
+			"size": [6, 1, 4],
 			"material": "grid"
-		},
-		{
-			"name": "Ramp",
-			"shape": "box",
-			"pos": [0, -3.4569, 30.2969],
-			"rot": [23.9625, 0, 0],
-			"size": [2.6, 1, 9.8489],
-			"material": "ramp"
 		},
 		{
 			"name": "Corner",
 			"shape": "box",
-			"pos": [0, -5.5, 39],
+			"pos": [0, -0.5, 28],
 			"size": [8, 1, 8],
-			"material": "grid"
-		},
-		{
-			"name": "Slalom",
-			"shape": "box",
-			"pos": [12.2335, -7.4862, 39],
-			"rot": [13.4698, 90, 0],
-			"size": [8, 1, 17.1724],
-			"material": "ramp"
-		},
-		{
-			"name": "Rail",
-			"shape": "box",
-			"pos": [12.2219, -6.9849, 43.15],
-			"rot": [13.4698, 90, 0],
-			"size": [0.3, 1.1, 17.1724],
-			"material": "rail"
-		},
-		{
-			"name": "Rail2",
-			"shape": "box",
-			"pos": [12.2219, -6.9849, 34.85],
-			"rot": [13.4698, 90, 0],
-			"size": [0.3, 1.1, 17.1724],
-			"material": "rail"
-		},
-		{
-			"name": "Post",
-			"shape": "cylinder",
-			"pos": [8.2833, -5.0259, 39.6856],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post2",
-			"shape": "cylinder",
-			"pos": [8.2833, -5.0259, 38.1856],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post3",
-			"shape": "cylinder",
-			"pos": [8.2833, -5.0259, 36.6856],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post4",
-			"shape": "cylinder",
-			"pos": [8.2833, -5.0259, 35.1856],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post5",
-			"shape": "cylinder",
-			"pos": [8.2833, -5.0259, 42.6856],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post6",
-			"shape": "cylinder",
-			"pos": [12.85, -6.1198, 35.2227],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post7",
-			"shape": "cylinder",
-			"pos": [12.85, -6.1198, 38.2227],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post8",
-			"shape": "cylinder",
-			"pos": [12.85, -6.1198, 39.7227],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post9",
-			"shape": "cylinder",
-			"pos": [12.85, -6.1198, 41.2227],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post10",
-			"shape": "cylinder",
-			"pos": [12.85, -6.1198, 42.7227],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post11",
-			"shape": "cylinder",
-			"pos": [17.4167, -7.2136, 39.7101],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post12",
-			"shape": "cylinder",
-			"pos": [17.4167, -7.2136, 38.2101],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post13",
-			"shape": "cylinder",
-			"pos": [17.4167, -7.2136, 36.7101],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post14",
-			"shape": "cylinder",
-			"pos": [17.4167, -7.2136, 35.2101],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post15",
-			"shape": "cylinder",
-			"pos": [17.4167, -7.2136, 42.7101],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Corner2",
-			"shape": "box",
-			"pos": [24.7, -9.5, 39],
-			"rot": [0, 90, 0],
-			"size": [8, 1, 8],
-			"material": "grid"
-		},
-		{
-			"name": "Approach",
-			"shape": "box",
-			"pos": [24.7, -9.5, 44.5],
-			"size": [4, 1, 3],
-			"material": "grid"
-		},
-		{
-			"name": "Landing",
-			"shape": "box",
-			"pos": [24.7, -9.5, 52],
-			"size": [4, 1, 3],
-			"material": "grid"
-		},
-		{
-			"name": "Corner3",
-			"shape": "box",
-			"pos": [24.7, -9.5, 57.5],
-			"size": [8, 1, 8],
-			"material": "grid"
-		},
-		{
-			"name": "Run",
-			"shape": "box",
-			"pos": [32.2, -9.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [2.1, 1, 7],
-			"material": "grid"
-		},
-		{
-			"name": "Pad2",
-			"shape": "box",
-			"pos": [38.7, -9.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [7, 1, 6],
-			"material": "grid"
-		},
-		{
-			"name": "Launch",
-			"shape": "box",
-			"pos": [44.2, -9.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [3.1, 1, 5],
-			"material": "dark"
-		},
-		{
-			"name": "Arrival",
-			"shape": "box",
-			"pos": [54.6, -11.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [3.8, 1, 3.8],
-			"material": "start"
-		},
-		{
-			"name": "Pad3",
-			"shape": "box",
-			"pos": [59.5, -11.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
 			"name": "Beam",
 			"shape": "box",
-			"pos": [65, -11.5, 57.5],
+			"pos": [7, -0.5, 28],
 			"rot": [0, 90, 0],
-			"size": [1.7, 1, 5],
+			"size": [1.7, 1, 6],
 			"material": "bridge"
 		},
 		{
-			"name": "Corner4",
+			"name": "Corner2",
 			"shape": "box",
-			"pos": [68.35, -11.5, 57.5],
+			"pos": [10.85, -0.5, 28],
 			"rot": [0, 90, 0],
 			"size": [1.7, 1, 1.7],
 			"material": "bridge"
@@ -321,15 +110,15 @@
 		{
 			"name": "Beam2",
 			"shape": "box",
-			"pos": [68.35, -11.5, 60],
+			"pos": [10.85, -0.5, 25],
 			"rot": [0, 90, 0],
-			"size": [3.3, 1, 1.7],
+			"size": [4.3, 1, 1.7],
 			"material": "bridge"
 		},
 		{
-			"name": "Corner5",
+			"name": "Corner3",
 			"shape": "box",
-			"pos": [68.35, -11.5, 62.5],
+			"pos": [10.85, -0.5, 22],
 			"rot": [0, 90, 0],
 			"size": [1.7, 1, 1.7],
 			"material": "bridge"
@@ -337,15 +126,15 @@
 		{
 			"name": "Beam3",
 			"shape": "box",
-			"pos": [71.2, -11.5, 62.5],
+			"pos": [15.2, -0.5, 22],
 			"rot": [0, 90, 0],
-			"size": [1.7, 1, 4],
+			"size": [1.7, 1, 7],
 			"material": "bridge"
 		},
 		{
-			"name": "Corner6",
+			"name": "Corner4",
 			"shape": "box",
-			"pos": [74.05, -11.5, 62.5],
+			"pos": [19.55, -0.5, 22],
 			"rot": [0, 90, 0],
 			"size": [1.7, 1, 1.7],
 			"material": "bridge"
@@ -353,15 +142,15 @@
 		{
 			"name": "Beam4",
 			"shape": "box",
-			"pos": [74.05, -11.5, 60],
+			"pos": [19.55, -0.5, 25],
 			"rot": [0, 90, 0],
-			"size": [3.3, 1, 1.7],
+			"size": [4.3, 1, 1.7],
 			"material": "bridge"
 		},
 		{
-			"name": "Corner7",
+			"name": "Corner5",
 			"shape": "box",
-			"pos": [74.05, -11.5, 57.5],
+			"pos": [19.55, -0.5, 28],
 			"rot": [0, 90, 0],
 			"size": [1.7, 1, 1.7],
 			"material": "bridge"
@@ -369,63 +158,396 @@
 		{
 			"name": "Beam5",
 			"shape": "box",
-			"pos": [76.4, -11.5, 57.5],
+			"pos": [23.9, -0.5, 28],
+			"rot": [0, 90, 0],
+			"size": [1.7, 1, 7],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner6",
+			"shape": "box",
+			"pos": [28.25, -0.5, 28],
+			"rot": [0, 90, 0],
+			"size": [1.7, 1, 1.7],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam6",
+			"shape": "box",
+			"pos": [28.25, -0.5, 26.5],
+			"rot": [0, 90, 0],
+			"size": [1.3, 1, 1.7],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner7",
+			"shape": "box",
+			"pos": [28.25, -0.5, 25],
+			"rot": [0, 90, 0],
+			"size": [1.7, 1, 1.7],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam7",
+			"shape": "box",
+			"pos": [31.1, -0.5, 25],
+			"rot": [0, 90, 0],
+			"size": [1.7, 1, 4],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner8",
+			"shape": "box",
+			"pos": [33.95, -0.5, 25],
+			"rot": [0, 90, 0],
+			"size": [1.7, 1, 1.7],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam8",
+			"shape": "box",
+			"pos": [33.95, -0.5, 26.5],
+			"rot": [0, 90, 0],
+			"size": [1.3, 1, 1.7],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner9",
+			"shape": "box",
+			"pos": [33.95, -0.5, 28],
+			"rot": [0, 90, 0],
+			"size": [1.7, 1, 1.7],
+			"material": "bridge"
+		},
+		{
+			"name": "Beam9",
+			"shape": "box",
+			"pos": [36.3, -0.5, 28],
 			"rot": [0, 90, 0],
 			"size": [1.7, 1, 3],
 			"material": "bridge"
 		},
 		{
-			"name": "Pad4",
+			"name": "Pad",
 			"shape": "box",
-			"pos": [80.9, -11.5, 57.5],
+			"pos": [40.8, -0.5, 28],
 			"rot": [0, 90, 0],
 			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
-			"name": "Arena",
+			"name": "Hills",
 			"shape": "box",
-			"pos": [89.9, -11.5, 57.5],
+			"pos": [48.9962, -1.245, 28],
+			"rot": [8.1047, 90, 0],
+			"size": [3.2, 1, 10.6396],
+			"material": "ramp"
+		},
+		{
+			"name": "Bump",
+			"shape": "bump",
+			"pos": [46.1993, 0.0119, 28],
+			"rot": [8.1047, 90, 0],
+			"size": [3.2, 0.7, 2.7],
+			"material": "ramp"
+		},
+		{
+			"name": "Bump2",
+			"shape": "bump",
+			"pos": [50.4625, -0.6205, 28],
+			"rot": [8.1047, 90, 0],
+			"size": [3.2, 0.65, 2.7],
+			"material": "ramp"
+		},
+		{
+			"name": "Corner10",
+			"shape": "box",
+			"pos": [58.3333, -2, 28],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Field",
+			"shape": "box",
+			"pos": [58.3333, -2.7481, 40.5901],
+			"rot": [4.965, 0, 0],
+			"size": [5, 1, 17.3317],
+			"material": "ramp"
+		},
+		{
+			"name": "Rock",
+			"shape": "rock",
+			"pos": [57.9432, -1.2164, 35.1381],
+			"rot": [4.965, 95, 0],
+			"size": [1.3331, 1.3082, 1.5647],
+			"material": "rock"
+		},
+		{
+			"name": "Crate",
+			"shape": "box",
+			"pos": [56.5428, -1.2836, 35.328],
+			"rot": [4.965, 15, 0],
+			"size": [1.0072, 1.0072, 1.0072],
+			"material": "crate"
+		},
+		{
+			"name": "Crate2",
+			"shape": "box",
+			"pos": [58.8712, -1.4975, 39.1379],
+			"rot": [4.965, 21, 0],
+			"size": [1.2405, 1.2405, 1.2405],
+			"material": "crate"
+		},
+		{
+			"name": "Crate3",
+			"shape": "box",
+			"pos": [60.3222, -1.6401, 38.9405],
+			"rot": [4.965, 19, 0],
+			"size": [0.9222, 0.9222, 0.9222],
+			"material": "crate"
+		},
+		{
+			"name": "Rock2",
+			"shape": "rock",
+			"pos": [57.4439, -1.7955, 42.3724],
+			"rot": [4.965, 259, 0],
+			"size": [1.3408, 1.4066, 1.2719],
+			"material": "rock"
+		},
+		{
+			"name": "Rock3",
+			"shape": "rock",
+			"pos": [56.219, -2.2191, 42.7058],
+			"rot": [4.965, 81, 0],
+			"size": [0.6713, 0.6203, 0.7191],
+			"material": "rock"
+		},
+		{
+			"name": "Crate4",
+			"shape": "box",
+			"pos": [59.298, -1.9977, 45.7742],
+			"rot": [4.965, 6, 0],
+			"size": [1.3926, 1.3926, 1.3926],
+			"material": "crate"
+		},
+		{
+			"name": "Corner11",
+			"shape": "box",
+			"pos": [58.3333, -3.5, 53.2667],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [67.8333, -3.5, 53.2667],
+			"rot": [0, 90, 0],
+			"size": [2.3, 1, 11],
+			"material": "grid"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [76.3333, -3.5, 53.2667],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Plaza",
+			"shape": "box",
+			"pos": [85.3333, -3.5, 48.4667],
 			"rot": [0, 90, 0],
 			"size": [12, 1, 12],
 			"material": "dark"
 		},
 		{
-			"name": "Pad5",
+			"name": "Pad3",
 			"shape": "box",
-			"pos": [98.9, -11.5, 57.5],
+			"pos": [94.3333, -3.5, 53.2667],
 			"rot": [0, 90, 0],
 			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
-			"name": "Slalom2",
+			"name": "Ramp",
 			"shape": "box",
-			"pos": [114.7036, -14.487, 57.5],
-			"rot": [13.0756, 90, 0],
+			"pos": [102.1281, -5.706, 53.2667],
+			"rot": [24.2277, 90, 0],
+			"size": [2.5, 1, 10.9659],
+			"material": "ramp"
+		},
+		{
+			"name": "Corner12",
+			"shape": "box",
+			"pos": [111.3333, -8, 53.2667],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Arena",
+			"shape": "box",
+			"pos": [111.3333, -8, 63.2667],
+			"size": [12, 1, 12],
+			"material": "dark"
+		},
+		{
+			"name": "Pad4",
+			"shape": "box",
+			"pos": [111.3333, -8, 72.2667],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Slalom",
+			"shape": "box",
+			"pos": [111.3333, -10.987, 88.0702],
+			"rot": [13.0756, 0, 0],
 			"size": [8, 1, 26.521],
 			"material": "ramp"
 		},
 		{
-			"name": "Rail3",
+			"name": "Rail",
 			"shape": "box",
-			"pos": [114.6922, -13.9857, 61.65],
-			"rot": [13.0756, 90, 0],
+			"pos": [107.1833, -10.4857, 88.0589],
+			"rot": [13.0756, 0, 0],
 			"size": [0.3, 1.1, 26.521],
 			"material": "rail"
 		},
 		{
-			"name": "Rail4",
+			"name": "Rail2",
 			"shape": "box",
-			"pos": [114.6922, -13.9857, 53.35],
-			"rot": [13.0756, 90, 0],
+			"pos": [115.4833, -10.4857, 88.0589],
+			"rot": [13.0756, 0, 0],
 			"size": [0.3, 1.1, 26.521],
 			"material": "rail"
+		},
+		{
+			"name": "Post",
+			"shape": "cylinder",
+			"pos": [114.8905, -7.4948, 79.55],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post2",
+			"shape": "cylinder",
+			"pos": [111.8905, -7.4948, 79.55],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post3",
+			"shape": "cylinder",
+			"pos": [110.3905, -7.4948, 79.55],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post4",
+			"shape": "cylinder",
+			"pos": [108.8905, -7.4948, 79.55],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post5",
+			"shape": "cylinder",
+			"pos": [107.3905, -7.4948, 79.55],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post6",
+			"shape": "cylinder",
+			"pos": [110.4048, -8.5555, 84.1167],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post7",
+			"shape": "cylinder",
+			"pos": [111.9048, -8.5555, 84.1167],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post8",
+			"shape": "cylinder",
+			"pos": [113.4048, -8.5555, 84.1167],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post9",
+			"shape": "cylinder",
+			"pos": [114.9048, -8.5555, 84.1167],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post10",
+			"shape": "cylinder",
+			"pos": [107.4048, -8.5555, 84.1167],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post11",
+			"shape": "cylinder",
+			"pos": [115.1624, -9.6161, 88.6833],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post12",
+			"shape": "cylinder",
+			"pos": [112.1624, -9.6161, 88.6833],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post13",
+			"shape": "cylinder",
+			"pos": [110.6624, -9.6161, 88.6833],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post14",
+			"shape": "cylinder",
+			"pos": [109.1624, -9.6161, 88.6833],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post15",
+			"shape": "cylinder",
+			"pos": [107.6624, -9.6161, 88.6833],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
 		},
 		{
 			"name": "Post16",
 			"shape": "cylinder",
-			"pos": [106.1833, -10.9948, 58.0514],
+			"pos": [110.5856, -10.6768, 93.25],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -433,7 +555,7 @@
 		{
 			"name": "Post17",
 			"shape": "cylinder",
-			"pos": [106.1833, -10.9948, 56.5514],
+			"pos": [112.0856, -10.6768, 93.25],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -441,7 +563,7 @@
 		{
 			"name": "Post18",
 			"shape": "cylinder",
-			"pos": [106.1833, -10.9948, 55.0514],
+			"pos": [113.5856, -10.6768, 93.25],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -449,7 +571,7 @@
 		{
 			"name": "Post19",
 			"shape": "cylinder",
-			"pos": [106.1833, -10.9948, 53.5514],
+			"pos": [115.0856, -10.6768, 93.25],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -457,7 +579,7 @@
 		{
 			"name": "Post20",
 			"shape": "cylinder",
-			"pos": [106.1833, -10.9948, 61.0514],
+			"pos": [107.5856, -10.6768, 93.25],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -465,7 +587,7 @@
 		{
 			"name": "Post21",
 			"shape": "cylinder",
-			"pos": [110.75, -12.0555, 53.6643],
+			"pos": [114.7282, -11.7374, 97.8167],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -473,7 +595,7 @@
 		{
 			"name": "Post22",
 			"shape": "cylinder",
-			"pos": [110.75, -12.0555, 56.6643],
+			"pos": [111.7282, -11.7374, 97.8167],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -481,7 +603,7 @@
 		{
 			"name": "Post23",
 			"shape": "cylinder",
-			"pos": [110.75, -12.0555, 58.1643],
+			"pos": [110.2282, -11.7374, 97.8167],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
@@ -489,206 +611,124 @@
 		{
 			"name": "Post24",
 			"shape": "cylinder",
-			"pos": [110.75, -12.0555, 59.6643],
+			"pos": [108.7282, -11.7374, 97.8167],
 			"radius": 0.45,
 			"height": 2.5,
 			"material": "post"
 		},
 		{
-			"name": "Post25",
-			"shape": "cylinder",
-			"pos": [110.75, -12.0555, 61.1643],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post26",
-			"shape": "cylinder",
-			"pos": [115.3167, -13.1161, 57.9306],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post27",
-			"shape": "cylinder",
-			"pos": [115.3167, -13.1161, 56.4306],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post28",
-			"shape": "cylinder",
-			"pos": [115.3167, -13.1161, 54.9306],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post29",
-			"shape": "cylinder",
-			"pos": [115.3167, -13.1161, 60.9306],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post30",
-			"shape": "cylinder",
-			"pos": [119.8833, -14.1768, 53.596],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post31",
-			"shape": "cylinder",
-			"pos": [119.8833, -14.1768, 56.596],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post32",
-			"shape": "cylinder",
-			"pos": [119.8833, -14.1768, 58.096],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post33",
-			"shape": "cylinder",
-			"pos": [119.8833, -14.1768, 59.596],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post34",
-			"shape": "cylinder",
-			"pos": [119.8833, -14.1768, 61.096],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post35",
-			"shape": "cylinder",
-			"pos": [124.45, -15.2374, 58.0555],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post36",
-			"shape": "cylinder",
-			"pos": [124.45, -15.2374, 56.5555],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post37",
-			"shape": "cylinder",
-			"pos": [124.45, -15.2374, 55.0555],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post38",
-			"shape": "cylinder",
-			"pos": [124.45, -15.2374, 53.5555],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Post39",
-			"shape": "cylinder",
-			"pos": [124.45, -15.2374, 61.0555],
-			"radius": 0.45,
-			"height": 2.5,
-			"material": "post"
-		},
-		{
-			"name": "Pad6",
+			"name": "Pad5",
 			"shape": "box",
-			"pos": [130.7333, -17.5, 57.5],
-			"rot": [0, 90, 0],
+			"pos": [111.3333, -14, 104.1],
 			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
-			"name": "Launch2",
+			"name": "Arena2",
 			"shape": "box",
-			"pos": [136.2333, -17.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [3.1, 1, 5],
+			"pos": [111.3333, -14, 113.1],
+			"size": [12, 1, 12],
 			"material": "dark"
-		},
-		{
-			"name": "Arrival2",
-			"shape": "box",
-			"pos": [147.6333, -21.5, 57.5],
-			"rot": [0, 90, 0],
-			"size": [3.8, 1, 3.8],
-			"material": "start"
 		},
 		{
 			"name": "FinishPad",
 			"shape": "box",
-			"pos": [153.5333, -21.5, 57.5],
-			"rot": [0, 90, 0],
+			"pos": [111.3333, -14, 123.1],
 			"size": [8, 1, 8],
 			"material": "grid"
 		}
 	],
 	"hazards": [
 		{
-			"name": "Ice",
-			"type": "ice",
-			"pos": [0, -0.9983, 13.9585],
-			"rot": [4.7636, 0, 0],
-			"parts": [
-				{
-					"shape": "box",
-					"pos": [0, 0, 0],
-					"size": [3.5, 1, 12.0416]
-				}
-			]
-		},
-		{
-			"name": "Slider",
+			"name": "Plank",
 			"type": "mover",
-			"pos": [17.7, -9.5, 48.25],
-			"offset": [7, 0, 0],
-			"period": 4.3,
+			"pos": [-1.4667, -0.5, 9.5],
+			"offset": [2.9333, 0, 0],
+			"period": 2.5,
 			"phase": 0,
 			"parts": [
 				{
 					"shape": "box",
 					"pos": [0, 0, 0],
-					"size": [3.5, 1, 4.9],
-					"material": "hazard"
+					"size": [4, 1, 3],
+					"material": "moving"
 				}
 			]
 		},
 		{
-			"name": "Teleporter",
-			"type": "teleporter",
-			"pos": [44.2, -9, 57.5],
-			"target": [54.6, -11, 57.5],
-			"keepSpeed": true,
-			"radius": 1.1
+			"name": "Plank2",
+			"type": "mover",
+			"pos": [-1.4667, -0.5, 12.5],
+			"offset": [2.9333, 0, 0],
+			"period": 2.5,
+			"phase": 0.25,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank3",
+			"type": "mover",
+			"pos": [-1.4667, -0.5, 15.5],
+			"offset": [2.9333, 0, 0],
+			"period": 2.5,
+			"phase": 0.5,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank4",
+			"type": "mover",
+			"pos": [-1.4667, -0.5, 18.5],
+			"offset": [2.9333, 0, 0],
+			"period": 2.5,
+			"phase": 0.75,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Sweeper",
+			"type": "spinner",
+			"pos": [85.3333, -2.55, 48.4667],
+			"rot": [0, 90, 0],
+			"speed": -44,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [11, 0.8, 0.6],
+					"material": "sweeper"
+				},
+				{
+					"shape": "cylinder",
+					"pos": [0, 0, 0],
+					"radius": 0.6,
+					"height": 0.9,
+					"material": "hub"
+				}
+			]
 		},
 		{
 			"name": "Steelie",
 			"type": "chaser",
-			"pos": [87.9, -10.45, 53.5],
+			"pos": [115.3333, -6.95, 61.2667],
 			"radius": 0.5,
 			"chaseRadius": 8,
 			"pushForce": 11.5,
@@ -698,7 +738,7 @@
 		{
 			"name": "Steelie2",
 			"type": "chaser",
-			"pos": [91.9, -10.45, 61.5],
+			"pos": [107.3333, -6.95, 65.2667],
 			"radius": 0.5,
 			"chaseRadius": 8,
 			"pushForce": 11.5,
@@ -706,39 +746,53 @@
 			"material": "steelie"
 		},
 		{
-			"name": "Teleporter2",
-			"type": "teleporter",
-			"pos": [136.2333, -17, 57.5],
-			"target": [147.6333, -21, 57.5],
-			"keepSpeed": true,
-			"radius": 1.1
+			"name": "Steelie3",
+			"type": "chaser",
+			"pos": [115.3333, -12.95, 111.1],
+			"radius": 0.5,
+			"chaseRadius": 8,
+			"pushForce": 11.5,
+			"maxSpeed": 5.4,
+			"material": "steelie"
+		},
+		{
+			"name": "Steelie4",
+			"type": "chaser",
+			"pos": [107.3333, -12.95, 115.1],
+			"radius": 0.5,
+			"chaseRadius": 8,
+			"pushForce": 11.5,
+			"maxSpeed": 5.4,
+			"material": "steelie"
 		}
 	],
 	"checkpoints": [
 		{
-			"pos": [0, -5, 39],
-			"size": [8, 3, 2]
-		},
-		{
-			"pos": [24.7, -9, 57.5],
-			"size": [8, 3, 2]
-		},
-		{
-			"pos": [80.9, -11, 57.5],
+			"pos": [40.8, 0, 28],
 			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		},
+		{
+			"pos": [76.3333, -3, 53.2667],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		},
+		{
+			"pos": [111.3333, -7.5, 72.2667],
 			"size": [7, 3, 2]
 		}
 	],
 	"goals": [
 		{
-			"pos": [153.5333, -21, 57.5]
+			"pos": [111.3333, -13.5, 123.1]
 		}
 	],
 	"gates": [
 		{
 			"name": "Gate1",
-			"pos": [24.7, -9, 48.25],
-			"size": [0.6, 1, 0.6]
+			"pos": [85.3333, -2.55, 53.2667],
+			"rot": [0, 90, 0],
+			"size": [1.2, 0.8, 5.9703]
 		}
 	],
 	"route": [
@@ -746,171 +800,196 @@
 			"pos": [0, 0.5, 4]
 		},
 		{
-			"pos": [0, 0.5, 8],
+			"pos": [0, 0.5, 21],
 			"speed": 4
 		},
 		{
-			"pos": [0, -0.5, 20],
+			"pos": [0, 0.5, 23]
+		},
+		{
+			"pos": [0, 0.5, 28]
+		},
+		{
+			"pos": [10.85, 0.5, 28],
+			"speed": 2.5
+		},
+		{
+			"pos": [10.85, 0.5, 22],
+			"speed": 2.5
+		},
+		{
+			"pos": [19.55, 0.5, 22],
+			"speed": 2.5
+		},
+		{
+			"pos": [19.55, 0.5, 28],
+			"speed": 2.5
+		},
+		{
+			"pos": [28.25, 0.5, 28],
+			"speed": 2.5
+		},
+		{
+			"pos": [28.25, 0.5, 25],
+			"speed": 2.5
+		},
+		{
+			"pos": [33.95, 0.5, 25],
+			"speed": 2.5
+		},
+		{
+			"pos": [33.95, 0.5, 28],
+			"speed": 2.5
+		},
+		{
+			"pos": [37.8, 0.5, 28],
+			"speed": 2.5
+		},
+		{
+			"pos": [40.8, 0.5, 28]
+		},
+		{
+			"pos": [48.1, -0.1123, 28],
 			"speed": 4
 		},
 		{
-			"pos": [0, -0.5, 23]
+			"pos": [52.3667, -0.7199, 28],
+			"speed": 4
 		},
 		{
-			"pos": [0, -4.5, 35],
+			"pos": [54.3333, -1, 28],
 			"speed": 5
 		},
 		{
-			"pos": [0, -4.5, 39]
+			"pos": [58.3333, -1, 28]
 		},
 		{
-			"pos": [6.8833, -5.1906, 41.1856],
-			"speed": 3.5
+			"pos": [59.5598, -1.1289, 33.4833],
+			"speed": 4
 		},
 		{
-			"pos": [9.1833, -5.7415, 41.1856],
-			"speed": 3.5
+			"pos": [59.5598, -1.3895, 36.4833],
+			"speed": 4
 		},
 		{
-			"pos": [11.45, -6.2844, 36.7227],
-			"speed": 3.5
+			"pos": [57.301, -1.4387, 37.05],
+			"speed": 4
 		},
 		{
-			"pos": [13.75, -6.8353, 36.7227],
-			"speed": 3.5
+			"pos": [57.301, -1.6993, 40.05],
+			"speed": 4
 		},
 		{
-			"pos": [16.0167, -7.3782, 41.2101],
-			"speed": 3.5
+			"pos": [59.0643, -1.7486, 40.6167],
+			"speed": 4
 		},
 		{
-			"pos": [18.3167, -7.9291, 41.2101],
-			"speed": 3.5
+			"pos": [59.0643, -2.0092, 43.6167],
+			"speed": 4
 		},
 		{
-			"pos": [20.7, -8.5, 39],
+			"pos": [57.6517, -2.0584, 44.1833],
+			"speed": 4
+		},
+		{
+			"pos": [57.6517, -2.319, 47.1833],
+			"speed": 4
+		},
+		{
+			"pos": [58.3333, -2.5, 49.2667],
 			"speed": 5
 		},
 		{
-			"pos": [24.7, -8.5, 39]
+			"pos": [58.3333, -2.5, 53.2667]
 		},
 		{
-			"pos": [24.7, -8.5, 44.5]
+			"pos": [73.3333, -2.5, 53.2667]
 		},
 		{
-			"pos": [24.7, -8.5, 52],
+			"pos": [76.3333, -2.5, 53.2667]
+		},
+		{
+			"pos": [79.8333, -2.5, 53.2667]
+		},
+		{
+			"pos": [90.8333, -2.5, 53.2667],
 			"gate": "Gate1",
-			"waitFor": "occupied"
+			"waitFor": "clear"
 		},
 		{
-			"pos": [24.7, -8.5, 57.5]
+			"pos": [94.3333, -2.5, 53.2667]
 		},
 		{
-			"pos": [35.7, -8.5, 57.5]
-		},
-		{
-			"pos": [38.7, -8.5, 57.5]
-		},
-		{
-			"pos": [44.2, -8.5, 57.5],
-			"speed": 4
-		},
-		{
-			"pos": [56.5, -10.5, 57.5],
-			"speed": 4
-		},
-		{
-			"pos": [59.5, -10.5, 57.5]
-		},
-		{
-			"pos": [68.35, -10.5, 57.5],
-			"speed": 2.5
-		},
-		{
-			"pos": [68.35, -10.5, 62.5],
-			"speed": 2.5
-		},
-		{
-			"pos": [74.05, -10.5, 62.5],
-			"speed": 2.5
-		},
-		{
-			"pos": [74.05, -10.5, 57.5],
-			"speed": 2.5
-		},
-		{
-			"pos": [77.9, -10.5, 57.5],
-			"speed": 2.5
-		},
-		{
-			"pos": [80.9, -10.5, 57.5]
-		},
-		{
-			"pos": [89.9, -10.5, 57.5]
-		},
-		{
-			"pos": [95.9, -10.5, 57.5]
-		},
-		{
-			"pos": [98.9, -10.5, 57.5]
-		},
-		{
-			"pos": [104.7833, -11.1697, 59.5514],
-			"speed": 3.5
-		},
-		{
-			"pos": [107.0833, -11.7039, 59.5514],
-			"speed": 3.5
-		},
-		{
-			"pos": [109.35, -12.2303, 55.1643],
-			"speed": 3.5
-		},
-		{
-			"pos": [111.65, -12.7645, 55.1643],
-			"speed": 3.5
-		},
-		{
-			"pos": [113.9167, -13.291, 59.4306],
-			"speed": 3.5
-		},
-		{
-			"pos": [116.2167, -13.8252, 59.4306],
-			"speed": 3.5
-		},
-		{
-			"pos": [118.4833, -14.3516, 55.096],
-			"speed": 3.5
-		},
-		{
-			"pos": [120.7833, -14.8858, 55.096],
-			"speed": 3.5
-		},
-		{
-			"pos": [123.05, -15.4123, 59.5555],
-			"speed": 3.5
-		},
-		{
-			"pos": [125.35, -15.9465, 59.5555],
-			"speed": 3.5
-		},
-		{
-			"pos": [127.7333, -16.5, 57.5],
+			"pos": [107.3333, -7, 53.2667],
 			"speed": 5
 		},
 		{
-			"pos": [130.7333, -16.5, 57.5]
+			"pos": [111.3333, -7, 53.2667]
 		},
 		{
-			"pos": [136.2333, -16.5, 57.5],
-			"speed": 4
+			"pos": [111.3333, -7, 63.2667]
 		},
 		{
-			"pos": [149.5333, -20.5, 57.5],
-			"speed": 4
+			"pos": [111.3333, -7, 69.2667]
 		},
 		{
-			"pos": [153.5333, -20.5, 57.5]
+			"pos": [111.3333, -7, 72.2667]
+		},
+		{
+			"pos": [113.3905, -7.6697, 78.15],
+			"speed": 3.5
+		},
+		{
+			"pos": [113.3905, -8.2039, 80.45],
+			"speed": 3.5
+		},
+		{
+			"pos": [108.9048, -8.7303, 82.7167],
+			"speed": 3.5
+		},
+		{
+			"pos": [108.9048, -9.2645, 85.0167],
+			"speed": 3.5
+		},
+		{
+			"pos": [113.6624, -9.791, 87.2833],
+			"speed": 3.5
+		},
+		{
+			"pos": [113.6624, -10.3252, 89.5833],
+			"speed": 3.5
+		},
+		{
+			"pos": [109.0856, -10.8516, 91.85],
+			"speed": 3.5
+		},
+		{
+			"pos": [109.0856, -11.3858, 94.15],
+			"speed": 3.5
+		},
+		{
+			"pos": [113.2282, -11.9123, 96.4167],
+			"speed": 3.5
+		},
+		{
+			"pos": [113.2282, -12.4465, 98.7167],
+			"speed": 3.5
+		},
+		{
+			"pos": [111.3333, -13, 101.1],
+			"speed": 5
+		},
+		{
+			"pos": [111.3333, -13, 104.1]
+		},
+		{
+			"pos": [111.3333, -13, 113.1]
+		},
+		{
+			"pos": [111.3333, -13, 119.1]
+		},
+		{
+			"pos": [111.3333, -13, 123.1]
 		}
 	]
 }
