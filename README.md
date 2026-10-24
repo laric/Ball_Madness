@@ -40,15 +40,29 @@ Steering has two modes too, under Settings. **Screen direction** (the default) r
 
 ## Title screen and saves
 
-The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls, **Pack** picks which level pack to play (shown once you have a pack of your own), **Level editor** opens the pack manager and editor (see below), and **Settings** has the camera and steering modes, the volume sliders (overall, effects and menu sounds) and sound on/off. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
+The game opens on the title screen: **Continue** plays the level after the last one you completed (**Start** on a fresh save), **Level select** lists every level with your best time and fewest falls (in the campaign it picks a world first), **Pack** picks what to play: the campaign, the classic levels or a pack of your own, **Level editor** opens the pack manager and editor (see below), and **Settings** has the camera and steering modes, the volume sliders (overall, effects and menu sounds) and sound on/off. Completed levels and the next one are playable from level select; later ones stay locked. Esc (or Start on a gamepad) pauses a level with Resume, Restart level, Settings and Title screen. Menus work with the mouse, the keyboard (arrows, Enter, Esc) and a gamepad (D-pad or stick, A, B).
 
 Progress is saved to `user://save.json` (on Linux `~/.local/share/godot/app_userdata/Ball Madness/`, on Windows `%APPDATA%\Godot\app_userdata\Ball Madness\`) as soon as you reach a goal. It is stored per level pack id and per level index: the furthest level completed, and each level's best time and fewest falls. Delete the file to start over.
 
 Starting with `-- --level N` or `-- --autopilot` skips the title screen. Autopilot runs don't write the save file unless you pass one with `-- --save PATH`.
 
+## Campaign
+
+The campaign is ten worlds of ten levels, each world a built-in pack in its own theme, from World 1 (Meadow, the gentlest) to World 10 (Space). `packs/campaign.json` lists the worlds in play order. World 1 is open from the start and each later world opens once every level of the world before it is completed; finishing a world's last level leads straight into the next world, and Continue picks up in the first world not yet finished. The original ten hand-made levels are the **Classic levels** pack (`packs/main/`).
+
+The worlds are generated (see Level generator below) from the plan in `tools/campaign.txt`: each world's seed, difficulty range, theme and name. The generator brings in a new kind of section about every 0.05 of difficulty, so each world introduces roughly two of them. To build or rebuild worlds, on a desktop (it plays every level with the autopilot, and takes a while):
+
+```sh
+dotnet build
+GODOT=godot-mono tools/build-campaign.sh              # all ten worlds
+GODOT=godot-mono tools/build-campaign.sh w05-ice      # just one
+```
+
+It ends with a `check-pack.sh` summary of every world it built, to paste into the pull request.
+
 ## Levels
 
-Levels come in **packs**. The game ships with the `main` pack in `packs/main/`; players' own packs go in the user data folder under `packs/` (`~/.local/share/godot/app_userdata/Ball Madness/packs/` on Linux, `%APPDATA%\Godot\app_userdata\Ball Madness\packs\` on Windows). Each pack is a folder with a `pack.json` and a `levels/` folder of level files:
+Levels come in **packs**. The game ships with the campaign's world packs and the classic `main` pack in `packs/`; players' own packs go in the user data folder under `packs/` (`~/.local/share/godot/app_userdata/Ball Madness/packs/` on Linux, `%APPDATA%\Godot\app_userdata\Ball Madness\packs\` on Windows). Each pack is a folder with a `pack.json` and a `levels/` folder of level files:
 
 ```
 packs/main/
@@ -63,7 +77,7 @@ Each pack is set in a **world theme**: sky, fog, light, the ground under the cou
 
 A level file is plain JSON: the time limit, colours, the course's boxes, cylinders and ramps, moving hazards, checkpoints, goal and the autopilot's route. The game builds the level from it when it loads, and a level file can't contain code, so packs from other players are safe to play. [docs/level-format.md](docs/level-format.md) describes every field.
 
-Reach the goal and the level-complete screen shows your time; press Enter for the next level. Run out of time and Enter or R retries the same level. After the last level the game-complete screen shows your total time and falls, and Enter starts again from level 1.
+Reach the goal and the level-complete screen shows your time; press Enter for the next level. Run out of time and Enter or R retries the same level. After a campaign world's last level, Enter goes on to the next world. After the last level of a pack (or of World 10) the game-complete screen shows your total time and falls, and Enter starts again from the beginning.
 
 To make levels, use the in-game editor below, or copy one of the files in `packs/main/levels/`, edit it, and add its name to `pack.json`.
 
@@ -135,7 +149,7 @@ Scripts/SaveGame.cs Progress in user://save.json: furthest level, best times, fe
 Scripts/UI/         Menu theme, level select, settings screen, pause menu, pack manager
 Scripts/Editing/    Level editor: palette catalog, item helpers and checks, property panel, session kept across test plays
 Scripts/Levels.cs   The pack and level being played and the run's total time
-Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file to nodes), Packs (finding, importing, exporting), Themes (world themes)
+Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file to nodes), Packs (finding, importing, exporting), Themes (world themes), Campaign (world order and unlocks)
 themes/             The built-in world themes as JSON
 Scripts/LevelInfo.cs Per-level settings on the built level's root: name, time limit, kill height
 Scripts/Ball.cs     Camera-relative rolling controls

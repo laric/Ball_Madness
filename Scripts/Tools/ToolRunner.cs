@@ -180,6 +180,7 @@ public partial class ToolRunner : Node
 			}
 		}
 		GD.Print($"[tools] {count - failed} of {count} levels in {packs.Count} pack(s) load");
+		GD.Print($"[tools] campaign: {Campaign.Worlds.Count} world(s), {Campaign.LevelCount} level(s)");
 		return failed == 0 ? 0 : 1;
 	}
 

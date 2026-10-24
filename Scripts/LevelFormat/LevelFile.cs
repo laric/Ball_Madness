@@ -276,6 +276,7 @@ public class RoundedFloatConverter : JsonConverter<float>
 	Converters = new[] { typeof(RoundedFloatConverter) })]
 [JsonSerializable(typeof(LevelFile))]
 [JsonSerializable(typeof(PackFile))]
+[JsonSerializable(typeof(CampaignFile))]
 [JsonSerializable(typeof(ThemeFile))]
 internal partial class LevelJsonContext : JsonSerializerContext
 {

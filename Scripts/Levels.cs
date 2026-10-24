@@ -9,6 +9,7 @@ namespace BallMadness;
 /// of the current run.
 ///
 /// Levels come from packs (see <see cref="Packs"/>): the built-in campaign is
+/// one pack per world (see <see cref="Campaign"/>), the original ten levels are
 /// res://packs/main/, and players' packs live in user://packs/. The run state
 /// is static so it survives reloading the main scene between levels.
 /// </summary>
@@ -16,8 +17,8 @@ public static class Levels
 {
 	private static Pack _pack;
 
-	/// <summary>The pack being played; the main campaign unless another was picked.</summary>
-	public static Pack CurrentPack => _pack ??= Packs.Find(Packs.MainPackId) ?? Packs.All[0];
+	/// <summary>The pack being played; the campaign world to continue in unless another was picked.</summary>
+	public static Pack CurrentPack => _pack ??= Campaign.ContinueWorld() ?? Packs.Find(Packs.MainPackId) ?? Packs.All[0];
 
 	public static int Count => CurrentPack.LevelPaths.Count;
 
@@ -137,13 +138,24 @@ public static class Levels
 			CurrentIndex++;
 	}
 
+	/// <summary>Carries the run on into the first level of the next campaign world.</summary>
+	public static void EnterWorld(Pack world)
+	{
+		_pack = world;
+		CurrentIndex = 0;
+	}
+
 	/// <summary>
 	/// Testing shortcut: moves to the next level without banking anything,
-	/// wrapping round to level 1 after the last one.
+	/// on into the next world after a world's last level, or round to level 1
+	/// after the last one.
 	/// </summary>
 	public static void SkipCurrent()
 	{
-		CurrentIndex = IsLastLevel ? 0 : CurrentIndex + 1;
+		if (IsLastLevel && Campaign.NextWorld(CurrentPack) is Pack next)
+			EnterWorld(next);
+		else
+			CurrentIndex = IsLastLevel ? 0 : CurrentIndex + 1;
 	}
 
 	/// <summary>Starts a new run at the level with this index (from the title screen or level select).</summary>

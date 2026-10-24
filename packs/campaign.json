@@ -1,0 +1,14 @@
+{
+	"worlds": [
+		"w01-meadow",
+		"w02-desert",
+		"w03-forest",
+		"w04-ocean",
+		"w05-ice",
+		"w06-neon-city",
+		"w07-clockwork",
+		"w08-crystal-cave",
+		"w09-lava",
+		"w10-space"
+	]
+}
