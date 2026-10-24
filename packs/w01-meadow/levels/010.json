@@ -2,9 +2,9 @@
 	"format": 1,
 	"name": "Bramble Glide",
 	"difficulty": 0.09,
-	"generator": "v2 seed 101009",
-	"timeLimit": 35,
-	"killHeight": -13,
+	"generator": "v3 seed 101009",
+	"timeLimit": 60,
+	"killHeight": -24,
 	"materials": {
 		"start": {
 			"color": [0.45, 0.7, 0.9],
@@ -71,65 +71,72 @@
 			"name": "Step",
 			"shape": "box",
 			"pos": [0, -0.5, 9.705],
-			"size": [6.3, 1, 3.41],
+			"size": [5.2, 1, 3.41],
 			"material": "bridge"
 		},
 		{
 			"name": "Step2",
 			"shape": "box",
 			"pos": [0, -1.5, 13.115],
-			"size": [6.3, 1, 3.41],
+			"size": [5.2, 1, 3.41],
 			"material": "bridge"
 		},
 		{
 			"name": "Step3",
 			"shape": "box",
 			"pos": [0, -2.5, 16.525],
-			"size": [6.3, 1, 3.41],
+			"size": [5.2, 1, 3.41],
 			"material": "bridge"
 		},
 		{
 			"name": "Step4",
 			"shape": "box",
 			"pos": [0, -3.5, 19.935],
-			"size": [6.3, 1, 3.41],
+			"size": [5.2, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step5",
+			"shape": "box",
+			"pos": [0, -4.5, 23.345],
+			"size": [5.2, 1, 3.41],
 			"material": "bridge"
 		},
 		{
 			"name": "Corner",
 			"shape": "box",
-			"pos": [0, -3.5, 25.64],
+			"pos": [0, -4.5, 29.05],
 			"size": [8, 1, 8],
 			"material": "grid"
 		},
 		{
 			"name": "Run",
 			"shape": "box",
-			"pos": [8.5, -3.5, 25.64],
+			"pos": [7, -4.5, 29.05],
 			"rot": [0, 90, 0],
-			"size": [6.5, 1, 9],
+			"size": [4.8, 1, 6],
 			"material": "grid"
 		},
 		{
 			"name": "Rail",
 			"shape": "box",
-			"pos": [8.5, -3, 29.04],
+			"pos": [7, -4, 31.6],
 			"rot": [0, 90, 0],
-			"size": [0.3, 1.1, 9],
+			"size": [0.3, 1.1, 6],
 			"material": "rail"
 		},
 		{
 			"name": "Rail2",
 			"shape": "box",
-			"pos": [8.5, -3, 22.24],
+			"pos": [7, -4, 26.5],
 			"rot": [0, 90, 0],
-			"size": [0.3, 1.1, 9],
+			"size": [0.3, 1.1, 6],
 			"material": "rail"
 		},
 		{
 			"name": "Corner2",
 			"shape": "box",
-			"pos": [17, -3.5, 25.64],
+			"pos": [14, -4.5, 29.05],
 			"rot": [0, 90, 0],
 			"size": [8, 1, 8],
 			"material": "grid"
@@ -137,40 +144,143 @@
 		{
 			"name": "Ramp",
 			"shape": "box",
-			"pos": [17, -4.4851, 33.5187],
+			"pos": [14, -5.9851, 38.9287],
 			"rot": [14.0362, 0, 0],
-			"size": [6.2, 1, 8.2462],
+			"size": [5.5, 1, 12.3693],
 			"material": "ramp"
 		},
 		{
 			"name": "Rail3",
 			"shape": "box",
-			"pos": [13.75, -3.9836, 33.5066],
+			"pos": [11.1, -5.4836, 38.9166],
 			"rot": [14.0362, 0, 0],
-			"size": [0.3, 1.1, 8.2462],
+			"size": [0.3, 1.1, 12.3693],
 			"material": "rail"
 		},
 		{
 			"name": "Rail4",
 			"shape": "box",
-			"pos": [20.25, -3.9836, 33.5066],
+			"pos": [16.9, -5.4836, 38.9166],
 			"rot": [14.0362, 0, 0],
-			"size": [0.3, 1.1, 8.2462],
+			"size": [0.3, 1.1, 12.3693],
 			"material": "rail"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [14, -7.5, 48.05],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Step6",
+			"shape": "box",
+			"pos": [14, -7.5, 52.755],
+			"size": [5.2, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step7",
+			"shape": "box",
+			"pos": [14, -8.5, 56.165],
+			"size": [5.2, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step8",
+			"shape": "box",
+			"pos": [14, -9.5, 59.575],
+			"size": [5.2, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step9",
+			"shape": "box",
+			"pos": [14, -10.5, 62.985],
+			"size": [5.2, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step10",
+			"shape": "box",
+			"pos": [14, -11.5, 66.395],
+			"size": [5.2, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner3",
+			"shape": "box",
+			"pos": [14, -11.5, 72.1],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp2",
+			"shape": "box",
+			"pos": [23.898, -12.7395, 72.1],
+			"rot": [11.7683, 90, 0],
+			"size": [5.1, 1, 12.2577],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail5",
+			"shape": "box",
+			"pos": [23.8878, -12.2384, 74.8],
+			"rot": [11.7683, 90, 0],
+			"size": [0.3, 1.1, 12.2577],
+			"material": "rail"
+		},
+		{
+			"name": "Rail6",
+			"shape": "box",
+			"pos": [23.8878, -12.2384, 69.4],
+			"rot": [11.7683, 90, 0],
+			"size": [0.3, 1.1, 12.2577],
+			"material": "rail"
+		},
+		{
+			"name": "Step11",
+			"shape": "box",
+			"pos": [31.705, -14, 72.1],
+			"rot": [0, 90, 0],
+			"size": [5.1, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step12",
+			"shape": "box",
+			"pos": [35.115, -15, 72.1],
+			"rot": [0, 90, 0],
+			"size": [5.1, 1, 3.41],
+			"material": "bridge"
+		},
+		{
+			"name": "Step13",
+			"shape": "box",
+			"pos": [38.525, -16, 72.1],
+			"rot": [0, 90, 0],
+			"size": [5.1, 1, 3.41],
+			"material": "bridge"
 		},
 		{
 			"name": "FinishPad",
 			"shape": "box",
-			"pos": [17, -5.5, 41.64],
+			"pos": [44.23, -16, 72.1],
+			"rot": [0, 90, 0],
 			"size": [8, 1, 8],
 			"material": "grid"
 		}
 	],
 	"hazards": [],
-	"checkpoints": [],
+	"checkpoints": [
+		{
+			"pos": [14, -7, 48.05],
+			"size": [7, 3, 2]
+		}
+	],
 	"goals": [
 		{
-			"pos": [17, -5, 41.64]
+			"pos": [44.23, -15.5, 72.1]
 		}
 	],
 	"gates": [],
@@ -195,19 +305,64 @@
 			"speed": 4
 		},
 		{
-			"pos": [0, -2.5, 25.64]
+			"pos": [0, -3.5, 23.345],
+			"speed": 4
 		},
 		{
-			"pos": [13, -2.5, 25.64]
+			"pos": [0, -3.5, 29.05]
 		},
 		{
-			"pos": [17, -2.5, 25.64]
+			"pos": [10, -3.5, 29.05]
 		},
 		{
-			"pos": [17, -4.5, 37.64]
+			"pos": [14, -3.5, 29.05]
 		},
 		{
-			"pos": [17, -4.5, 41.64]
+			"pos": [14, -6.5, 45.05]
+		},
+		{
+			"pos": [14, -6.5, 48.05]
+		},
+		{
+			"pos": [14, -6.5, 52.755],
+			"speed": 4
+		},
+		{
+			"pos": [14, -7.5, 56.165],
+			"speed": 4
+		},
+		{
+			"pos": [14, -8.5, 59.575],
+			"speed": 4
+		},
+		{
+			"pos": [14, -9.5, 62.985],
+			"speed": 4
+		},
+		{
+			"pos": [14, -10.5, 66.395],
+			"speed": 4
+		},
+		{
+			"pos": [14, -10.5, 72.1]
+		},
+		{
+			"pos": [30, -13, 72.1]
+		},
+		{
+			"pos": [31.705, -13, 72.1],
+			"speed": 4
+		},
+		{
+			"pos": [35.115, -14, 72.1],
+			"speed": 4
+		},
+		{
+			"pos": [38.525, -15, 72.1],
+			"speed": 4
+		},
+		{
+			"pos": [44.23, -15, 72.1]
 		}
 	]
 }

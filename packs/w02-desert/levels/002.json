@@ -2,9 +2,9 @@
 	"format": 1,
 	"name": "Dune Funnel",
 	"difficulty": 0.11,
-	"generator": "v2 seed 102001",
-	"timeLimit": 55,
-	"killHeight": -16,
+	"generator": "v3 seed 102001",
+	"timeLimit": 70,
+	"killHeight": -28,
 	"materials": {
 		"start": {
 			"color": [0.45, 0.7, 0.9],
@@ -68,158 +68,314 @@
 			"material": "start"
 		},
 		{
-			"name": "Run",
+			"name": "Ramp",
 			"shape": "box",
-			"pos": [0, -0.5, 12],
-			"size": [5.8, 1, 8],
-			"material": "grid"
+			"pos": [0, -1.9872, 14.3876],
+			"rot": [12.9946, 0, 0],
+			"size": [4.8, 1, 13.3417],
+			"material": "ramp"
 		},
 		{
 			"name": "Rail",
 			"shape": "box",
-			"pos": [-3.05, 0, 12],
-			"size": [0.3, 1.1, 8],
+			"pos": [-2.55, -1.4859, 14.3763],
+			"rot": [12.9946, 0, 0],
+			"size": [0.3, 1.1, 13.3417],
 			"material": "rail"
 		},
 		{
 			"name": "Rail2",
 			"shape": "box",
-			"pos": [3.05, 0, 12],
-			"size": [0.3, 1.1, 8],
+			"pos": [2.55, -1.4859, 14.3763],
+			"rot": [12.9946, 0, 0],
+			"size": [0.3, 1.1, 13.3417],
 			"material": "rail"
+		},
+		{
+			"name": "Step",
+			"shape": "box",
+			"pos": [0, -3.5, 22.695],
+			"size": [5.5, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [0, -4.5, 26.085],
+			"size": [5.5, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [0, -5.5, 29.475],
+			"size": [5.5, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step4",
+			"shape": "box",
+			"pos": [0, -6.5, 32.865],
+			"size": [5.5, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [0, -6.5, 37.56],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp2",
+			"shape": "box",
+			"pos": [0, -7.7351, 45.4387],
+			"rot": [14.0362, 0, 0],
+			"size": [5, 1, 10.3078],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail3",
+			"shape": "box",
+			"pos": [-2.65, -7.2336, 45.4266],
+			"rot": [14.0362, 0, 0],
+			"size": [0.3, 1.1, 10.3078],
+			"material": "rail"
+		},
+		{
+			"name": "Rail4",
+			"shape": "box",
+			"pos": [2.65, -7.2336, 45.4266],
+			"rot": [14.0362, 0, 0],
+			"size": [0.3, 1.1, 10.3078],
+			"material": "rail"
+		},
+		{
+			"name": "Step5",
+			"shape": "box",
+			"pos": [0, -9, 52.255],
+			"size": [4.8, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step6",
+			"shape": "box",
+			"pos": [0, -10, 55.645],
+			"size": [4.8, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step7",
+			"shape": "box",
+			"pos": [0, -11, 59.035],
+			"size": [4.8, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step8",
+			"shape": "box",
+			"pos": [0, -12, 62.425],
+			"size": [4.8, 1, 3.39],
+			"material": "bridge"
+		},
+		{
+			"name": "Step9",
+			"shape": "box",
+			"pos": [0, -13, 65.815],
+			"size": [4.8, 1, 3.39],
+			"material": "bridge"
 		},
 		{
 			"name": "Corner",
 			"shape": "box",
-			"pos": [0, -0.5, 20],
+			"pos": [0, -13, 71.51],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp3",
+			"shape": "box",
+			"pos": [8.8787, -14.2351, 71.51],
+			"rot": [14.0362, 90, 0],
+			"size": [4.9, 1, 10.3078],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail5",
+			"shape": "box",
+			"pos": [8.8666, -13.7336, 74.11],
+			"rot": [14.0362, 90, 0],
+			"size": [0.3, 1.1, 10.3078],
+			"material": "rail"
+		},
+		{
+			"name": "Rail6",
+			"shape": "box",
+			"pos": [8.8666, -13.7336, 68.91],
+			"rot": [14.0362, 90, 0],
+			"size": [0.3, 1.1, 10.3078],
+			"material": "rail"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [18, -15.5, 71.51],
+			"rot": [0, 90, 0],
 			"size": [8, 1, 8],
 			"material": "grid"
 		},
 		{
 			"name": "Slalom",
 			"shape": "box",
-			"pos": [17.5147, -2.4947, 20],
-			"rot": [8.3735, 90, 0],
-			"size": [8, 1, 27.4678],
+			"pos": [18, -16.994, 85.0177],
+			"rot": [8.8943, 0, 0],
+			"size": [8, 1, 19.4033],
 			"material": "ramp"
+		},
+		{
+			"name": "Rail7",
+			"shape": "box",
+			"pos": [13.85, -16.4934, 85.01],
+			"rot": [8.8943, 0, 0],
+			"size": [0.3, 1.1, 19.4033],
+			"material": "rail"
+		},
+		{
+			"name": "Rail8",
+			"shape": "box",
+			"pos": [22.15, -16.4934, 85.01],
+			"rot": [8.8943, 0, 0],
+			"size": [0.3, 1.1, 19.4033],
+			"material": "rail"
 		},
 		{
 			"name": "Post",
 			"shape": "cylinder",
-			"pos": [8.4175, 0.8498, 18.334],
-			"radius": 0.6,
-			"height": 3.5,
+			"pos": [18.1212, -14.7347, 80.205],
+			"radius": 0.45,
+			"height": 2.5,
 			"material": "post"
 		},
 		{
 			"name": "Post2",
 			"shape": "cylinder",
-			"pos": [13.2525, 0.1381, 21.666],
-			"radius": 0.6,
-			"height": 3.5,
+			"pos": [19.6212, -14.7347, 80.205],
+			"radius": 0.45,
+			"height": 2.5,
 			"material": "post"
 		},
 		{
 			"name": "Post3",
 			"shape": "cylinder",
-			"pos": [18.0875, -0.5736, 18.334],
-			"radius": 0.6,
-			"height": 3.5,
+			"pos": [21.1212, -14.7347, 80.205],
+			"radius": 0.45,
+			"height": 2.5,
 			"material": "post"
 		},
 		{
 			"name": "Post4",
 			"shape": "cylinder",
-			"pos": [22.9225, -1.2853, 21.666],
-			"radius": 0.6,
-			"height": 3.5,
+			"pos": [14.3212, -14.7347, 80.205],
+			"radius": 0.45,
+			"height": 2.5,
 			"material": "post"
 		},
 		{
 			"name": "Post5",
 			"shape": "cylinder",
-			"pos": [27.7575, -1.997, 18.334],
-			"radius": 0.6,
-			"height": 3.5,
+			"pos": [21.7059, -15.5782, 85.595],
+			"radius": 0.45,
+			"height": 2.5,
 			"material": "post"
 		},
 		{
-			"name": "Run2",
-			"shape": "box",
-			"pos": [36.175, -4.5, 20],
-			"rot": [0, 90, 0],
-			"size": [6.4, 1, 10],
-			"material": "grid"
+			"name": "Post6",
+			"shape": "cylinder",
+			"pos": [17.9059, -15.5782, 85.595],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
 		},
 		{
-			"name": "Rail3",
-			"shape": "box",
-			"pos": [36.175, -4, 23.35],
-			"rot": [0, 90, 0],
-			"size": [0.3, 1.1, 10],
-			"material": "rail"
+			"name": "Post7",
+			"shape": "cylinder",
+			"pos": [16.4059, -15.5782, 85.595],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
 		},
 		{
-			"name": "Rail4",
-			"shape": "box",
-			"pos": [36.175, -4, 16.65],
-			"rot": [0, 90, 0],
-			"size": [0.3, 1.1, 10],
-			"material": "rail"
+			"name": "Post8",
+			"shape": "cylinder",
+			"pos": [14.9059, -15.5782, 85.595],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
 		},
 		{
-			"name": "Pad",
+			"name": "Post9",
+			"shape": "cylinder",
+			"pos": [18.4251, -16.4218, 90.985],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post10",
+			"shape": "cylinder",
+			"pos": [19.9251, -16.4218, 90.985],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post11",
+			"shape": "cylinder",
+			"pos": [21.4251, -16.4218, 90.985],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Post12",
+			"shape": "cylinder",
+			"pos": [14.6251, -16.4218, 90.985],
+			"radius": 0.45,
+			"height": 2.5,
+			"material": "post"
+		},
+		{
+			"name": "Pad2",
 			"shape": "box",
-			"pos": [44.175, -4.5, 20],
-			"rot": [0, 90, 0],
+			"pos": [18, -18.5, 97.68],
 			"size": [7, 1, 6],
 			"material": "grid"
 		},
 		{
-			"name": "Step",
+			"name": "Step10",
 			"shape": "box",
-			"pos": [48.87, -4.5, 20],
-			"rot": [0, 90, 0],
-			"size": [6, 1, 3.39],
+			"pos": [18, -18.5, 102.375],
+			"size": [5.5, 1, 3.39],
 			"material": "bridge"
 		},
 		{
-			"name": "Step2",
+			"name": "Step11",
 			"shape": "box",
-			"pos": [52.26, -5.5, 20],
-			"rot": [0, 90, 0],
-			"size": [6, 1, 3.39],
+			"pos": [18, -19.5, 105.765],
+			"size": [5.5, 1, 3.39],
 			"material": "bridge"
 		},
 		{
-			"name": "Step3",
+			"name": "Step12",
 			"shape": "box",
-			"pos": [55.65, -6.5, 20],
-			"rot": [0, 90, 0],
-			"size": [6, 1, 3.39],
-			"material": "bridge"
-		},
-		{
-			"name": "Step4",
-			"shape": "box",
-			"pos": [59.04, -7.5, 20],
-			"rot": [0, 90, 0],
-			"size": [6, 1, 3.39],
-			"material": "bridge"
-		},
-		{
-			"name": "Step5",
-			"shape": "box",
-			"pos": [62.43, -8.5, 20],
-			"rot": [0, 90, 0],
-			"size": [6, 1, 3.39],
+			"pos": [18, -20.5, 109.155],
+			"size": [5.5, 1, 3.39],
 			"material": "bridge"
 		},
 		{
 			"name": "FinishPad",
 			"shape": "box",
-			"pos": [68.125, -8.5, 20],
-			"rot": [0, 90, 0],
+			"pos": [18, -20.5, 114.85],
 			"size": [8, 1, 8],
 			"material": "grid"
 		}
@@ -227,14 +383,21 @@
 	"hazards": [],
 	"checkpoints": [
 		{
-			"pos": [44.175, -4, 20],
-			"rot": [0, 90, 0],
+			"pos": [0, -6, 37.56],
+			"size": [7, 3, 2]
+		},
+		{
+			"pos": [0, -12.5, 71.51],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [18, -18, 97.68],
 			"size": [7, 3, 2]
 		}
 	],
 	"goals": [
 		{
-			"pos": [68.125, -8, 20]
+			"pos": [18, -20, 114.85]
 		}
 	],
 	"gates": [],
@@ -243,62 +406,104 @@
 			"pos": [0, 0.5, 4]
 		},
 		{
-			"pos": [0, 0.5, 16]
+			"pos": [0, -2.5, 21]
 		},
 		{
-			"pos": [0, 0.5, 20]
-		},
-		{
-			"pos": [8.4175, -0.1502, 22.6],
-			"speed": 5
-		},
-		{
-			"pos": [13.2525, -0.8619, 17.4],
-			"speed": 5
-		},
-		{
-			"pos": [18.0875, -1.5736, 22.6],
-			"speed": 5
-		},
-		{
-			"pos": [22.9225, -2.2853, 17.4],
-			"speed": 5
-		},
-		{
-			"pos": [27.7575, -2.997, 22.6],
-			"speed": 5
-		},
-		{
-			"pos": [31.175, -3.5, 20]
-		},
-		{
-			"pos": [41.175, -3.5, 20]
-		},
-		{
-			"pos": [44.175, -3.5, 20]
-		},
-		{
-			"pos": [48.87, -3.5, 20],
+			"pos": [0, -2.5, 22.695],
 			"speed": 4
 		},
 		{
-			"pos": [52.26, -4.5, 20],
+			"pos": [0, -3.5, 26.085],
 			"speed": 4
 		},
 		{
-			"pos": [55.65, -5.5, 20],
+			"pos": [0, -4.5, 29.475],
 			"speed": 4
 		},
 		{
-			"pos": [59.04, -6.5, 20],
+			"pos": [0, -5.5, 32.865],
 			"speed": 4
 		},
 		{
-			"pos": [62.43, -7.5, 20],
+			"pos": [0, -5.5, 37.56]
+		},
+		{
+			"pos": [0, -8, 50.56]
+		},
+		{
+			"pos": [0, -8, 52.255],
 			"speed": 4
 		},
 		{
-			"pos": [68.125, -7.5, 20]
+			"pos": [0, -9, 55.645],
+			"speed": 4
+		},
+		{
+			"pos": [0, -10, 59.035],
+			"speed": 4
+		},
+		{
+			"pos": [0, -11, 62.425],
+			"speed": 4
+		},
+		{
+			"pos": [0, -12, 65.815],
+			"speed": 4
+		},
+		{
+			"pos": [0, -12, 71.51]
+		},
+		{
+			"pos": [14, -14.5, 71.51]
+		},
+		{
+			"pos": [18, -14.5, 71.51]
+		},
+		{
+			"pos": [16.2212, -15.0156, 78.805],
+			"speed": 3.5
+		},
+		{
+			"pos": [16.2212, -15.3756, 81.105],
+			"speed": 3.5
+		},
+		{
+			"pos": [19.8059, -15.8592, 84.195],
+			"speed": 3.5
+		},
+		{
+			"pos": [19.8059, -16.2191, 86.495],
+			"speed": 3.5
+		},
+		{
+			"pos": [16.5251, -16.7027, 89.585],
+			"speed": 3.5
+		},
+		{
+			"pos": [16.5251, -17.0626, 91.885],
+			"speed": 3.5
+		},
+		{
+			"pos": [18, -17.5, 94.68],
+			"speed": 5
+		},
+		{
+			"pos": [18, -17.5, 97.68]
+		},
+		{
+			"pos": [18, -17.5, 102.375],
+			"speed": 4
+		},
+		{
+			"pos": [18, -18.5, 105.765],
+			"speed": 4
+		},
+		{
+			"pos": [18, -19.5, 109.155],
+			"speed": 4
+		},
+		{
+			"pos": [18, -19.5, 114.85]
 		}
 	]
 }
