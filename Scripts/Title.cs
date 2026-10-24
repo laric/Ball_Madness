@@ -41,9 +41,13 @@ public partial class Title : Node3D
 
 		_camera = GetNode<Camera3D>("Camera3D");
 		_ui = GetNode<Control>("Ui/Root");
-		_ui.Theme = MenuUi.Theme;
+		Levels.ApplyCommandLine(); // -- --pack ID opens on that pack
 		Levels.ReloadPack();
-		AddBackgroundLevel();
+		// The title screen is dressed in the current pack's world.
+		var world = Levels.CurrentPack.Theme;
+		MenuUi.Use(world);
+		_ui.Theme = MenuUi.Theme;
+		AddBackgroundLevel(world);
 		ShowMainMenu();
 
 		// Back from the level editor: reopen the pack manager on the same pack.
@@ -65,12 +69,17 @@ public partial class Title : Node3D
 	}
 
 	/// <summary>Shows level 1 behind the menu, centred between its spawn and goal.</summary>
-	private void AddBackgroundLevel()
+	private void AddBackgroundLevel(ThemeFile world)
 	{
 		if (Levels.Count == 0)
+		{
+			Themes.ApplyEnvironment(this, world);
 			return;
+		}
 
-		var level = LevelBuilder.Build(Packs.LoadLevel(Levels.CurrentPack.LevelPaths[0]));
+		var file = Packs.LoadLevel(Levels.CurrentPack.LevelPaths[0]);
+		Themes.ApplyEnvironment(this, world, file.KillHeight);
+		var level = LevelBuilder.Build(file, world);
 		// Scenery only: no hazards moving or areas firing behind the menu.
 		level.ProcessMode = ProcessModeEnum.Disabled;
 		AddChild(level);
@@ -91,6 +100,8 @@ public partial class Title : Node3D
 		var column = MenuUi.CenteredColumn(_ui, null, 420);
 		_mainMenu = column.GetParent().GetParent<Control>();
 		MenuUi.AddHeading(column, "BALL MADNESS", 56);
+		if (Levels.CurrentPack.Theme.Id != Themes.ClassicId || PlayablePacks().Count > 1)
+			AddWorldLine(column, Levels.CurrentPack);
 
 		string pack = SaveGame.CurrentPack;
 		int next = ContinueIndex();
@@ -105,6 +116,13 @@ public partial class Title : Node3D
 		MenuUi.AddButton(column, "Settings", ShowSettings);
 		MenuUi.AddButton(column, "Quit", () => GetTree().Quit());
 		MenuUi.FocusFirst(column);
+	}
+
+	/// <summary>The pack's name and world under the heading, in the world's accent colour.</summary>
+	private static void AddWorldLine(Container column, Pack pack)
+	{
+		var line = MenuUi.AddHeading(column, $"{pack.Name}  ·  {pack.Theme.Name}", 22);
+		line.AddThemeColorOverride("font_color", MenuUi.Accent.Lerp(Colors.White, 0.3f));
 	}
 
 	/// <summary>The level after the last one completed (the last level once all are done).</summary>
@@ -136,6 +154,10 @@ public partial class Title : Node3D
 				GetTree().ReloadCurrentScene();
 			});
 			button.AddThemeFontSizeOverride("font_size", 22);
+			// Each pack's button in its own world's colours.
+			button.Theme = MenuUi.ThemeFor(pack.Theme);
+			if (pack.Theme.Id != Themes.ClassicId)
+				button.Text = $"{pack.Name}  ·  {pack.Theme.Name}\n{count}  ·  {done} completed";
 			if (pack == Levels.CurrentPack)
 				button.CallDeferred(Control.MethodName.GrabFocus);
 		}

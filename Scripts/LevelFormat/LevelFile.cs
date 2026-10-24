@@ -37,7 +37,10 @@ public class LevelFile
 	/// <summary>Anything below this height counts as having fallen off the course.</summary>
 	public float KillHeight { get; set; } = -12.0f;
 
-	/// <summary>Named looks that parts refer to by key.</summary>
+	/// <summary>
+	/// Named looks that parts refer to by key. The pack's theme replaces the
+	/// ones it has a look for, unless they're marked <see cref="MaterialDef.Override"/>.
+	/// </summary>
 	public Dictionary<string, MaterialDef> Materials { get; set; } = new();
 
 	public Vec3 Spawn { get; set; }
@@ -71,6 +74,12 @@ public class MaterialDef
 
 	public float? Roughness { get; set; }
 	public float? Metallic { get; set; }
+
+	/// <summary>Makes the grid lines (or a plain surface) give off their colour at this strength.</summary>
+	public float? Glow { get; set; }
+
+	/// <summary>True to keep this look whatever the pack's theme says for the same key.</summary>
+	public bool? Override { get; set; }
 }
 
 /// <summary>A box, cylinder or sphere: the building block of courses and hazards.</summary>
@@ -267,6 +276,7 @@ public class RoundedFloatConverter : JsonConverter<float>
 	Converters = new[] { typeof(RoundedFloatConverter) })]
 [JsonSerializable(typeof(LevelFile))]
 [JsonSerializable(typeof(PackFile))]
+[JsonSerializable(typeof(ThemeFile))]
 internal partial class LevelJsonContext : JsonSerializerContext
 {
 }

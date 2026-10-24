@@ -1,0 +1,32 @@
+{
+	"id": "desert",
+	"name": "Desert",
+	"description": "Sandstone ruins in the blazing sun",
+	"sky": { "top": [0.38, 0.6, 0.9], "horizon": [1.0, 0.86, 0.62], "ground": [0.6, 0.45, 0.28] },
+	"fog": { "color": [0.98, 0.86, 0.68], "density": 0.002, "heightDensity": 0.005 },
+	"light": { "color": [1, 0.9, 0.74], "energy": 1.2, "pitch": 66, "ambientEnergy": 0.28 },
+	"ground": { "color": [0.72, 0.48, 0.26] },
+	"ui": { "accent": [0.98, 0.66, 0.3], "panel": [0.32, 0.17, 0.07] },
+	"materials": {
+		"grid": { "color": [0.92, 0.82, 0.62], "line": [0.6, 0.46, 0.3] },
+		"start": { "color": [0.98, 0.92, 0.75], "line": [0.65, 0.55, 0.35] },
+		"ramp": { "color": [0.994, 0.886, 0.67], "line": [0.6, 0.46, 0.3] },
+		"dark": { "color": [0.552, 0.492, 0.372], "line": [0.48, 0.368, 0.24] },
+		"moss": { "color": [0.66, 0.76, 0.485], "line": [0.297, 0.342, 0.218] },
+		"rail": { "color": [0.78, 0.42, 0.26], "line": [0.45, 0.22, 0.12] },
+		"bridge": { "color": [0.62, 0.44, 0.26], "line": [0.36, 0.24, 0.12] },
+		"post": { "color": [0.2, 0.66, 0.66], "line": [0.08, 0.35, 0.36] },
+		"moving": { "color": [0.25, 0.65, 0.72], "roughness": 0.5 },
+		"slider": { "color": [0.25, 0.65, 0.72], "roughness": 0.5 },
+		"hazard": { "color": [0.92, 0.55, 0.15], "roughness": 0.6 },
+		"pusher": { "color": [0.92, 0.55, 0.15], "roughness": 0.6 },
+		"sweeper": { "color": [0.82, 0.25, 0.15], "roughness": 0.4, "metallic": 0.2 },
+		"hub": { "color": [0.45, 0.32, 0.2], "roughness": 0.4, "metallic": 0.5 },
+		"steelie": { "color": [0.18, 0.12, 0.08], "roughness": 0.25, "metallic": 0.85 },
+		"bumper": { "color": [0.2, 0.7, 0.75], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.35, 0.25, 0.15], "line": [0.95, 0.8, 0.35] },
+		"teleporter": { "color": [0.3, 0.8, 0.85] },
+		"trapdoor": { "color": [0.7, 0.45, 0.2], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.45, 0.32, 0.2], "roughness": 0.4, "metallic": 0.5 }
+	}
+}

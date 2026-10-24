@@ -34,6 +34,9 @@ public class PackFile
 	/// <c>levels/*.json</c> is played in file name order.
 	/// </summary>
 	public List<string> Levels { get; set; }
+
+	/// <summary>The world the pack is set in, e.g. <c>{ "base": "lava" }</c>. Left out, "classic".</summary>
+	public ThemeFile Theme { get; set; }
 }
 
 /// <summary>A pack found on disk, ready to play.</summary>
@@ -52,6 +55,9 @@ public class Pack
 
 	public string Id => Info.Id;
 	public string Name => Info.Name;
+
+	/// <summary>The pack's theme laid over its base theme.</summary>
+	public ThemeFile Theme => Themes.For(this);
 }
 
 /// <summary>
@@ -274,6 +280,7 @@ public static class Packs
 		Author = pack.Info.Author,
 		Version = pack.Info.Version,
 		Description = pack.Info.Description,
+		Theme = pack.Info.Theme,
 		Levels = pack.LevelPaths.Select(p => p.GetFile()).ToList(),
 	};
 

@@ -1,0 +1,32 @@
+{
+	"id": "forest",
+	"name": "Forest",
+	"description": "Mossy stones deep in the old woods",
+	"sky": { "top": [0.18, 0.3, 0.32], "horizon": [0.55, 0.66, 0.52], "ground": [0.1, 0.16, 0.08] },
+	"fog": { "color": [0.42, 0.52, 0.42], "density": 0.003, "heightDensity": 0.008 },
+	"light": { "color": [1, 0.88, 0.66], "energy": 1.0, "pitch": 40, "ambientEnergy": 0.35 },
+	"ground": { "color": [0.14, 0.22, 0.1] },
+	"ui": { "accent": [0.38, 0.65, 0.35], "panel": [0.06, 0.13, 0.06] },
+	"materials": {
+		"grid": { "color": [0.42, 0.52, 0.34], "line": [0.22, 0.3, 0.16] },
+		"start": { "color": [0.72, 0.66, 0.46], "line": [0.38, 0.32, 0.18] },
+		"ramp": { "color": [0.454, 0.562, 0.367], "line": [0.22, 0.3, 0.16] },
+		"dark": { "color": [0.252, 0.312, 0.204], "line": [0.176, 0.24, 0.128] },
+		"moss": { "color": [0.41, 0.61, 0.345], "line": [0.184, 0.275, 0.155] },
+		"rail": { "color": [0.38, 0.27, 0.16], "line": [0.2, 0.13, 0.07] },
+		"bridge": { "color": [0.56, 0.4, 0.25], "line": [0.3, 0.2, 0.11] },
+		"post": { "color": [0.88, 0.8, 0.5], "line": [0.5, 0.42, 0.2] },
+		"moving": { "color": [0.88, 0.58, 0.22], "roughness": 0.6 },
+		"slider": { "color": [0.88, 0.58, 0.22], "roughness": 0.6 },
+		"hazard": { "color": [0.9, 0.45, 0.15], "roughness": 0.6 },
+		"pusher": { "color": [0.9, 0.45, 0.15], "roughness": 0.6 },
+		"sweeper": { "color": [0.78, 0.18, 0.14], "roughness": 0.4 },
+		"hub": { "color": [0.32, 0.24, 0.16], "roughness": 0.6, "metallic": 0.2 },
+		"steelie": { "color": [0.12, 0.1, 0.08], "roughness": 0.25, "metallic": 0.8 },
+		"bumper": { "color": [0.9, 0.3, 0.25], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.22, 0.18, 0.12], "line": [0.85, 0.8, 0.4] },
+		"teleporter": { "color": [0.55, 0.9, 0.4] },
+		"trapdoor": { "color": [0.6, 0.42, 0.22], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.32, 0.24, 0.16], "roughness": 0.6, "metallic": 0.2 }
+	}
+}

@@ -68,6 +68,8 @@ public partial class Game : Node3D
 		skipButton.Visible = OS.IsDebugBuild() && !Levels.Testing;
 		skipButton.Pressed += SkipLevel;
 
+		Levels.ApplyCommandLine();
+		MenuUi.Use(Levels.CurrentTheme);
 		_pauseMenu = new PauseMenu();
 		AddChild(_pauseMenu);
 
@@ -106,6 +108,7 @@ public partial class Game : Node3D
 
 		TimeLimit = level.TimeLimit;
 		KillHeight = level.KillHeight;
+		LevelFormat.Themes.ApplyEnvironment(this, Levels.CurrentTheme, KillHeight);
 		_levelName = level.DisplayName;
 		_levelLabel.Text = Levels.Testing
 			? $"TEST  {_levelName}"

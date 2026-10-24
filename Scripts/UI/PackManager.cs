@@ -25,6 +25,7 @@ public partial class PackManager : Control
 	private ItemList _levelList;
 	private LineEdit _nameEdit;
 	private LineEdit _authorEdit;
+	private OptionButton _worldPicker;
 	private Label _info;
 	private Control _details;
 	private Label _empty;
@@ -83,6 +84,14 @@ public partial class PackManager : Control
 		right.AddChild(details);
 		_nameEdit = AddEdit(details, "Name", name => UpdateInfo(info => info.Name = string.IsNullOrWhiteSpace(name) ? info.Id : name.Trim()));
 		_authorEdit = AddEdit(details, "Author", author => UpdateInfo(info => info.Author = string.IsNullOrWhiteSpace(author) ? null : author.Trim()));
+		var worldRow = new HBoxContainer();
+		worldRow.AddChild(new Label { Text = "World", CustomMinimumSize = new Vector2(80, 0) });
+		_worldPicker = new OptionButton { SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "The world theme every level of the pack is played in" };
+		foreach (var theme in Themes.BuiltIn)
+			_worldPicker.AddItem(string.IsNullOrEmpty(theme.Description) ? theme.Name : $"{theme.Name}  ·  {theme.Description}");
+		_worldPicker.ItemSelected += i => UpdateInfo(info => info.Theme = Themes.WithBase(info.Theme, Themes.BuiltIn[(int)i].Id));
+		worldRow.AddChild(_worldPicker);
+		details.AddChild(worldRow);
 		_info = new Label { Modulate = new Color(1, 1, 1, 0.7f) };
 		details.AddChild(_info);
 		details.AddChild(new Label { Text = "Levels, in play order" });
@@ -177,6 +186,12 @@ public partial class PackManager : Control
 
 		_nameEdit.Text = pack.Name;
 		_authorEdit.Text = pack.Info.Author ?? "";
+		string world = Themes.BaseId(pack.Info);
+		for (int i = 0; i < Themes.BuiltIn.Count; i++)
+		{
+			if (Themes.BuiltIn[i].Id == world)
+				_worldPicker.Select(i);
+		}
 		_info.Text = $"id {pack.Id}  ·  {pack.Folder}";
 		_levelList.Clear();
 		for (int i = 0; i < pack.LevelPaths.Count; i++)

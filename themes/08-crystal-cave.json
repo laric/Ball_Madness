@@ -1,0 +1,37 @@
+{
+	"id": "crystal-cave",
+	"name": "Crystal Cave",
+	"description": "Glittering crystals in the dark below",
+	"sky": {
+		"top": [0.02, 0.02, 0.05],
+		"horizon": [0.13, 0.08, 0.22],
+		"ground": [0.05, 0.03, 0.08],
+		"stars": 0.15
+	},
+	"fog": { "color": [0.16, 0.1, 0.26], "density": 0.002, "heightDensity": 0.008 },
+	"light": { "color": [0.62, 0.72, 1.0], "energy": 0.85, "ambientEnergy": 0.5 },
+	"ground": { "color": [0.07, 0.05, 0.1] },
+	"ui": { "accent": [0.62, 0.45, 1.0], "panel": [0.1, 0.06, 0.19] },
+	"materials": {
+		"grid": { "color": [0.3, 0.27, 0.37], "line": [0.6, 0.4, 0.92], "glow": 0.8 },
+		"start": { "color": [0.42, 0.4, 0.52], "line": [0.3, 0.92, 0.9], "glow": 0.7 },
+		"ramp": { "color": [0.324, 0.292, 0.4], "line": [0.6, 0.4, 0.92], "glow": 0.8 },
+		"dark": { "color": [0.18, 0.162, 0.222], "line": [0.48, 0.32, 0.736], "glow": 0.8 },
+		"moss": { "color": [0.22, 0.32, 0.36], "line": [0.3, 0.9, 0.8], "glow": 0.6 },
+		"rail": { "color": [0.58, 0.38, 0.95], "roughness": 0.2, "metallic": 0.2, "glow": 0.5 },
+		"bridge": { "color": [0.36, 0.31, 0.42], "line": [0.5, 0.4, 0.62], "glow": 0.3 },
+		"post": { "color": [0.3, 0.92, 0.86], "roughness": 0.2, "metallic": 0.2, "glow": 1.0 },
+		"moving": { "color": [0.35, 0.95, 0.85], "roughness": 0.25, "metallic": 0.2, "glow": 0.5 },
+		"slider": { "color": [0.35, 0.95, 0.85], "roughness": 0.25, "metallic": 0.2, "glow": 0.5 },
+		"hazard": { "color": [0.9, 0.5, 1.0], "roughness": 0.25, "metallic": 0.2, "glow": 0.6 },
+		"pusher": { "color": [0.9, 0.5, 1.0], "roughness": 0.25, "metallic": 0.2, "glow": 0.6 },
+		"sweeper": { "color": [0.95, 0.3, 0.7], "roughness": 0.25, "metallic": 0.2, "glow": 0.8 },
+		"hub": { "color": [0.2, 0.18, 0.26], "roughness": 0.3, "metallic": 0.7 },
+		"steelie": { "color": [0.12, 0.1, 0.18], "roughness": 0.15, "metallic": 0.9 },
+		"bumper": { "color": [0.3, 0.95, 0.85], "roughness": 0.3, "metallic": 0.3, "glow": 0.6 },
+		"conveyor": { "color": [0.14, 0.12, 0.2], "line": [0.7, 0.5, 1.0] },
+		"teleporter": { "color": [0.95, 0.4, 0.9] },
+		"trapdoor": { "color": [0.45, 0.4, 0.6], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.2, 0.18, 0.26], "roughness": 0.3, "metallic": 0.7 }
+	}
+}

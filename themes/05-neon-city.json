@@ -1,0 +1,37 @@
+{
+	"id": "neon-city",
+	"name": "Neon City",
+	"description": "Glowing grids above the night streets",
+	"sky": {
+		"top": [0.02, 0.0, 0.07],
+		"horizon": [0.28, 0.05, 0.38],
+		"ground": [0.05, 0.0, 0.1],
+		"stars": 0.35
+	},
+	"fog": { "color": [0.2, 0.05, 0.32], "density": 0.001, "heightDensity": 0.006 },
+	"light": { "color": [0.65, 0.55, 1.0], "energy": 0.8, "ambientEnergy": 0.45 },
+	"ground": { "color": [0.04, 0.02, 0.09], "roughness": 0.3, "metallic": 0.4 },
+	"ui": { "accent": [1.0, 0.22, 0.75], "panel": [0.1, 0.02, 0.17] },
+	"materials": {
+		"grid": { "color": [0.07, 0.06, 0.14], "line": [0.1, 0.9, 1.0], "glow": 2.0 },
+		"start": { "color": [0.12, 0.1, 0.2], "line": [1.0, 0.9, 0.2], "glow": 1.6 },
+		"ramp": { "color": [0.076, 0.065, 0.151], "line": [0.1, 0.9, 1.0], "glow": 2.0 },
+		"dark": { "color": [0.042, 0.036, 0.084], "line": [0.08, 0.72, 0.8], "glow": 2.0 },
+		"moss": { "color": [0.06, 0.12, 0.1], "line": [0.2, 1.0, 0.5], "glow": 1.6 },
+		"rail": { "color": [0.12, 0.05, 0.16], "line": [1.0, 0.2, 0.8], "glow": 2.0 },
+		"bridge": { "color": [0.09, 0.07, 0.16], "line": [0.6, 0.3, 1.0], "glow": 1.6 },
+		"post": { "color": [1.0, 0.2, 0.6], "roughness": 0.4, "glow": 1.5 },
+		"moving": { "color": [0.2, 1.0, 0.6], "roughness": 0.4, "glow": 1.0 },
+		"slider": { "color": [0.2, 1.0, 0.6], "roughness": 0.4, "glow": 1.0 },
+		"hazard": { "color": [1.0, 0.5, 0.1], "roughness": 0.4, "glow": 1.0 },
+		"pusher": { "color": [1.0, 0.5, 0.1], "roughness": 0.4, "glow": 1.0 },
+		"sweeper": { "color": [1.0, 0.15, 0.5], "roughness": 0.3, "glow": 1.5 },
+		"hub": { "color": [0.1, 0.1, 0.16], "roughness": 0.3, "metallic": 0.8 },
+		"steelie": { "color": [0.05, 0.05, 0.08], "roughness": 0.15, "metallic": 0.9 },
+		"bumper": { "color": [0.2, 0.9, 1.0], "roughness": 0.3, "metallic": 0.3, "glow": 0.6 },
+		"conveyor": { "color": [0.06, 0.05, 0.1], "line": [1.0, 0.2, 0.8] },
+		"teleporter": { "color": [0.3, 1.0, 0.6] },
+		"trapdoor": { "color": [0.6, 0.3, 1.0], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.1, 0.1, 0.16], "roughness": 0.3, "metallic": 0.8 }
+	}
+}

@@ -59,6 +59,8 @@ packs/main/
     ...
 ```
 
+Each pack is set in a **world theme**: sky, fog, light, the ground under the course, menu colours and the course and hazard materials. There are ten built-in worlds (Meadow, Desert, Ice, Lava, Neon City, Ocean, Forest, Crystal Cave, Clockwork and Space) plus Classic, the default, in `themes/`; a pack picks one with `"theme": { "base": "lava" }` in its `pack.json` and can change any part of it. `-- --theme ID` previews any pack in another world.
+
 A level file is plain JSON: the time limit, colours, the course's boxes, cylinders and ramps, moving hazards, checkpoints, goal and the autopilot's route. The game builds the level from it when it loads, and a level file can't contain code, so packs from other players are safe to play. [docs/level-format.md](docs/level-format.md) describes every field.
 
 Reach the goal and the level-complete screen shows your time; press Enter for the next level. Run out of time and Enter or R retries the same level. After the last level the game-complete screen shows your total time and falls, and Enter starts again from level 1.
@@ -85,7 +87,7 @@ The finale: faster pistons on a 2.5 m walkway, a sliding bridge, an arena guarde
 
 ## Level editor
 
-**Level editor** on the title screen opens the pack manager. It lists your own packs (the built-in pack can't be changed): **New pack** makes one, the Name and Author boxes rename it, and the level list has **New level**, **Edit** (or double-click), **Move up**/**Move down** for the play order and **Delete level**. **Play pack** plays it from the selected level, **Export zip…** saves the pack as a zip to share, **Import zip…** adds one someone sent you (replacing an older copy of the same pack), and **Delete pack** removes it.
+**Level editor** on the title screen opens the pack manager. It lists your own packs (the built-in pack can't be changed): **New pack** makes one, the Name and Author boxes rename it, **World** sets the pack's theme (also in the editor's toolbar), and the level list has **New level**, **Edit** (or double-click), **Move up**/**Move down** for the play order and **Delete level**. **Play pack** plays it from the selected level, **Export zip…** saves the pack as a zip to share, **Import zip…** adds one someone sent you (replacing an older copy of the same pack), and **Delete pack** removes it.
 
 The editor shows the level as the game builds it, with hazards frozen where they start, over a build grid with 0.5 m steps. The camera works like the game's: right-drag to orbit, wheel to zoom, WASD or middle-drag to pan, F to frame the selection.
 
@@ -133,7 +135,8 @@ Scripts/SaveGame.cs Progress in user://save.json: furthest level, best times, fe
 Scripts/UI/         Menu theme, level select, settings screen, pause menu, pack manager
 Scripts/Editing/    Level editor: palette catalog, item helpers and checks, property panel, session kept across test plays
 Scripts/Levels.cs   The pack and level being played and the run's total time
-Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file to nodes), Packs (finding, importing, exporting)
+Scripts/LevelFormat/ Level and pack file formats (LevelFile), LevelBuilder (file to nodes), Packs (finding, importing, exporting), Themes (world themes)
+themes/             The built-in world themes as JSON
 Scripts/LevelInfo.cs Per-level settings on the built level's root: name, time limit, kill height
 Scripts/Ball.cs     Camera-relative rolling controls
 Scripts/CameraRig.cs Isometric orthographic follow camera, right-drag to orbit, wheel to zoom, optional follow-the-ball yaw
@@ -173,8 +176,8 @@ Sections first appear at these difficulties (`LevelGenerator.Unlocks`): run and 
 
 ```sh
 dotnet build
-GODOT=godot-mono tools/build-pack.sh my-pack 20 1 0 1 "My pack"   # ID COUNT SEED FROM TO NAME
-GODOT=godot-mono tools/build-pack.sh ice-world 10 1 0.3 0.7 "Ice" Ice   # every level has an Ice section
+GODOT=godot-mono tools/build-pack.sh my-pack 20 1 0 1 "My pack"   # ID COUNT SEED FROM TO NAME [FEATURE] [THEME]
+GODOT=godot-mono tools/build-pack.sh ice-world 10 1 0.3 0.7 "Ice" Ice ice   # every level has an Ice section, in the Ice world
 ```
 
 That writes `packs/my-pack/` with 20 levels whose difficulty rises from 0 to 1, then plays each one with the autopilot. A level the autopilot can't finish without falling is generated again from another seed, and every level's time limit is set from the autopilot's time on it: about 2.6 times as long on the easiest levels, down to 1.3 times on the hardest. The lower-level commands it uses are in `Scripts/Tools/ToolRunner.cs`.

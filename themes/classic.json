@@ -1,0 +1,8 @@
+{
+	"id": "classic",
+	"name": "Classic",
+	"description": "Each level's own colours",
+	"sky": { "top": [0.08, 0.06, 0.2], "horizon": [0.35, 0.3, 0.55], "ground": [0.02, 0.02, 0.05] },
+	"light": { "color": [1, 1, 1], "energy": 1.2, "ambientEnergy": 0.6 },
+	"ui": { "accent": [0.45, 0.4, 0.8], "panel": [0.12, 0.1, 0.28] }
+}

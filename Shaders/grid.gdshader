@@ -6,6 +6,8 @@ uniform vec4 base_color : source_color = vec4(0.55, 0.62, 0.75, 1.0);
 uniform vec4 line_color : source_color = vec4(0.18, 0.2, 0.3, 1.0);
 uniform float cell_size = 1.0;
 uniform float side_darken : hint_range(0.0, 1.0) = 0.35;
+// Neon: the grid lines give off their colour at this strength.
+uniform float line_glow = 0.0;
 
 varying vec3 world_pos;
 varying vec3 world_normal;
@@ -27,5 +29,6 @@ void fragment() {
 	color *= mix(1.0 - side_darken, 1.0, smoothstep(0.3, 0.9, n.y));
 
 	ALBEDO = color;
+	EMISSION = line_color.rgb * line * line_glow;
 	ROUGHNESS = 0.85;
 }

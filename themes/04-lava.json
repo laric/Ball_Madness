@@ -1,0 +1,32 @@
+{
+	"id": "lava",
+	"name": "Lava",
+	"description": "Black basalt over a sea of fire",
+	"sky": { "top": [0.06, 0.01, 0.01], "horizon": [0.45, 0.1, 0.03], "ground": [0.5, 0.12, 0.02] },
+	"fog": { "color": [0.65, 0.22, 0.06], "density": 0.002, "heightDensity": 0.008, "height": 4 },
+	"light": { "color": [1, 0.62, 0.38], "energy": 1.1, "ambientEnergy": 0.5 },
+	"ground": { "color": [0.4, 0.07, 0.01], "glow": 0.3 },
+	"ui": { "accent": [1.0, 0.45, 0.1], "panel": [0.26, 0.06, 0.03] },
+	"materials": {
+		"grid": { "color": [0.27, 0.23, 0.23], "line": [0.75, 0.25, 0.05], "glow": 0.7 },
+		"start": { "color": [0.48, 0.42, 0.4], "line": [0.95, 0.55, 0.12], "glow": 0.5 },
+		"ramp": { "color": [0.292, 0.248, 0.248], "line": [0.75, 0.25, 0.05], "glow": 0.7 },
+		"dark": { "color": [0.162, 0.138, 0.138], "line": [0.6, 0.2, 0.04], "glow": 0.7 },
+		"moss": { "color": [0.35, 0.18, 0.12], "line": [0.9, 0.35, 0.05], "glow": 0.6 },
+		"rail": { "color": [0.36, 0.2, 0.18], "line": [0.85, 0.3, 0.05], "glow": 0.9 },
+		"bridge": { "color": [0.32, 0.22, 0.17], "line": [0.7, 0.25, 0.05], "glow": 0.5 },
+		"post": { "color": [0.95, 0.5, 0.1], "roughness": 0.5, "glow": 0.8 },
+		"moving": { "color": [1.0, 0.55, 0.12], "roughness": 0.5, "glow": 0.6 },
+		"slider": { "color": [1.0, 0.55, 0.12], "roughness": 0.5, "glow": 0.6 },
+		"hazard": { "color": [1.0, 0.42, 0.05], "roughness": 0.5, "glow": 0.8 },
+		"pusher": { "color": [1.0, 0.42, 0.05], "roughness": 0.5, "glow": 0.8 },
+		"sweeper": { "color": [1.0, 0.24, 0.05], "roughness": 0.4, "glow": 1.0 },
+		"hub": { "color": [0.16, 0.13, 0.13], "roughness": 0.4, "metallic": 0.6 },
+		"steelie": { "color": [0.1, 0.08, 0.08], "roughness": 0.2, "metallic": 0.9 },
+		"bumper": { "color": [1.0, 0.75, 0.2], "roughness": 0.3, "metallic": 0.3, "glow": 0.6 },
+		"conveyor": { "color": [0.12, 0.1, 0.1], "line": [1.0, 0.45, 0.05] },
+		"teleporter": { "color": [1.0, 0.85, 0.3] },
+		"trapdoor": { "color": [0.45, 0.3, 0.25], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.16, 0.13, 0.13], "roughness": 0.4, "metallic": 0.6 }
+	}
+}

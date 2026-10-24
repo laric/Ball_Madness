@@ -1,0 +1,35 @@
+{
+	"id": "space",
+	"name": "Space",
+	"description": "Steel platforms among the stars",
+	"sky": {
+		"top": [0.0, 0.0, 0.02],
+		"horizon": [0.05, 0.04, 0.13],
+		"ground": [0.0, 0.0, 0.02],
+		"stars": 1.0
+	},
+	"light": { "color": [1, 1, 1], "energy": 1.4, "ambientEnergy": 0.35 },
+	"ui": { "accent": [0.35, 0.66, 1.0], "panel": [0.03, 0.06, 0.15] },
+	"materials": {
+		"grid": { "color": [0.56, 0.6, 0.65], "line": [0.26, 0.29, 0.34] },
+		"start": { "color": [0.86, 0.88, 0.92], "line": [0.2, 0.6, 1.0], "glow": 0.6 },
+		"ramp": { "color": [0.605, 0.648, 0.702], "line": [0.26, 0.29, 0.34] },
+		"dark": { "color": [0.336, 0.36, 0.39], "line": [0.208, 0.232, 0.272] },
+		"moss": { "color": [0.48, 0.65, 0.5], "line": [0.216, 0.293, 0.225] },
+		"rail": { "color": [0.36, 0.39, 0.46], "line": [0.3, 0.7, 1.0], "glow": 0.8 },
+		"bridge": { "color": [0.42, 0.44, 0.5], "line": [0.2, 0.22, 0.27] },
+		"post": { "color": [1.0, 0.6, 0.15], "roughness": 0.4, "glow": 0.6 },
+		"moving": { "color": [0.9, 0.9, 0.95], "roughness": 0.3, "metallic": 0.6 },
+		"slider": { "color": [0.9, 0.9, 0.95], "roughness": 0.3, "metallic": 0.6 },
+		"hazard": { "color": [1.0, 0.75, 0.15], "roughness": 0.4, "glow": 0.3 },
+		"pusher": { "color": [1.0, 0.75, 0.15], "roughness": 0.4, "glow": 0.3 },
+		"sweeper": { "color": [1.0, 0.35, 0.2], "roughness": 0.4, "glow": 0.4 },
+		"hub": { "color": [0.3, 0.32, 0.36], "roughness": 0.3, "metallic": 0.9 },
+		"steelie": { "color": [0.62, 0.64, 0.72], "roughness": 0.1, "metallic": 0.95 },
+		"bumper": { "color": [1.0, 0.55, 0.2], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.18, 0.2, 0.25], "line": [0.3, 0.75, 1.0] },
+		"teleporter": { "color": [0.75, 0.4, 1.0] },
+		"trapdoor": { "color": [0.6, 0.62, 0.68], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.3, 0.32, 0.36], "roughness": 0.3, "metallic": 0.9 }
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"id": "clockwork",
+	"name": "Clockwork",
+	"description": "Brass gears and steel in a sepia haze",
+	"sky": { "top": [0.28, 0.2, 0.13], "horizon": [0.76, 0.6, 0.4], "ground": [0.2, 0.15, 0.1] },
+	"fog": { "color": [0.62, 0.5, 0.35], "density": 0.002, "heightDensity": 0.005 },
+	"light": { "color": [1, 0.86, 0.62], "energy": 1.1, "ambientEnergy": 0.35 },
+	"ground": { "color": [0.2, 0.15, 0.1], "roughness": 0.5, "metallic": 0.5 },
+	"ui": { "accent": [0.88, 0.66, 0.3], "panel": [0.22, 0.14, 0.07] },
+	"materials": {
+		"grid": { "color": [0.66, 0.54, 0.36], "line": [0.36, 0.26, 0.14] },
+		"start": { "color": [0.8, 0.72, 0.52], "line": [0.45, 0.34, 0.18] },
+		"ramp": { "color": [0.713, 0.583, 0.389], "line": [0.36, 0.26, 0.14] },
+		"dark": { "color": [0.396, 0.324, 0.216], "line": [0.288, 0.208, 0.112] },
+		"moss": { "color": [0.53, 0.62, 0.355], "line": [0.239, 0.279, 0.16] },
+		"rail": { "color": [0.56, 0.56, 0.6], "line": [0.28, 0.28, 0.32] },
+		"bridge": { "color": [0.5, 0.36, 0.22], "line": [0.28, 0.19, 0.1] },
+		"post": { "color": [0.78, 0.58, 0.26], "roughness": 0.35, "metallic": 0.8 },
+		"moving": { "color": [0.82, 0.62, 0.26], "roughness": 0.3, "metallic": 0.8 },
+		"slider": { "color": [0.82, 0.62, 0.26], "roughness": 0.3, "metallic": 0.8 },
+		"hazard": { "color": [0.86, 0.46, 0.2], "roughness": 0.35, "metallic": 0.7 },
+		"pusher": { "color": [0.86, 0.46, 0.2], "roughness": 0.35, "metallic": 0.7 },
+		"sweeper": { "color": [0.66, 0.26, 0.16], "roughness": 0.4, "metallic": 0.5 },
+		"hub": { "color": [0.36, 0.36, 0.4], "roughness": 0.3, "metallic": 0.9 },
+		"steelie": { "color": [0.26, 0.26, 0.3], "roughness": 0.2, "metallic": 0.95 },
+		"bumper": { "color": [0.85, 0.55, 0.25], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.22, 0.2, 0.2], "line": [0.9, 0.75, 0.35] },
+		"teleporter": { "color": [0.4, 0.75, 0.95] },
+		"trapdoor": { "color": [0.7, 0.5, 0.25], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.36, 0.36, 0.4], "roughness": 0.3, "metallic": 0.9 }
+	}
+}

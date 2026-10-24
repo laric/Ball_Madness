@@ -1,0 +1,32 @@
+{
+	"id": "ice",
+	"name": "Ice",
+	"description": "Frozen peaks and polished glaciers",
+	"sky": { "top": [0.5, 0.72, 0.95], "horizon": [0.9, 0.95, 1.0], "ground": [0.7, 0.8, 0.9] },
+	"fog": { "color": [0.86, 0.92, 1.0], "density": 0.002, "heightDensity": 0.006 },
+	"light": { "color": [0.9, 0.95, 1.0], "energy": 1.0, "pitch": 40, "ambientEnergy": 0.3 },
+	"ground": { "color": [0.55, 0.68, 0.82], "roughness": 0.6 },
+	"ui": { "accent": [0.55, 0.82, 1.0], "panel": [0.08, 0.2, 0.34] },
+	"materials": {
+		"grid": { "color": [0.78, 0.9, 1.0], "line": [0.36, 0.55, 0.8] },
+		"start": { "color": [0.96, 0.98, 1.0], "line": [0.6, 0.7, 0.86] },
+		"ramp": { "color": [0.842, 0.972, 1], "line": [0.36, 0.55, 0.8] },
+		"dark": { "color": [0.468, 0.54, 0.6], "line": [0.288, 0.44, 0.64] },
+		"moss": { "color": [0.59, 0.8, 0.675], "line": [0.266, 0.36, 0.304] },
+		"rail": { "color": [0.5, 0.72, 0.95], "line": [0.25, 0.42, 0.7] },
+		"bridge": { "color": [0.6, 0.66, 0.76], "line": [0.35, 0.4, 0.5] },
+		"post": { "color": [0.3, 0.5, 0.88], "line": [0.15, 0.25, 0.5] },
+		"moving": { "color": [0.45, 0.88, 0.96], "roughness": 0.15, "metallic": 0.3 },
+		"slider": { "color": [0.45, 0.88, 0.96], "roughness": 0.15, "metallic": 0.3 },
+		"hazard": { "color": [0.95, 0.42, 0.55], "roughness": 0.4 },
+		"pusher": { "color": [0.95, 0.42, 0.55], "roughness": 0.4 },
+		"sweeper": { "color": [0.2, 0.38, 0.85], "roughness": 0.3, "metallic": 0.3 },
+		"hub": { "color": [0.55, 0.6, 0.7], "roughness": 0.3, "metallic": 0.7 },
+		"steelie": { "color": [0.16, 0.22, 0.32], "roughness": 0.15, "metallic": 0.9 },
+		"bumper": { "color": [0.95, 0.45, 0.6], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.3, 0.38, 0.5], "line": [0.85, 0.95, 1.0] },
+		"teleporter": { "color": [0.6, 0.45, 1.0] },
+		"trapdoor": { "color": [0.45, 0.6, 0.85], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.55, 0.6, 0.7], "roughness": 0.3, "metallic": 0.7 }
+	}
+}

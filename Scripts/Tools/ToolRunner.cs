@@ -14,10 +14,11 @@ namespace BallMadness.Tools;
 /// <code>
 /// godot --headless --path . res://Scenes/Tools.tscn -- COMMAND ...
 ///
-/// --generate-pack ID --count N [--seed S] [--from D] [--to D] [--name NAME] [--feature SECTION]
+/// --generate-pack ID --count N [--seed S] [--from D] [--to D] [--name NAME] [--feature SECTION] [--theme THEME]
 ///     Writes a pack of N generated levels whose difficulty rises from D to D
 ///     (0 to 1 by default). Level i uses seed S*1000+i. With --feature, every
-///     level has that section (a Section name such as Ice) in it.
+///     level has that section (a Section name such as Ice) in it. THEME is a
+///     built-in world theme (res://themes/), e.g. lava.
 /// --regenerate ID INDEX SEED
 ///     Replaces level INDEX (1-based) of the pack with one from another seed,
 ///     keeping its name and difficulty.
@@ -25,7 +26,8 @@ namespace BallMadness.Tools;
 ///     Sets the level's time limit from the autopilot's time on it.
 /// --validate [ID ...]
 ///     Loads and builds every level of the given packs (all built-in packs by
-///     default) without playing them, and fails if any level doesn't load.
+///     default) in its pack's world theme without playing them, and fails if
+///     any level, built-in theme (res://themes/) or pack theme doesn't load.
 /// </code>
 /// tools/build-pack.sh runs these with the autopilot to make a pack where
 /// every level is known to be finishable.
@@ -59,7 +61,7 @@ public partial class ToolRunner : Node
 			case "--generate-pack":
 				GeneratePack(args[1], Int(Option(args, "--count") ?? "10"), Int(Option(args, "--seed") ?? "1"),
 					Float(Option(args, "--from") ?? "0"), Float(Option(args, "--to") ?? "1"), Option(args, "--name"),
-					Option(args, "--feature") is string feature ? Enum.Parse<Section>(feature, true) : null);
+					Option(args, "--feature") is string feature ? Enum.Parse<Section>(feature, true) : null, Option(args, "--theme"));
 				return 0;
 			case "--regenerate":
 				Regenerate(args[1], Int(args[2]), Int(args[3]));
@@ -75,10 +77,12 @@ public partial class ToolRunner : Node
 		}
 	}
 
-	private static void GeneratePack(string id, int count, int seed, float from, float to, string name, Section? feature)
+	private static void GeneratePack(string id, int count, int seed, float from, float to, string name, Section? feature, string theme)
 	{
 		if (!Packs.IsValidId(id))
 			throw new InvalidOperationException($"Bad pack id \"{id}\"");
+		if (theme != null && Themes.Find(theme) == null)
+			throw new InvalidOperationException($"No built-in theme \"{theme}\" (have {string.Join(", ", Themes.BuiltIn.Select(t => t.Id))})");
 		string folder = $"{Packs.BuiltInRoot}/{id}";
 		DirAccess.MakeDirRecursiveAbsolute($"{folder}/levels");
 
@@ -94,8 +98,41 @@ public partial class ToolRunner : Node
 			GD.Print($"[tools] {file}: {level.Name}, difficulty {d:0.00}, {level.Course.Count} parts, {level.Hazards.Count} hazards");
 		}
 
-		var pack = new PackFile { Id = id, Name = name ?? id, Author = "Ball Madness", Version = "1", Levels = files };
+		var pack = new PackFile { Id = id, Name = name ?? id, Author = "Ball Madness", Version = "1", Levels = files, Theme = Themes.WithBase(null, theme ?? Themes.ClassicId) };
 		Write($"{folder}/pack.json", Packs.Serialize(pack));
+	}
+
+	/// <summary>Reads every built-in theme strictly, checks the packs' theme names, and returns how many failed.</summary>
+	private static int CheckThemes(List<Pack> packs)
+	{
+		int failed = 0;
+		using var dir = DirAccess.Open(Themes.Root);
+		foreach (string file in dir?.GetFiles() ?? Array.Empty<string>())
+		{
+			if (!file.EndsWith(".json", StringComparison.Ordinal))
+				continue;
+			try
+			{
+				var theme = Themes.Parse(FileAccess.GetFileAsString($"{Themes.Root}/{file}"), file);
+				GD.Print($"[tools] {file}: {theme.Name} ({theme.Id}), {theme.Materials?.Count ?? 0} materials");
+			}
+			catch (Exception e)
+			{
+				GD.PrintErr($"[tools] {e.Message}");
+				failed++;
+			}
+		}
+		foreach (var pack in packs)
+		{
+			string id = pack.Info.Theme?.Base;
+			if (id != null && Themes.Find(id) == null)
+			{
+				GD.PrintErr($"[tools] pack {pack.Id} names theme \"{id}\", which doesn't exist");
+				failed++;
+			}
+		}
+		GD.Print($"[tools] {Themes.BuiltIn.Count} world themes load");
+		return failed;
 	}
 
 	private static void Regenerate(string id, int index, int seed)
@@ -121,9 +158,10 @@ public partial class ToolRunner : Node
 		var packs = ids.Length > 0
 			? ids.Select(id => Packs.Find(id) ?? throw new InvalidOperationException($"No pack \"{id}\"")).ToList()
 			: Packs.All.Where(p => p.BuiltIn).ToList();
-		int failed = 0, count = 0;
+		int failed = CheckThemes(packs), count = 0;
 		foreach (var pack in packs)
 		{
+			var theme = pack.Theme;
 			foreach (string path in pack.LevelPaths)
 			{
 				count++;
@@ -132,7 +170,7 @@ public partial class ToolRunner : Node
 					var level = Packs.LoadLevel(path);
 					if (level.Goals.Count == 0)
 						throw new InvalidOperationException("no goal");
-					LevelBuilder.Build(level).Free();
+					LevelBuilder.Build(level, theme).Free();
 				}
 				catch (Exception e)
 				{
