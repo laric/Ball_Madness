@@ -1,0 +1,360 @@
+{
+	"format": 1,
+	"name": "Dizzy Junction",
+	"difficulty": 0.7,
+	"generator": "v2 seed 108000",
+	"timeLimit": 45,
+	"killHeight": -11,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Climb",
+			"shape": "box",
+			"pos": [0, 0.7624, 13.6108],
+			"rot": [-12.8043, 0, 0],
+			"size": [3.2, 1, 11.2805],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail",
+			"shape": "box",
+			"pos": [-1.75, 1.2637, 13.6219],
+			"rot": [-12.8043, 0, 0],
+			"size": [0.3, 1.1, 11.2805],
+			"material": "rail"
+		},
+		{
+			"name": "Rail2",
+			"shape": "box",
+			"pos": [1.75, 1.2637, 13.6219],
+			"rot": [-12.8043, 0, 0],
+			"size": [0.3, 1.1, 11.2805],
+			"material": "rail"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [0, 2, 22],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Beam",
+			"shape": "box",
+			"pos": [0, 1.2533, 31.4427],
+			"rot": [6.5819, 0, 0],
+			"size": [1.6, 1, 13.0863],
+			"material": "bridge"
+		},
+		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [0, 0.5, 41],
+			"size": [3.7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, 0.5, 48],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Climb2",
+			"shape": "box",
+			"pos": [9.5894, 1.5081, 48],
+			"rot": [-10.3048, 90, 0],
+			"size": [3.2, 1, 11.1803],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail3",
+			"shape": "box",
+			"pos": [9.5984, 2.0089, 49.75],
+			"rot": [-10.3048, 90, 0],
+			"size": [0.3, 1.1, 11.1803],
+			"material": "rail"
+		},
+		{
+			"name": "Rail4",
+			"shape": "box",
+			"pos": [9.5984, 2.0089, 46.25],
+			"rot": [-10.3048, 90, 0],
+			"size": [0.3, 1.1, 11.1803],
+			"material": "rail"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [19, 2.5, 48],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp",
+			"shape": "box",
+			"pos": [19, -0.2105, 58.3052],
+			"rot": [22.9321, 0, 0],
+			"size": [3.4, 1, 14.1156],
+			"material": "ramp"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [19, -3, 68],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Landing",
+			"shape": "box",
+			"pos": [19, -3, 88],
+			"size": [6, 1, 4],
+			"material": "grid"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [19, -3, 94],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Ratchet",
+			"type": "oneway",
+			"pos": [0, 0.8333, 11.6667],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet2",
+			"type": "oneway",
+			"pos": [0, 1.6667, 15.3333],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet3",
+			"type": "oneway",
+			"pos": [7.6667, 1.6667, 48],
+			"rot": [0, 90, 0],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet4",
+			"type": "oneway",
+			"pos": [11.3333, 2.3333, 48],
+			"rot": [0, 90, 0],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Plank",
+			"type": "mover",
+			"pos": [17.65, -3, 72.5],
+			"offset": [2.7, 0, 0],
+			"period": 2.8,
+			"phase": 0,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank2",
+			"type": "mover",
+			"pos": [17.65, -3, 75.5],
+			"offset": [2.7, 0, 0],
+			"period": 2.8,
+			"phase": 0.2,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank3",
+			"type": "mover",
+			"pos": [17.65, -3, 78.5],
+			"offset": [2.7, 0, 0],
+			"period": 2.8,
+			"phase": 0.4,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank4",
+			"type": "mover",
+			"pos": [17.65, -3, 81.5],
+			"offset": [2.7, 0, 0],
+			"period": 2.8,
+			"phase": 0.6,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		},
+		{
+			"name": "Plank5",
+			"type": "mover",
+			"pos": [17.65, -3, 84.5],
+			"offset": [2.7, 0, 0],
+			"period": 2.8,
+			"phase": 0.8,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1, 3],
+					"material": "moving"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [0, 1, 48],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [19, -2.5, 68],
+			"size": [7, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [19, -2.5, 94]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [0, 3, 19]
+		},
+		{
+			"pos": [0, 3, 22]
+		},
+		{
+			"pos": [0, 2.25, 31.5],
+			"speed": 3
+		},
+		{
+			"pos": [0, 1.5, 38],
+			"speed": 3
+		},
+		{
+			"pos": [0, 1.5, 44]
+		},
+		{
+			"pos": [0, 1.5, 48]
+		},
+		{
+			"pos": [15, 3.5, 48]
+		},
+		{
+			"pos": [19, 3.5, 48]
+		},
+		{
+			"pos": [19, -2, 65]
+		},
+		{
+			"pos": [19, -2, 68]
+		},
+		{
+			"pos": [19, -2, 87],
+			"speed": 4
+		},
+		{
+			"pos": [19, -2, 89]
+		},
+		{
+			"pos": [19, -2, 94]
+		}
+	]
+}

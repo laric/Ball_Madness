@@ -1,0 +1,324 @@
+{
+	"format": 1,
+	"name": "Quartz Gallery",
+	"difficulty": 0.59,
+	"generator": "v2 seed 106009",
+	"timeLimit": 60,
+	"killHeight": -18,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Plaza",
+			"shape": "box",
+			"pos": [-4.8, -0.5, 14],
+			"size": [12, 1, 12],
+			"material": "dark"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -0.5, 24],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Beam",
+			"shape": "box",
+			"pos": [9.4106, -1.4919, 24],
+			"rot": [10.3048, 90, 0],
+			"size": [1.7, 1, 11.1803],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [19, -2.5, 24],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [19, -2.5, 33],
+			"size": [3.9, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [19, -2.5, 41],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Beam2",
+			"shape": "box",
+			"pos": [19, -2.5, 50],
+			"size": [1.7, 1, 12],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner3",
+			"shape": "box",
+			"pos": [19, -2.5, 60],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Step",
+			"shape": "box",
+			"pos": [24.455, -2.5, 60],
+			"rot": [0, 90, 0],
+			"size": [4.1, 1, 2.91],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [27.365, -3.5, 60],
+			"rot": [0, 90, 0],
+			"size": [4.1, 1, 2.91],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [30.275, -4.5, 60],
+			"rot": [0, 90, 0],
+			"size": [4.1, 1, 2.91],
+			"material": "bridge"
+		},
+		{
+			"name": "Step4",
+			"shape": "box",
+			"pos": [33.185, -5.5, 60],
+			"rot": [0, 90, 0],
+			"size": [4.1, 1, 2.91],
+			"material": "bridge"
+		},
+		{
+			"name": "Step5",
+			"shape": "box",
+			"pos": [36.095, -6.5, 60],
+			"rot": [0, 90, 0],
+			"size": [4.1, 1, 2.91],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner4",
+			"shape": "box",
+			"pos": [41.55, -6.5, 60],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Launch",
+			"shape": "box",
+			"pos": [41.55, -6.5, 66.5],
+			"size": [3.8, 1, 5],
+			"material": "dark"
+		},
+		{
+			"name": "Arrival",
+			"shape": "box",
+			"pos": [41.55, -10.5, 78.3],
+			"size": [4.6, 1, 4.6],
+			"material": "start"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [41.55, -10.5, 84.6],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Sweeper",
+			"type": "spinner",
+			"pos": [-4.8, 0.45, 14],
+			"speed": 38,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [11, 0.8, 0.6],
+					"material": "sweeper"
+				},
+				{
+					"shape": "cylinder",
+					"pos": [0, 0, 0],
+					"radius": 0.6,
+					"height": 0.9,
+					"material": "hub"
+				}
+			]
+		},
+		{
+			"name": "Teleporter",
+			"type": "teleporter",
+			"pos": [41.55, -6, 66.5],
+			"target": [41.55, -10, 78.3],
+			"radius": 1.1
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [19, -2, 41],
+			"size": [7, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [41.55, -10, 84.6]
+		}
+	],
+	"gates": [
+		{
+			"name": "Gate1",
+			"pos": [0, 0.45, 14],
+			"size": [1.2, 0.8, 5.9703]
+		}
+	],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [0, 0.5, 8.5]
+		},
+		{
+			"pos": [0, 0.5, 19.5],
+			"gate": "Gate1",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [0, 0.5, 24]
+		},
+		{
+			"pos": [9.5, -0.5, 24],
+			"speed": 3
+		},
+		{
+			"pos": [15, -1.5, 24],
+			"speed": 3
+		},
+		{
+			"pos": [19, -1.5, 24]
+		},
+		{
+			"pos": [19, -1.5, 38]
+		},
+		{
+			"pos": [19, -1.5, 41]
+		},
+		{
+			"pos": [19, -1.5, 50],
+			"speed": 3
+		},
+		{
+			"pos": [19, -1.5, 56],
+			"speed": 3
+		},
+		{
+			"pos": [19, -1.5, 60]
+		},
+		{
+			"pos": [24.455, -1.5, 60],
+			"speed": 4
+		},
+		{
+			"pos": [27.365, -2.5, 60],
+			"speed": 4
+		},
+		{
+			"pos": [30.275, -3.5, 60],
+			"speed": 4
+		},
+		{
+			"pos": [33.185, -4.5, 60],
+			"speed": 4
+		},
+		{
+			"pos": [36.095, -5.5, 60],
+			"speed": 4
+		},
+		{
+			"pos": [41.55, -5.5, 60]
+		},
+		{
+			"pos": [41.55, -5.5, 66.5],
+			"speed": 4
+		},
+		{
+			"pos": [41.55, -9.5, 80.6],
+			"speed": 4
+		},
+		{
+			"pos": [41.55, -9.5, 84.6]
+		}
+	]
+}

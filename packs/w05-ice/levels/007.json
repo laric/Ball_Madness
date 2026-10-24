@@ -1,0 +1,359 @@
+{
+	"format": 1,
+	"name": "Zigzag Cascade",
+	"difficulty": 0.46,
+	"generator": "v2 seed 105006",
+	"timeLimit": 70,
+	"killHeight": -18,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Holes",
+			"shape": "box",
+			"pos": [0, -0.5, 18.11],
+			"size": [7.5, 1, 20.22],
+			"material": "grid"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -0.5, 32.22],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Slalom",
+			"shape": "box",
+			"pos": [11.8725, -1.9914, 32.22],
+			"rot": [10.6653, 90, 0],
+			"size": [8, 1, 16.21],
+			"material": "ramp"
+		},
+		{
+			"name": "Post",
+			"shape": "cylinder",
+			"pos": [8.155, 0.7175, 30.344],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post2",
+			"shape": "cylinder",
+			"pos": [12.465, -0.0942, 34.096],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post3",
+			"shape": "cylinder",
+			"pos": [16.775, -0.9058, 30.344],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [22.93, -3.5, 32.22],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp",
+			"shape": "box",
+			"pos": [31.2784, -5.2265, 32.22],
+			"rot": [17.6501, 90, 0],
+			"size": [5, 1, 11.5434],
+			"material": "ramp"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [40.93, -7, 32.22],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Plaza",
+			"shape": "box",
+			"pos": [36.13, -7, 42.22],
+			"size": [12, 1, 12],
+			"material": "dark"
+		},
+		{
+			"name": "Corner3",
+			"shape": "box",
+			"pos": [40.93, -7, 52.22],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Step",
+			"shape": "box",
+			"pos": [46.45, -7, 52.22],
+			"rot": [0, 90, 0],
+			"size": [4.9, 1, 3.04],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [49.49, -8, 52.22],
+			"rot": [0, 90, 0],
+			"size": [4.9, 1, 3.04],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [52.53, -9, 52.22],
+			"rot": [0, 90, 0],
+			"size": [4.9, 1, 3.04],
+			"material": "bridge"
+		},
+		{
+			"name": "Step4",
+			"shape": "box",
+			"pos": [55.57, -10, 52.22],
+			"rot": [0, 90, 0],
+			"size": [4.9, 1, 3.04],
+			"material": "bridge"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [60.09, -10, 52.22],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [68.09, -10, 52.22],
+			"rot": [0, 90, 0],
+			"size": [4.7, 1, 10],
+			"material": "grid"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [77.09, -10, 52.22],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Hole",
+			"type": "hole",
+			"pos": [-1.094, 0, 12.37],
+			"radius": 1.2
+		},
+		{
+			"name": "Hole2",
+			"type": "hole",
+			"pos": [1.094, 0, 18.11],
+			"radius": 1.2
+		},
+		{
+			"name": "Hole3",
+			"type": "hole",
+			"pos": [-1.094, 0, 23.85],
+			"radius": 1.2
+		},
+		{
+			"name": "Sweeper",
+			"type": "spinner",
+			"pos": [36.13, -6.05, 42.22],
+			"speed": 36,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [11, 0.8, 0.6],
+					"material": "sweeper"
+				},
+				{
+					"shape": "cylinder",
+					"pos": [0, 0, 0],
+					"radius": 0.6,
+					"height": 0.9,
+					"material": "hub"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [22.93, -3, 32.22],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		},
+		{
+			"pos": [60.09, -9.5, 52.22],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [77.09, -9.5, 52.22]
+		}
+	],
+	"gates": [
+		{
+			"name": "Gate1",
+			"pos": [40.93, -6.05, 42.22],
+			"size": [1.2, 0.8, 5.9703]
+		}
+	],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [2.55, 0.5, 12.37],
+			"speed": 4.5
+		},
+		{
+			"pos": [-2.55, 0.5, 18.11],
+			"speed": 4.5
+		},
+		{
+			"pos": [2.55, 0.5, 23.85],
+			"speed": 4.5
+		},
+		{
+			"pos": [0, 0.5, 28.22]
+		},
+		{
+			"pos": [0, 0.5, 32.22]
+		},
+		{
+			"pos": [8.155, -0.2825, 34.82],
+			"speed": 5
+		},
+		{
+			"pos": [12.465, -1.0942, 29.62],
+			"speed": 5
+		},
+		{
+			"pos": [16.775, -1.9058, 34.82],
+			"speed": 5
+		},
+		{
+			"pos": [19.93, -2.5, 32.22]
+		},
+		{
+			"pos": [22.93, -2.5, 32.22]
+		},
+		{
+			"pos": [36.93, -6, 32.22]
+		},
+		{
+			"pos": [40.93, -6, 32.22]
+		},
+		{
+			"pos": [40.93, -6, 36.72]
+		},
+		{
+			"pos": [40.93, -6, 47.72],
+			"gate": "Gate1",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [40.93, -6, 52.22]
+		},
+		{
+			"pos": [46.45, -6, 52.22],
+			"speed": 4
+		},
+		{
+			"pos": [49.49, -7, 52.22],
+			"speed": 4
+		},
+		{
+			"pos": [52.53, -8, 52.22],
+			"speed": 4
+		},
+		{
+			"pos": [55.57, -9, 52.22],
+			"speed": 4
+		},
+		{
+			"pos": [60.09, -9, 52.22]
+		},
+		{
+			"pos": [73.09, -9, 52.22]
+		},
+		{
+			"pos": [77.09, -9, 52.22]
+		}
+	]
+}

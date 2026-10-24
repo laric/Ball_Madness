@@ -1,0 +1,565 @@
+{
+	"format": 1,
+	"name": "Granite Overpass",
+	"difficulty": 0.71,
+	"generator": "v2 seed 108001",
+	"timeLimit": 85,
+	"killHeight": -16,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Bumpers",
+			"shape": "box",
+			"pos": [0, -0.5, 18.08],
+			"size": [7.5, 1, 20.16],
+			"material": "dark"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -0.5, 32.16],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Beam",
+			"shape": "box",
+			"pos": [10.4427, -1.2467, 32.16],
+			"rot": [6.5819, 90, 0],
+			"size": [1.6, 1, 13.0863],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [21, -2, 32.16],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Bumpers2",
+			"shape": "box",
+			"pos": [21, -2, 44.095],
+			"size": [7.5, 1, 15.87],
+			"material": "dark"
+		},
+		{
+			"name": "Corner3",
+			"shape": "box",
+			"pos": [21, -2, 56.03],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Step",
+			"shape": "box",
+			"pos": [26.395, -2, 56.03],
+			"rot": [0, 90, 0],
+			"size": [3.4, 1, 2.79],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [29.185, -3, 56.03],
+			"rot": [0, 90, 0],
+			"size": [3.4, 1, 2.79],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [31.975, -4, 56.03],
+			"rot": [0, 90, 0],
+			"size": [3.4, 1, 2.79],
+			"material": "bridge"
+		},
+		{
+			"name": "Step4",
+			"shape": "box",
+			"pos": [34.765, -5, 56.03],
+			"rot": [0, 90, 0],
+			"size": [3.4, 1, 2.79],
+			"material": "bridge"
+		},
+		{
+			"name": "Step5",
+			"shape": "box",
+			"pos": [37.555, -6, 56.03],
+			"rot": [0, 90, 0],
+			"size": [3.4, 1, 2.79],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner4",
+			"shape": "box",
+			"pos": [42.95, -6, 56.03],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Climb",
+			"shape": "box",
+			"pos": [42.95, -4.4889, 67.1348],
+			"rot": [-12.0948, 0, 0],
+			"size": [3.2, 1, 14.3178],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail",
+			"shape": "box",
+			"pos": [41.2, -3.9878, 67.1452],
+			"rot": [-12.0948, 0, 0],
+			"size": [0.3, 1.1, 14.3178],
+			"material": "rail"
+		},
+		{
+			"name": "Rail2",
+			"shape": "box",
+			"pos": [44.7, -3.9878, 67.1452],
+			"rot": [-12.0948, 0, 0],
+			"size": [0.3, 1.1, 14.3178],
+			"material": "rail"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [42.95, -3, 77.03],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Slalom",
+			"shape": "box",
+			"pos": [42.95, -5.4883, 91.2598],
+			"rot": [12.4351, 0, 0],
+			"size": [8, 1, 23.2197],
+			"material": "ramp"
+		},
+		{
+			"name": "Post",
+			"shape": "cylinder",
+			"pos": [44.976, -1.8749, 83.9975],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post2",
+			"shape": "cylinder",
+			"pos": [40.924, -2.7426, 87.9325],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post3",
+			"shape": "cylinder",
+			"pos": [44.976, -3.6103, 91.8675],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post4",
+			"shape": "cylinder",
+			"pos": [40.924, -4.4779, 95.8025],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post5",
+			"shape": "cylinder",
+			"pos": [44.976, -5.3456, 99.7375],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Corner5",
+			"shape": "box",
+			"pos": [42.95, -8, 106.705],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Climb2",
+			"shape": "box",
+			"pos": [54.0379, -6.7422, 106.705],
+			"rot": [-10.1247, 90, 0],
+			"size": [3.2, 1, 14.2215],
+			"material": "ramp"
+		},
+		{
+			"name": "Rail3",
+			"shape": "box",
+			"pos": [54.0467, -6.2414, 108.455],
+			"rot": [-10.1247, 90, 0],
+			"size": [0.3, 1.1, 14.2215],
+			"material": "rail"
+		},
+		{
+			"name": "Rail4",
+			"shape": "box",
+			"pos": [54.0467, -6.2414, 104.955],
+			"rot": [-10.1247, 90, 0],
+			"size": [0.3, 1.1, 14.2215],
+			"material": "rail"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [64.95, -5.5, 106.705],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Bumper",
+			"type": "bumper",
+			"pos": [1.15, 0, 11.645],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Bumper2",
+			"type": "bumper",
+			"pos": [-1.15, 0, 15.935],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Bumper3",
+			"type": "bumper",
+			"pos": [1.15, 0, 20.225],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Bumper4",
+			"type": "bumper",
+			"pos": [-1.15, 0, 24.515],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Bumper5",
+			"type": "bumper",
+			"pos": [19.85, -1.5, 39.805],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Bumper6",
+			"type": "bumper",
+			"pos": [22.15, -1.5, 44.095],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Bumper7",
+			"type": "bumper",
+			"pos": [19.85, -1.5, 48.385],
+			"force": 10,
+			"parts": [
+				{
+					"shape": "cylinder",
+					"pos": [0, 0.5, 0],
+					"radius": 0.8,
+					"height": 1
+				}
+			]
+		},
+		{
+			"name": "Ratchet",
+			"type": "oneway",
+			"pos": [42.95, -4.75, 63.53],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet2",
+			"type": "oneway",
+			"pos": [42.95, -4, 67.03],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet3",
+			"type": "oneway",
+			"pos": [42.95, -3.25, 70.53],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet4",
+			"type": "oneway",
+			"pos": [50.45, -6.875, 106.705],
+			"rot": [0, 90, 0],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet5",
+			"type": "oneway",
+			"pos": [53.95, -6.25, 106.705],
+			"rot": [0, 90, 0],
+			"width": 3.2,
+			"height": 1.2
+		},
+		{
+			"name": "Ratchet6",
+			"type": "oneway",
+			"pos": [57.45, -5.625, 106.705],
+			"rot": [0, 90, 0],
+			"width": 3.2,
+			"height": 1.2
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [21, -1.5, 32.16],
+			"rot": [0, 90, 0],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [42.95, -5.5, 56.03],
+			"rot": [0, 90, 0],
+			"size": [8, 3, 2]
+		},
+		{
+			"pos": [42.95, -7.5, 106.705],
+			"size": [8, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [64.95, -5, 106.705]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [-2.35, 0.5, 11.645],
+			"speed": 4.5
+		},
+		{
+			"pos": [2.35, 0.5, 15.935],
+			"speed": 4.5
+		},
+		{
+			"pos": [-2.35, 0.5, 20.225],
+			"speed": 4.5
+		},
+		{
+			"pos": [2.35, 0.5, 24.515],
+			"speed": 4.5
+		},
+		{
+			"pos": [0, 0.5, 28.16]
+		},
+		{
+			"pos": [0, 0.5, 32.16]
+		},
+		{
+			"pos": [10.5, -0.25, 32.16],
+			"speed": 3
+		},
+		{
+			"pos": [17, -1, 32.16],
+			"speed": 3
+		},
+		{
+			"pos": [21, -1, 32.16]
+		},
+		{
+			"pos": [23.35, -1, 39.805],
+			"speed": 4.5
+		},
+		{
+			"pos": [18.65, -1, 44.095],
+			"speed": 4.5
+		},
+		{
+			"pos": [23.35, -1, 48.385],
+			"speed": 4.5
+		},
+		{
+			"pos": [21, -1, 52.03]
+		},
+		{
+			"pos": [21, -1, 56.03]
+		},
+		{
+			"pos": [26.395, -1, 56.03],
+			"speed": 4
+		},
+		{
+			"pos": [29.185, -2, 56.03],
+			"speed": 4
+		},
+		{
+			"pos": [31.975, -3, 56.03],
+			"speed": 4
+		},
+		{
+			"pos": [34.765, -4, 56.03],
+			"speed": 4
+		},
+		{
+			"pos": [37.555, -5, 56.03],
+			"speed": 4
+		},
+		{
+			"pos": [42.95, -5, 56.03]
+		},
+		{
+			"pos": [42.95, -2, 74.03]
+		},
+		{
+			"pos": [42.95, -2, 77.03]
+		},
+		{
+			"pos": [40.35, -2.8749, 83.9975],
+			"speed": 5
+		},
+		{
+			"pos": [45.55, -3.7426, 87.9325],
+			"speed": 5
+		},
+		{
+			"pos": [40.35, -4.6103, 91.8675],
+			"speed": 5
+		},
+		{
+			"pos": [45.55, -5.4779, 95.8025],
+			"speed": 5
+		},
+		{
+			"pos": [40.35, -6.3456, 99.7375],
+			"speed": 5
+		},
+		{
+			"pos": [42.95, -7, 102.705]
+		},
+		{
+			"pos": [42.95, -7, 106.705]
+		},
+		{
+			"pos": [60.95, -4.5, 106.705]
+		},
+		{
+			"pos": [64.95, -4.5, 106.705]
+		}
+	]
+}

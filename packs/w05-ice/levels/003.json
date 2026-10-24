@@ -1,0 +1,335 @@
+{
+	"format": 1,
+	"name": "Silver Falls",
+	"difficulty": 0.42,
+	"generator": "v2 seed 105002",
+	"timeLimit": 65,
+	"killHeight": -16,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Rail",
+			"shape": "box",
+			"pos": [-2.6, 0, 12],
+			"size": [0.3, 1.1, 8],
+			"material": "rail"
+		},
+		{
+			"name": "Rail2",
+			"shape": "box",
+			"pos": [2.6, 0, 12],
+			"size": [0.3, 1.1, 8],
+			"material": "rail"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -0.5, 20],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp",
+			"shape": "box",
+			"pos": [8.8348, -2.2219, 20],
+			"rot": [19.29, 90, 0],
+			"size": [4.9, 1, 10.5948],
+			"material": "ramp"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [17, -4, 20],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Holes",
+			"shape": "box",
+			"pos": [30.17, -4, 20],
+			"rot": [0, 90, 0],
+			"size": [7.5, 1, 20.34],
+			"material": "grid"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [43.34, -4, 20],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Slalom",
+			"shape": "box",
+			"pos": [58.6759, -6.242, 20],
+			"rot": [10.2643, 90, 0],
+			"size": [8, 1, 25.2542],
+			"material": "ramp"
+		},
+		{
+			"name": "Post",
+			"shape": "cylinder",
+			"pos": [50.525, -2.7578, 21.852],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post2",
+			"shape": "cylinder",
+			"pos": [54.895, -3.5492, 18.148],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post3",
+			"shape": "cylinder",
+			"pos": [59.265, -4.3405, 21.852],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post4",
+			"shape": "cylinder",
+			"pos": [63.635, -5.1319, 18.148],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post5",
+			"shape": "cylinder",
+			"pos": [68.005, -5.9232, 21.852],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [75.19, -8.5, 20],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Rail3",
+			"shape": "box",
+			"pos": [72.54, -8, 28],
+			"size": [0.3, 1.1, 8],
+			"material": "rail"
+		},
+		{
+			"name": "Rail4",
+			"shape": "box",
+			"pos": [77.84, -8, 28],
+			"size": [0.3, 1.1, 8],
+			"material": "rail"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [75.19, -8.5, 36],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Ice",
+			"type": "ice",
+			"pos": [0, -0.5, 12],
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4.9, 1, 8]
+				}
+			]
+		},
+		{
+			"name": "Hole",
+			"type": "hole",
+			"pos": [24.39, -3.5, 21.138],
+			"radius": 1.2
+		},
+		{
+			"name": "Hole2",
+			"type": "hole",
+			"pos": [30.17, -3.5, 18.862],
+			"radius": 1.2
+		},
+		{
+			"name": "Hole3",
+			"type": "hole",
+			"pos": [35.95, -3.5, 21.138],
+			"radius": 1.2
+		},
+		{
+			"name": "Ice2",
+			"type": "ice",
+			"pos": [75.19, -8.5, 28],
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [5, 1, 8]
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [17, -3.5, 20],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [75.19, -8, 36]
+		}
+	],
+	"gates": [],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [0, 0.5, 8],
+			"speed": 4
+		},
+		{
+			"pos": [0, 0.5, 16],
+			"speed": 4
+		},
+		{
+			"pos": [0, 0.5, 20]
+		},
+		{
+			"pos": [14, -3, 20]
+		},
+		{
+			"pos": [17, -3, 20]
+		},
+		{
+			"pos": [24.39, -3, 17.45],
+			"speed": 4.5
+		},
+		{
+			"pos": [30.17, -3, 22.55],
+			"speed": 4.5
+		},
+		{
+			"pos": [35.95, -3, 17.45],
+			"speed": 4.5
+		},
+		{
+			"pos": [40.34, -3, 20]
+		},
+		{
+			"pos": [43.34, -3, 20]
+		},
+		{
+			"pos": [50.525, -3.7578, 17.4],
+			"speed": 5
+		},
+		{
+			"pos": [54.895, -4.5492, 22.6],
+			"speed": 5
+		},
+		{
+			"pos": [59.265, -5.3405, 17.4],
+			"speed": 5
+		},
+		{
+			"pos": [63.635, -6.1319, 22.6],
+			"speed": 5
+		},
+		{
+			"pos": [68.005, -6.9232, 17.4],
+			"speed": 5
+		},
+		{
+			"pos": [71.19, -7.5, 20]
+		},
+		{
+			"pos": [75.19, -7.5, 20]
+		},
+		{
+			"pos": [75.19, -7.5, 24],
+			"speed": 4
+		},
+		{
+			"pos": [75.19, -7.5, 32],
+			"speed": 4
+		},
+		{
+			"pos": [75.19, -7.5, 36]
+		}
+	]
+}

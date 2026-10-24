@@ -1,0 +1,379 @@
+{
+	"format": 1,
+	"name": "Sunny Mesa",
+	"difficulty": 0.88,
+	"generator": "v2 seed 109008",
+	"timeLimit": 55,
+	"killHeight": -14,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [0, -0.5, 14],
+			"size": [3.4, 1, 12],
+			"material": "grid"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [0, -0.5, 23],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Trapdoors",
+			"shape": "box",
+			"pos": [0, -0.5, 36.05],
+			"size": [2.9, 1, 20.1],
+			"material": "bridge"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [0, -0.5, 49.1],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Beam",
+			"shape": "box",
+			"pos": [0, -1.7395, 57.998],
+			"rot": [11.7683, 0, 0],
+			"size": [1.4, 1, 12.2577],
+			"material": "bridge"
+		},
+		{
+			"name": "Pad3",
+			"shape": "box",
+			"pos": [0, -3, 67.1],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Arena",
+			"shape": "box",
+			"pos": [0, -3, 76.1],
+			"size": [12, 1, 12],
+			"material": "dark"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -3, 86.1],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Slalom",
+			"shape": "box",
+			"pos": [10.8991, -4.7352, 86.1],
+			"rot": [13.9978, 90, 0],
+			"size": [8, 1, 14.4697],
+			"material": "ramp"
+		},
+		{
+			"name": "Post",
+			"shape": "cylinder",
+			"pos": [7.84, -1.9573, 83.972],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post2",
+			"shape": "cylinder",
+			"pos": [11.52, -2.8746, 88.228],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Post3",
+			"shape": "cylinder",
+			"pos": [15.2, -3.792, 83.972],
+			"radius": 0.6,
+			"height": 3.5,
+			"material": "post"
+		},
+		{
+			"name": "Pad4",
+			"shape": "box",
+			"pos": [21.04, -6.5, 86.1],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Arena2",
+			"shape": "box",
+			"pos": [30.04, -6.5, 86.1],
+			"rot": [0, 90, 0],
+			"size": [12, 1, 12],
+			"material": "dark"
+		},
+		{
+			"name": "Pad5",
+			"shape": "box",
+			"pos": [39.04, -6.5, 86.1],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Run2",
+			"shape": "box",
+			"pos": [46.04, -6.5, 86.1],
+			"rot": [0, 90, 0],
+			"size": [2.7, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [54.04, -6.5, 86.1],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Trapdoor",
+			"type": "hole",
+			"pos": [0, 0, 30.05],
+			"period": 3.7,
+			"phase": 0,
+			"open": 0.5,
+			"radius": 1.35
+		},
+		{
+			"name": "Trapdoor2",
+			"type": "hole",
+			"pos": [0, 0, 36.25],
+			"period": 3.7,
+			"phase": 0,
+			"open": 0.5,
+			"radius": 1.35
+		},
+		{
+			"name": "Trapdoor3",
+			"type": "hole",
+			"pos": [0, 0, 42.45],
+			"period": 3.7,
+			"phase": 0,
+			"open": 0.5,
+			"radius": 1.35
+		},
+		{
+			"name": "Steelie",
+			"type": "chaser",
+			"pos": [4, -1.95, 74.1],
+			"radius": 0.5,
+			"chaseRadius": 8,
+			"pushForce": 11.5,
+			"maxSpeed": 5.4,
+			"material": "steelie"
+		},
+		{
+			"name": "Steelie2",
+			"type": "chaser",
+			"pos": [28.04, -5.45, 82.1],
+			"radius": 0.5,
+			"chaseRadius": 8,
+			"pushForce": 11.5,
+			"maxSpeed": 5.4,
+			"material": "steelie"
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [0, -2.5, 67.1],
+			"size": [7, 3, 2]
+		},
+		{
+			"pos": [39.04, -6, 86.1],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [54.04, -6, 86.1]
+		}
+	],
+	"gates": [
+		{
+			"name": "Gate1",
+			"pos": [0, -0.1, 30.05],
+			"size": [0.6, 0.3, 0.6]
+		},
+		{
+			"name": "Gate2",
+			"pos": [0, -0.1, 36.25],
+			"size": [0.6, 0.3, 0.6]
+		},
+		{
+			"name": "Gate3",
+			"pos": [0, -0.1, 42.45],
+			"size": [0.6, 0.3, 0.6]
+		}
+	],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [0, 0.5, 20]
+		},
+		{
+			"pos": [0, 0.5, 23]
+		},
+		{
+			"pos": [0, 0.5, 27.5],
+			"speed": 3
+		},
+		{
+			"pos": [0, 0.5, 32.4],
+			"gate": "Gate1",
+			"waitFor": "occupied"
+		},
+		{
+			"pos": [0, 0.5, 33.7],
+			"speed": 3
+		},
+		{
+			"pos": [0, 0.5, 38.6],
+			"gate": "Gate2",
+			"waitFor": "occupied"
+		},
+		{
+			"pos": [0, 0.5, 39.9],
+			"speed": 3
+		},
+		{
+			"pos": [0, 0.5, 44.8],
+			"gate": "Gate3",
+			"waitFor": "occupied"
+		},
+		{
+			"pos": [0, 0.5, 46.1]
+		},
+		{
+			"pos": [0, 0.5, 49.1]
+		},
+		{
+			"pos": [0, -0.75, 58.1],
+			"speed": 3
+		},
+		{
+			"pos": [0, -2, 64.1],
+			"speed": 3
+		},
+		{
+			"pos": [0, -2, 67.1]
+		},
+		{
+			"pos": [0, -2, 76.1]
+		},
+		{
+			"pos": [0, -2, 82.1]
+		},
+		{
+			"pos": [0, -2, 86.1]
+		},
+		{
+			"pos": [7.84, -2.9573, 88.7],
+			"speed": 5
+		},
+		{
+			"pos": [11.52, -3.8746, 83.5],
+			"speed": 5
+		},
+		{
+			"pos": [15.2, -4.792, 88.7],
+			"speed": 5
+		},
+		{
+			"pos": [18.04, -5.5, 86.1]
+		},
+		{
+			"pos": [21.04, -5.5, 86.1]
+		},
+		{
+			"pos": [30.04, -5.5, 86.1]
+		},
+		{
+			"pos": [36.04, -5.5, 86.1]
+		},
+		{
+			"pos": [39.04, -5.5, 86.1]
+		},
+		{
+			"pos": [50.04, -5.5, 86.1]
+		},
+		{
+			"pos": [54.04, -5.5, 86.1]
+		}
+	]
+}

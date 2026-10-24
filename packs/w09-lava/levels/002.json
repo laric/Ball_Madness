@@ -1,0 +1,562 @@
+{
+	"format": 1,
+	"name": "Indigo Spiral",
+	"difficulty": 0.81,
+	"generator": "v2 seed 109001",
+	"timeLimit": 75,
+	"killHeight": -16,
+	"materials": {
+		"start": {
+			"color": [0.45, 0.7, 0.9],
+			"line": [0.15, 0.25, 0.35]
+		},
+		"grid": {
+			"color": [0.55, 0.62, 0.75],
+			"line": [0.18, 0.2, 0.3]
+		},
+		"ramp": {
+			"color": [0.62, 0.58, 0.8],
+			"line": [0.2, 0.18, 0.32]
+		},
+		"bridge": {
+			"color": [0.85, 0.65, 0.4],
+			"line": [0.35, 0.22, 0.12]
+		},
+		"dark": {
+			"color": [0.32, 0.3, 0.45],
+			"line": [0.12, 0.1, 0.2]
+		},
+		"rail": {
+			"color": [0.4, 0.42, 0.55],
+			"line": [0.2, 0.2, 0.3]
+		},
+		"post": {
+			"color": [0.9, 0.3, 0.2],
+			"line": [0.4, 0.1, 0.08]
+		},
+		"moving": {
+			"color": [0.85, 0.35, 0.75],
+			"roughness": 0.6
+		},
+		"hazard": {
+			"color": [0.95, 0.45, 0.15],
+			"roughness": 0.6
+		},
+		"sweeper": {
+			"color": [0.9, 0.25, 0.15],
+			"roughness": 0.4,
+			"metallic": 0.2
+		},
+		"hub": {
+			"color": [0.25, 0.22, 0.3],
+			"roughness": 0.4,
+			"metallic": 0.6
+		},
+		"steelie": {
+			"color": [0.08, 0.08, 0.1],
+			"roughness": 0.25,
+			"metallic": 0.9
+		}
+	},
+	"spawn": [0, 1.1, 4],
+	"course": [
+		{
+			"name": "StartPad",
+			"shape": "box",
+			"pos": [0, -0.5, 4],
+			"size": [8, 1, 8],
+			"material": "start"
+		},
+		{
+			"name": "Step",
+			"shape": "box",
+			"pos": [0, -0.5, 9.345],
+			"size": [3, 1, 2.69],
+			"material": "bridge"
+		},
+		{
+			"name": "Step2",
+			"shape": "box",
+			"pos": [0, -1.5, 12.035],
+			"size": [3, 1, 2.69],
+			"material": "bridge"
+		},
+		{
+			"name": "Step3",
+			"shape": "box",
+			"pos": [0, -2.5, 14.725],
+			"size": [3, 1, 2.69],
+			"material": "bridge"
+		},
+		{
+			"name": "Step4",
+			"shape": "box",
+			"pos": [0, -3.5, 17.415],
+			"size": [3, 1, 2.69],
+			"material": "bridge"
+		},
+		{
+			"name": "Step5",
+			"shape": "box",
+			"pos": [0, -4.5, 20.105],
+			"size": [3, 1, 2.69],
+			"material": "bridge"
+		},
+		{
+			"name": "Corner",
+			"shape": "box",
+			"pos": [0, -4.5, 25.45],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Alley",
+			"shape": "box",
+			"pos": [12, -4.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 16],
+			"material": "bridge"
+		},
+		{
+			"name": "Housing",
+			"shape": "box",
+			"pos": [8, -3.6, 16.95],
+			"rot": [0, 90, 0],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Housing2",
+			"shape": "box",
+			"pos": [14, -3.6, 33.95],
+			"rot": [0, 90, 0],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Pad",
+			"shape": "box",
+			"pos": [23, -4.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Run",
+			"shape": "box",
+			"pos": [30.5, -4.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3.7, 1, 9],
+			"material": "grid"
+		},
+		{
+			"name": "Pad2",
+			"shape": "box",
+			"pos": [38, -4.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Trapdoors",
+			"shape": "box",
+			"pos": [47.95, -4.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [2.9, 1, 13.9],
+			"material": "bridge"
+		},
+		{
+			"name": "Pad3",
+			"shape": "box",
+			"pos": [57.9, -4.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Ramp",
+			"shape": "box",
+			"pos": [64.6996, -6.2081, 25.45],
+			"rot": [23.6294, 90, 0],
+			"size": [3.2, 1, 8.7321],
+			"material": "ramp"
+		},
+		{
+			"name": "Pad4",
+			"shape": "box",
+			"pos": [71.9, -8, 25.45],
+			"rot": [0, 90, 0],
+			"size": [7, 1, 6],
+			"material": "grid"
+		},
+		{
+			"name": "Alley2",
+			"shape": "box",
+			"pos": [88.9, -8, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 28],
+			"material": "bridge"
+		},
+		{
+			"name": "Housing3",
+			"shape": "box",
+			"pos": [78.9, -7.1, 16.95],
+			"rot": [0, 90, 0],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Housing4",
+			"shape": "box",
+			"pos": [84.9, -7.1, 33.95],
+			"rot": [0, 90, 0],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Housing5",
+			"shape": "box",
+			"pos": [90.9, -7.1, 16.95],
+			"rot": [0, 90, 0],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Housing6",
+			"shape": "box",
+			"pos": [96.9, -7.1, 33.95],
+			"rot": [0, 90, 0],
+			"size": [5, 2.4, 2.8],
+			"material": "dark"
+		},
+		{
+			"name": "Corner2",
+			"shape": "box",
+			"pos": [106.9, -8, 25.45],
+			"rot": [0, 90, 0],
+			"size": [8, 1, 8],
+			"material": "grid"
+		},
+		{
+			"name": "Run2",
+			"shape": "box",
+			"pos": [106.9, -8, 35.45],
+			"size": [3.4, 1, 12],
+			"material": "grid"
+		},
+		{
+			"name": "FinishPad",
+			"shape": "box",
+			"pos": [106.9, -8, 45.45],
+			"size": [8, 1, 8],
+			"material": "grid"
+		}
+	],
+	"hazards": [
+		{
+			"name": "Piston",
+			"type": "mover",
+			"pos": [8, -3.38, 19.45],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, 6],
+			"period": 3.4,
+			"phase": 0,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "hazard"
+				}
+			]
+		},
+		{
+			"name": "Piston2",
+			"type": "mover",
+			"pos": [14, -3.38, 31.45],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -6],
+			"period": 3.4,
+			"phase": 0.5,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "hazard"
+				}
+			]
+		},
+		{
+			"name": "Trapdoor",
+			"type": "hole",
+			"pos": [45.05, -4, 25.45],
+			"period": 3.8,
+			"phase": 0,
+			"open": 0.45,
+			"radius": 1.35
+		},
+		{
+			"name": "Trapdoor2",
+			"type": "hole",
+			"pos": [51.25, -4, 25.45],
+			"period": 3.8,
+			"phase": 1,
+			"open": 0.45,
+			"radius": 1.35
+		},
+		{
+			"name": "Piston3",
+			"type": "mover",
+			"pos": [78.9, -6.88, 19.45],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, 6],
+			"period": 3.4,
+			"phase": 0,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "hazard"
+				}
+			]
+		},
+		{
+			"name": "Piston4",
+			"type": "mover",
+			"pos": [84.9, -6.88, 31.45],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -6],
+			"period": 3.4,
+			"phase": 0.25,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "hazard"
+				}
+			]
+		},
+		{
+			"name": "Piston5",
+			"type": "mover",
+			"pos": [90.9, -6.88, 19.45],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, 6],
+			"period": 3.4,
+			"phase": 0.5,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "hazard"
+				}
+			]
+		},
+		{
+			"name": "Piston6",
+			"type": "mover",
+			"pos": [96.9, -6.88, 31.45],
+			"rot": [0, 90, 0],
+			"offset": [0, 0, -6],
+			"period": 3.4,
+			"phase": 0.75,
+			"parts": [
+				{
+					"shape": "box",
+					"pos": [0, 0, 0],
+					"size": [4, 1.2, 2],
+					"material": "hazard"
+				}
+			]
+		}
+	],
+	"checkpoints": [
+		{
+			"pos": [38, -4, 25.45],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		},
+		{
+			"pos": [71.9, -7.5, 25.45],
+			"rot": [0, 90, 0],
+			"size": [7, 3, 2]
+		}
+	],
+	"goals": [
+		{
+			"pos": [106.9, -7.5, 45.45]
+		}
+	],
+	"gates": [
+		{
+			"name": "Gate1",
+			"pos": [8, -3.1, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Gate2",
+			"pos": [14, -3.1, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Gate3",
+			"pos": [45.05, -4.1, 25.45],
+			"rot": [0, 90, 0],
+			"size": [0.6, 0.3, 0.6]
+		},
+		{
+			"name": "Gate4",
+			"pos": [51.25, -4.1, 25.45],
+			"rot": [0, 90, 0],
+			"size": [0.6, 0.3, 0.6]
+		},
+		{
+			"name": "Gate5",
+			"pos": [78.9, -6.6, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Gate6",
+			"pos": [84.9, -6.6, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Gate7",
+			"pos": [90.9, -6.6, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 2.2]
+		},
+		{
+			"name": "Gate8",
+			"pos": [96.9, -6.6, 25.45],
+			"rot": [0, 90, 0],
+			"size": [3, 1, 2.2]
+		}
+	],
+	"route": [
+		{
+			"pos": [0, 0.5, 4]
+		},
+		{
+			"pos": [0, 0.5, 9.345],
+			"speed": 4
+		},
+		{
+			"pos": [0, -0.5, 12.035],
+			"speed": 4
+		},
+		{
+			"pos": [0, -1.5, 14.725],
+			"speed": 4
+		},
+		{
+			"pos": [0, -2.5, 17.415],
+			"speed": 4
+		},
+		{
+			"pos": [0, -3.5, 20.105],
+			"speed": 4
+		},
+		{
+			"pos": [0, -3.5, 25.45]
+		},
+		{
+			"pos": [5.5, -3.5, 25.45]
+		},
+		{
+			"pos": [11.5, -3.5, 25.45],
+			"gate": "Gate1",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [17.5, -3.5, 25.45],
+			"gate": "Gate2",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [20, -3.5, 25.45]
+		},
+		{
+			"pos": [23, -3.5, 25.45]
+		},
+		{
+			"pos": [35, -3.5, 25.45]
+		},
+		{
+			"pos": [38, -3.5, 25.45]
+		},
+		{
+			"pos": [42.5, -3.5, 25.45],
+			"speed": 3
+		},
+		{
+			"pos": [47.4, -3.5, 25.45],
+			"gate": "Gate3",
+			"waitFor": "occupied"
+		},
+		{
+			"pos": [48.7, -3.5, 25.45],
+			"speed": 3
+		},
+		{
+			"pos": [53.6, -3.5, 25.45],
+			"gate": "Gate4",
+			"waitFor": "occupied"
+		},
+		{
+			"pos": [54.9, -3.5, 25.45]
+		},
+		{
+			"pos": [57.9, -3.5, 25.45]
+		},
+		{
+			"pos": [68.9, -7, 25.45]
+		},
+		{
+			"pos": [71.9, -7, 25.45]
+		},
+		{
+			"pos": [76.4, -7, 25.45]
+		},
+		{
+			"pos": [82.4, -7, 25.45],
+			"gate": "Gate5",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [88.4, -7, 25.45],
+			"gate": "Gate6",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [94.4, -7, 25.45],
+			"gate": "Gate7",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [100.4, -7, 25.45],
+			"gate": "Gate8",
+			"waitFor": "clear"
+		},
+		{
+			"pos": [102.9, -7, 25.45]
+		},
+		{
+			"pos": [106.9, -7, 25.45]
+		},
+		{
+			"pos": [106.9, -7, 41.45]
+		},
+		{
+			"pos": [106.9, -7, 45.45]
+		}
+	]
+}
