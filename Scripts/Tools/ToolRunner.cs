@@ -14,9 +14,10 @@ namespace BallMadness.Tools;
 /// <code>
 /// godot --headless --path . res://Scenes/Tools.tscn -- COMMAND ...
 ///
-/// --generate-pack ID --count N [--seed S] [--from D] [--to D] [--name NAME]
+/// --generate-pack ID --count N [--seed S] [--from D] [--to D] [--name NAME] [--feature SECTION]
 ///     Writes a pack of N generated levels whose difficulty rises from D to D
-///     (0 to 1 by default). Level i uses seed S*1000+i.
+///     (0 to 1 by default). Level i uses seed S*1000+i. With --feature, every
+///     level has that section (a Section name such as Ice) in it.
 /// --regenerate ID INDEX SEED
 ///     Replaces level INDEX (1-based) of the pack with one from another seed,
 ///     keeping its name and difficulty.
@@ -57,7 +58,8 @@ public partial class ToolRunner : Node
 		{
 			case "--generate-pack":
 				GeneratePack(args[1], Int(Option(args, "--count") ?? "10"), Int(Option(args, "--seed") ?? "1"),
-					Float(Option(args, "--from") ?? "0"), Float(Option(args, "--to") ?? "1"), Option(args, "--name"));
+					Float(Option(args, "--from") ?? "0"), Float(Option(args, "--to") ?? "1"), Option(args, "--name"),
+					Option(args, "--feature") is string feature ? Enum.Parse<Section>(feature, true) : null);
 				return 0;
 			case "--regenerate":
 				Regenerate(args[1], Int(args[2]), Int(args[3]));
@@ -73,7 +75,7 @@ public partial class ToolRunner : Node
 		}
 	}
 
-	private static void GeneratePack(string id, int count, int seed, float from, float to, string name)
+	private static void GeneratePack(string id, int count, int seed, float from, float to, string name, Section? feature)
 	{
 		if (!Packs.IsValidId(id))
 			throw new InvalidOperationException($"Bad pack id \"{id}\"");
@@ -85,7 +87,7 @@ public partial class ToolRunner : Node
 		for (int i = 0; i < count; i++)
 		{
 			float d = count == 1 ? from : Mathf.Lerp(from, to, (float)i / (count - 1));
-			var level = LevelGenerator.Generate(seed * 1000 + i, d, names.Next());
+			var level = LevelGenerator.Generate(seed * 1000 + i, d, names.Next(), feature);
 			string file = $"{i + 1:000}.json";
 			Write($"{folder}/levels/{file}", Packs.Serialize(level));
 			files.Add(file);
@@ -100,7 +102,7 @@ public partial class ToolRunner : Node
 	{
 		string path = LevelPath(id, index);
 		var old = Packs.LoadLevel(path);
-		var level = LevelGenerator.Generate(seed, old.Difficulty ?? 0, old.Name);
+		var level = LevelGenerator.Generate(seed, old.Difficulty ?? 0, old.Name, LevelGenerator.FeatureOf(old));
 		Write(path, Packs.Serialize(level));
 		GD.Print($"[tools] {path}: regenerated from seed {seed}");
 	}

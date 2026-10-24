@@ -297,6 +297,23 @@ public partial class LevelEditor : Node3D
 			{
 				Circle(hazard.Pos, hazard.ChaseRadius ?? 10, TravelColor);
 			}
+			else if (hazard.Type == "teleporter")
+			{
+				// Where the ball comes out.
+				Vector3 exit = hazard.Target ?? (Vector3)hazard.Pos + new Vector3(0, 0, 8);
+				Circle(exit, 0.85f, TravelColor);
+				Line(bounds.WorldCenter, exit, TravelColor);
+			}
+			else if (hazard.Type is "oneway" or "conveyor")
+			{
+				// The way the ball is let through, or carried.
+				Vector3 forward = bounds.Transform.Basis.Z.Normalized() * (hazard.Type == "conveyor" && (hazard.Speed ?? 4) < 0 ? -1 : 1);
+				Vector3 from = bounds.WorldCenter - forward * 1.5f, to = bounds.WorldCenter + forward * 1.5f;
+				Line(from, to, TravelColor);
+				Vector3 side = forward.Cross(Vector3.Up).Normalized() * 0.5f;
+				Line(to, to - forward * 0.6f + side, TravelColor);
+				Line(to, to - forward * 0.6f - side, TravelColor);
+			}
 		}
 
 		float s = HandleScale;
@@ -926,9 +943,12 @@ public partial class LevelEditor : Node3D
 		left.OffsetBottom = -44;
 		left.CustomMinimumSize = new Vector2(150, 0);
 		root.AddChild(left);
-		var palette = new VBoxContainer();
+		// Scrolls when the window is too short for every entry.
+		var paletteScroll = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
+		left.AddChild(paletteScroll);
+		var palette = new VBoxContainer { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
 		palette.AddThemeConstantOverride("separation", 4);
-		left.AddChild(palette);
+		paletteScroll.AddChild(palette);
 		string category = null;
 		int number = 1;
 		foreach (var entry in EditorCatalog.Entries)

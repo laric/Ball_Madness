@@ -65,6 +65,9 @@ public class CourseWriter
 		for (int i = _firstHazard; i < Level.Hazards.Count; i++)
 		{
 			var hazard = Level.Hazards[i];
+			// Mechanics mark their own ground with Cover.
+			if (hazard.Type is not ("mover" or "spinner" or "chaser"))
+				continue;
 			Vector3 pos = hazard.Pos;
 			if (hazard.Type == "spinner")
 			{
@@ -101,6 +104,9 @@ public class CourseWriter
 		}
 		return false;
 	}
+
+	/// <summary>Records ground at (u, v) in the cursor's frame as covered by this section.</summary>
+	public void Cover(float u, float v, float halfU, float halfV) => Mark(At(u, v), halfU, halfV);
 
 	private void Mark(Vector3 centre, float halfU, float halfV)
 	{
@@ -142,7 +148,7 @@ public class CourseWriter
 		float len3d = Mathf.Sqrt(length * length + drop * drop);
 		float u = u0 + length / 2 - thickness / 2 * Mathf.Sin(angle);
 		float h = h0 - drop / 2 - thickness / 2 * Mathf.Cos(angle);
-		Box(name, u, v, h, new Vector3(width, thickness, len3d), -Mathf.RadToDeg(angle), material);
+		Box(name, u, v, h, new Vector3(width, thickness, len3d), Mathf.RadToDeg(angle), material);
 		LowestY = Mathf.Min(LowestY, At(u0 + length, v, h0 - drop).Y);
 	}
 
@@ -180,6 +186,32 @@ public class CourseWriter
 			Height = height,
 			Material = material,
 		});
+	}
+
+	/// <summary>
+	/// Like <see cref="Slab"/>, but the slab is a mechanic's body (ice, a
+	/// conveyor belt) whose local +Z points down the slab.
+	/// </summary>
+	public Hazard SlabHazard(string name, string type, float u0, float length, float drop, float width,
+		float v = 0, float h0 = 0, float thickness = 1)
+	{
+		float angle = Mathf.Atan2(drop, length);
+		float len3d = Mathf.Sqrt(length * length + drop * drop);
+		float u = u0 + length / 2 - thickness / 2 * Mathf.Sin(angle);
+		float h = h0 - drop / 2 - thickness / 2 * Mathf.Cos(angle);
+		Cover(u, v, length / 2, width / 2);
+		LowestY = Mathf.Min(LowestY, At(u0 + length, v, h0 - drop).Y);
+		var hazard = AddHazard(name, type, u, v, h);
+		hazard.Rot = Rot(Mathf.RadToDeg(angle));
+		hazard.Parts.Add(new Part { Shape = "box", Pos = default, Size = new Vector3(width, thickness, len3d) });
+		return hazard;
+	}
+
+	/// <summary>Rotation for something tilted by <paramref name="pitch"/> and turned <paramref name="turn"/> degrees from the heading.</summary>
+	public Vec3? Rot(float pitch, float turn)
+	{
+		var rot = new Vec3(pitch, Yaw + turn, 0);
+		return rot == default ? null : rot;
 	}
 
 	public Hazard AddHazard(string name, string type, float u, float v, float h)

@@ -24,6 +24,13 @@ public enum Section
 	SlidingBridge,
 	Pistons,
 	Chasers,
+	Conveyor,
+	Ice,
+	Bumpers,
+	Holes,
+	Trapdoors,
+	Teleport,
+	Ratchet,
 }
 
 /// <summary>
@@ -35,7 +42,7 @@ public enum Section
 public static class LevelGenerator
 {
 	/// <summary>Bumped when a change makes the same seed give a different level.</summary>
-	public const int Version = 1;
+	public const int Version = 2;
 
 	/// <summary>Time limit written before the autopilot has measured the level.</summary>
 	public const float UnmeasuredTimeLimit = 300;
@@ -47,13 +54,20 @@ public static class LevelGenerator
 		[Section.Ramp] = 0.0f,
 		[Section.Steps] = 0.05f,
 		[Section.Slalom] = 0.1f,
+		[Section.Conveyor] = 0.15f,
 		[Section.Zigzag] = 0.2f,
-		[Section.Planks] = 0.3f,
-		[Section.Sweeper] = 0.4f,
-		[Section.Beam] = 0.5f,
-		[Section.SlidingBridge] = 0.6f,
-		[Section.Pistons] = 0.7f,
-		[Section.Chasers] = 0.8f,
+		[Section.Bumpers] = 0.25f,
+		[Section.Holes] = 0.3f,
+		[Section.Planks] = 0.35f,
+		[Section.Ice] = 0.4f,
+		[Section.Sweeper] = 0.45f,
+		[Section.Teleport] = 0.5f,
+		[Section.Beam] = 0.55f,
+		[Section.Trapdoors] = 0.6f,
+		[Section.SlidingBridge] = 0.65f,
+		[Section.Ratchet] = 0.7f,
+		[Section.Pistons] = 0.75f,
+		[Section.Chasers] = 0.85f,
 	};
 
 	private static readonly Dictionary<string, MaterialDef> Palette = new()
@@ -82,18 +96,22 @@ public static class LevelGenerator
 		return Mathf.Ceil(autopilotSeconds * slack / 5) * 5;
 	}
 
-	public static LevelFile Generate(int seed, float difficulty, string name = null)
+	/// <summary>
+	/// Makes a level. With <paramref name="feature"/> that section is in the
+	/// level (as if it were the newest one unlocked) whatever the difficulty.
+	/// </summary>
+	public static LevelFile Generate(int seed, float difficulty, string name = null, Section? feature = null)
 	{
 		// A layout whose sections overlap is thrown away and laid again from
 		// the next random numbers; the result is still fixed by the seed.
 		var rng = new Random(seed);
 		for (int attempt = 0; ; attempt++)
 		{
-			var level = TryGenerate(rng, Mathf.Clamp(difficulty, 0, 1), out bool overlaps);
+			var level = TryGenerate(rng, Mathf.Clamp(difficulty, 0, 1), feature, out bool overlaps);
 			if (!overlaps || attempt >= 50)
 			{
 				level.Name = name ?? $"Level {seed}";
-				level.Generator = $"v{Version} seed {seed}";
+				level.Generator = $"v{Version} seed {seed}" + (feature is Section f ? $" feature {f}" : "");
 				if (overlaps)
 					GD.PushWarning($"Seed {seed}: couldn't find a layout without overlaps");
 				return level;
@@ -101,7 +119,15 @@ public static class LevelGenerator
 		}
 	}
 
-	private static LevelFile TryGenerate(Random rng, float d, out bool overlaps)
+	/// <summary>The section a level was made to feature, read back from its <see cref="LevelFile.Generator"/> note.</summary>
+	public static Section? FeatureOf(LevelFile level)
+	{
+		const string key = " feature ";
+		int at = level.Generator?.IndexOf(key) ?? -1;
+		return at >= 0 && Enum.TryParse(level.Generator[(at + key.Length)..], out Section s) ? s : null;
+	}
+
+	private static LevelFile TryGenerate(Random rng, float d, Section? feature, out bool overlaps)
 	{
 		var level = new LevelFile
 		{
@@ -121,6 +147,12 @@ public static class LevelGenerator
 
 		var available = Unlocks.Where(u => u.Value <= d + 0.001f).Select(u => u.Key).ToList();
 		Section newest = available.OrderBy(s => Unlocks[s]).Last();
+		if (feature is Section featured)
+		{
+			newest = featured;
+			if (!available.Contains(featured))
+				available.Add(featured);
+		}
 		int count = Mathf.RoundToInt(Mathf.Lerp(3, 7, d)) + c.Range(0, 1);
 
 		var sections = new List<Section>();
@@ -183,7 +215,9 @@ public static class LevelGenerator
 	}
 
 	private static bool IsHazard(Section s) =>
-		s is Section.Planks or Section.Sweeper or Section.SlidingBridge or Section.Pistons or Section.Chasers;
+		s is Section.Planks or Section.Sweeper or Section.SlidingBridge or Section.Pistons or Section.Chasers
+			or Section.Conveyor or Section.Ice or Section.Bumpers or Section.Holes or Section.Trapdoors
+			or Section.Teleport or Section.Ratchet;
 
 	private static Section Pick(CourseWriter c, List<Section> available, Section newest, List<Section> sofar)
 	{
@@ -221,6 +255,13 @@ public static class LevelGenerator
 			case Section.SlidingBridge: SlidingBridge(c, d); break;
 			case Section.Pistons: Pistons(c, d); break;
 			case Section.Chasers: Chasers(c, d); break;
+			case Section.Conveyor: Conveyor(c, d); break;
+			case Section.Ice: Ice(c, d); break;
+			case Section.Bumpers: Bumpers(c, d); break;
+			case Section.Holes: Holes(c, d); break;
+			case Section.Trapdoors: Trapdoors(c, d); break;
+			case Section.Teleport: Teleport(c, d); break;
+			case Section.Ratchet: Ratchet(c, d); break;
 		}
 	}
 
@@ -450,5 +491,191 @@ public static class LevelGenerator
 		c.Waypoint(size / 2);
 		c.Waypoint(size);
 		c.Advance(size);
+	}
+
+	/// <summary>
+	/// A conveyor belt. Gentle levels get a belt that speeds the ball along;
+	/// later ones get cross belts that push it towards the edges, faster as
+	/// difficulty rises.
+	/// </summary>
+	private static void Conveyor(CourseWriter c, float d)
+	{
+		if (d < 0.35f)
+		{
+			float w = Width(c, d);
+			float len = Mathf.Round(c.Range(8, 12));
+			var belt = c.SlabHazard("Belt", "conveyor", 0, len, 0, w);
+			belt.Speed = Mathf.Snapped(Mathf.Lerp(8, 10, d / 0.35f), 0.5f);
+			if (d < 0.25f)
+				c.Rails(0, len, 0, w, "rail");
+			c.Waypoint(len);
+			c.Advance(len);
+			return;
+		}
+
+		float lane = Mathf.Snapped(Mathf.Lerp(5, 3.4f, d), 0.1f);
+		float seg = Mathf.Snapped(Mathf.Lerp(3, 4.5f, d), 0.5f);
+		float speed = Mathf.Snapped(Mathf.Lerp(1.5f, 3.2f, d), 0.1f);
+		int n = c.Range(2, 3);
+		int side = c.Sign();
+		for (int i = 0; i < n; i++)
+		{
+			float u = i * seg + seg / 2;
+			var belt = c.AddHazard("Belt", "conveyor", u, 0, -0.5f);
+			// Turned a quarter, so the belt runs across the course.
+			belt.Rot = c.Rot(0, side * 90);
+			belt.Speed = speed;
+			belt.Parts.Add(new Part { Shape = "box", Pos = default, Size = new Vector3(seg, 1, lane) });
+			c.Cover(u, 0, seg / 2, lane / 2);
+			c.Waypoint(u + seg / 2, 0, 0, speed: 4.5f);
+			side = -side;
+		}
+		c.Advance(n * seg);
+	}
+
+	/// <summary>An icy slab: railed and flat at first, later bare and tilted.</summary>
+	private static void Ice(CourseWriter c, float d)
+	{
+		float w = Mathf.Snapped(Mathf.Lerp(6, 3.4f, d) + c.Range(-0.3f, 0.3f), 0.1f);
+		float len = Mathf.Round(c.Range(8, 12));
+		float drop = d < 0.5f ? 0 : Mathf.Snapped(len * Mathf.Tan(Mathf.DegToRad(c.Range(3, 6))), 0.5f);
+		// Onto the ice slowly: there's little grip to stop with once on it.
+		c.Waypoint(0, 0, 0, speed: 4);
+		c.SlabHazard("Ice", "ice", 0, len, drop, w);
+		if (d < 0.55f)
+			c.Rails(0, len, drop, w, "rail");
+		c.Waypoint(len, 0, -drop, speed: 4);
+		c.Advance(len, drop);
+	}
+
+	/// <summary>A plaza with bumpers to weave between; they kick harder as difficulty rises.</summary>
+	private static void Bumpers(CourseWriter c, float d)
+	{
+		float w = Mathf.Snapped(Mathf.Lerp(9, 7, d), 0.5f);
+		int n = c.Range(2, 3) + (d > 0.6f ? 1 : 0);
+		float gap = Mathf.Lerp(5, 4, d);
+		float len = n * gap + 3;
+		c.Slab("Bumpers", 0, len, 0, w, "dark");
+		if (d < 0.4f)
+			c.Rails(0, len, 0, w, "rail");
+		int side = c.Sign();
+		float offset = w / 2 - 2.6f;
+		for (int i = 0; i < n; i++)
+		{
+			float u = 1.5f + i * gap + gap / 2;
+			var bumper = c.AddHazard("Bumper", "bumper", u, side * offset, 0);
+			bumper.Rot = null;
+			bumper.Force = Mathf.Snapped(Mathf.Lerp(7, 11, d), 0.5f);
+			bumper.Parts.Add(new Part { Shape = "cylinder", Pos = new Vector3(0, 0.5f, 0), Radius = 0.8f, Height = 1 });
+			// Pass on the other side of each bumper.
+			c.Waypoint(u, -side * (w / 2 - 1.4f), 0, speed: 4.5f);
+			side = -side;
+		}
+		c.Waypoint(len);
+		c.Advance(len);
+	}
+
+	/// <summary>A plaza with holes to steer round; bigger and closer to the line as difficulty rises.</summary>
+	private static void Holes(CourseWriter c, float d)
+	{
+		float w = Mathf.Snapped(Mathf.Lerp(8, 6.5f, d), 0.5f);
+		float r = Mathf.Snapped(Mathf.Lerp(1.0f, 1.5f, d), 0.1f);
+		int n = c.Range(2, 4);
+		float gap = Mathf.Lerp(5, 4, d) + r;
+		float len = n * gap + 3;
+		c.Slab("Holes", 0, len, 0, w, "grid");
+		int side = c.Sign();
+		for (int i = 0; i < n; i++)
+		{
+			float u = 1.5f + i * gap + gap / 2;
+			var hole = c.AddHazard("Hole", "hole", u, side * Mathf.Lerp(1.6f, 0.5f, d), 0);
+			hole.Rot = null;
+			hole.Radius = r;
+			hole.Parts = null;
+			c.Waypoint(u, -side * (w / 2 - 1.2f), 0, speed: 4.5f);
+			side = -side;
+		}
+		c.Waypoint(len);
+		c.Advance(len);
+	}
+
+	/// <summary>A lane with trapdoors across it that open and close; quicker as difficulty rises.</summary>
+	private static void Trapdoors(CourseWriter c, float d)
+	{
+		float w = Mathf.Snapped(Mathf.Lerp(3.4f, 2.8f, d), 0.1f);
+		float r = w / 2 - 0.1f;
+		int n = c.Range(1, 2) + (d > 0.8f ? 1 : 0);
+		float spacing = 2 * r + 3.5f;
+		float len = n * spacing + 1.5f;
+		float period = Mathf.Snapped(Mathf.Lerp(4.5f, 3.6f, d), 0.1f);
+		float open = Mathf.Snapped(Mathf.Lerp(0.35f, 0.5f, d), 0.05f);
+		c.Slab("Trapdoors", 0, len, 0, w, "bridge");
+		for (int i = 0; i < n; i++)
+		{
+			float u = 2.7f + r + i * spacing;
+			var hole = c.AddHazard("Trapdoor", "hole", u, 0, 0);
+			hole.Rot = null;
+			hole.Radius = r;
+			hole.Period = period;
+			hole.Open = open;
+			hole.Phase = Mathf.Snapped(c.Range(0, 1), 0.01f);
+			hole.Parts = null;
+			// Wait short of the trapdoor until it has just closed, then run.
+			c.Waypoint(u - r - 1.2f, speed: 3);
+			string gate = c.Gate(u, 0, -0.1f, new Vector3(0.6f, 0.3f, 0.6f));
+			c.Waypoint(u + r + 1.0f, gate: gate, waitFor: "occupied");
+		}
+		c.Waypoint(len);
+		c.Advance(len);
+	}
+
+	/// <summary>
+	/// A teleporter that jumps a gap to a landing pad further down. The pads
+	/// get smaller as difficulty rises, and on the hardest levels the ball
+	/// keeps its speed through the jump.
+	/// </summary>
+	private static void Teleport(CourseWriter c, float d)
+	{
+		float w = Mathf.Snapped(Mathf.Lerp(5, 3, d), 0.1f);
+		c.Box("Launch", 2.5f, 0, -0.5f, new Vector3(w, 1, 5), 0, "dark");
+		var teleporter = c.AddHazard("Teleporter", "teleporter", 2.5f, 0, 0);
+		teleporter.Rot = null;
+		teleporter.Radius = 1.1f;
+		teleporter.Parts = null;
+
+		float gap = Mathf.Round(c.Range(5, 8));
+		float drop = Mathf.Round(c.Range(1, 4));
+		float pad = Mathf.Snapped(Mathf.Lerp(6, 3.6f, d), 0.2f);
+		float u = 5 + gap;
+		c.Box("Arrival", u + pad / 2, 0, -drop - 0.5f, new Vector3(pad, 1, pad), 0, "start");
+		teleporter.Target = c.At(u + pad / 2, 0, -drop);
+		if (d >= 0.75f)
+			teleporter.KeepSpeed = true;
+
+		c.Waypoint(2.5f, speed: 4);
+		c.Waypoint(u + pad, 0, -drop, speed: 4);
+		c.Advance(u + pad, drop);
+	}
+
+	/// <summary>An uphill climb with one-way gates that stop the ball rolling all the way back; steeper as difficulty rises.</summary>
+	private static void Ratchet(CourseWriter c, float d)
+	{
+		const float w = 3.2f;
+		float len = Mathf.Round(c.Range(10, 14));
+		float slope = Mathf.Lerp(7, 14, d) + c.Range(-1, 1);
+		float rise = Mathf.Snapped(len * Mathf.Tan(Mathf.DegToRad(slope)), 0.5f);
+		c.Slab("Climb", 0, len, -rise, w, "ramp");
+		c.Rails(0, len, -rise, w, "rail");
+		int n = len > 12 ? 3 : 2;
+		for (int i = 1; i <= n; i++)
+		{
+			float u = len * i / (n + 1);
+			var gate = c.AddHazard("Ratchet", "oneway", u, 0, rise * u / len);
+			gate.Width = w;
+			gate.Height = 1.2f;
+			gate.Parts = null;
+		}
+		c.Waypoint(len, 0, rise);
+		c.Advance(len, -rise);
 	}
 }

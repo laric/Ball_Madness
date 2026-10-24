@@ -95,7 +95,7 @@ public static class EditorItems
 				return part.Name ?? $"{Capitalize(IsRamp(part) ? "ramp" : part.Shape)} {item.Index + 1}";
 			case ItemKind.Hazard:
 				var hazard = level.Hazards[item.Index];
-				return hazard.Name ?? $"{Capitalize(hazard.Type)} {item.Index + 1}";
+				return hazard.Name ?? $"{EditorCatalog.ForHazard(hazard.Type)?.Label ?? Capitalize(hazard.Type)} {item.Index + 1}";
 			case ItemKind.Checkpoint:
 				return $"Checkpoint {item.Index + 1}";
 			case ItemKind.Goal:
@@ -255,6 +255,19 @@ public static class EditorItems
 		else if (!HasGroundUnder(level, level.Spawn))
 			problems.Add("The spawn isn't above any part of the course.");
 
+		for (int i = 0; i < level.Hazards.Count; i++)
+		{
+			var hazard = level.Hazards[i];
+			if (hazard.Type != "teleporter")
+				continue;
+			Vector3 exit = hazard.Target ?? (Vector3)hazard.Pos + new Vector3(0, 0, 8);
+			string name = Label(level, new EditorItem(ItemKind.Hazard, i));
+			if (exit.Y < level.KillHeight)
+				problems.Add($"{name}'s exit is below the kill height.");
+			else if (!HasGroundUnder(level, exit + Vector3.Up))
+				problems.Add($"{name}'s exit isn't above any part of the course.");
+		}
+
 		var below = All(level)
 			.Where(i => i.Kind != ItemKind.Spawn && LowestPoint(level, i) < level.KillHeight)
 			.Select(i => Label(level, i))
@@ -280,6 +293,8 @@ public static class EditorItems
 				continue;
 			if (item.Kind == ItemKind.Part && level.Course[item.Index].Collide == false)
 				continue;
+			if (item.Kind == ItemKind.Hazard && level.Hazards[item.Index].Type is "hole" or "teleporter" or "oneway")
+				continue;
 			if (Bounds(level, item).Intersect(point, Vector3.Down) is float t && (nearest == null || t < nearest))
 				nearest = t;
 		}
@@ -303,6 +318,17 @@ public static class EditorItems
 	private static Obb HazardBounds(Hazard hazard)
 	{
 		var transform = LevelBuilder.Place(hazard.Pos, hazard.Rot);
+		switch (hazard.Type)
+		{
+			// Flat on the floor at pos.
+			case "hole":
+			case "teleporter":
+				float r = hazard.Radius ?? (hazard.Type == "hole" ? LevelBuilder.DefaultHoleRadius : LevelBuilder.DefaultTeleporterRadius);
+				return new Obb(transform, new Vector3(0, 0.05f, 0), new Vector3(r, 0.05f, r));
+			case "oneway":
+				float w = hazard.Width ?? LevelBuilder.DefaultGateWidth, h = hazard.Height ?? LevelBuilder.DefaultGateHeight;
+				return new Obb(transform, new Vector3(0, (h + 0.3f) / 2, 0), new Vector3(w / 2 + 0.3f, (h + 0.3f) / 2, 0.15f));
+		}
 		if (hazard.Type == "chaser" || hazard.Parts == null || hazard.Parts.Count == 0)
 			return new Obb(transform, Vector3.Zero, Vector3.One * (hazard.Radius ?? 0.5f));
 

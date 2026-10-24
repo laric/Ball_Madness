@@ -77,6 +77,7 @@ public partial class Game : Node3D
 		_respawnPoint = spawn.GlobalPosition;
 		_ball.Respawn(_respawnPoint, StartHeading(_respawnPoint));
 		_cameraRig.SnapToTarget();
+		_ball.Teleported += _cameraRig.SnapToTarget;
 
 		foreach (Node node in GetTree().GetNodesInGroup("checkpoint"))
 		{

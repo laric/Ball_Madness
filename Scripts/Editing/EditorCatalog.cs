@@ -37,6 +37,7 @@ public static class EditorCatalog
 {
 	public const string Parts = "Parts";
 	public const string Hazards = "Hazards";
+	public const string Mechanics = "Mechanics";
 	public const string Markers = "Markers";
 
 	public static readonly IReadOnlyList<CatalogEntry> Entries = new List<CatalogEntry>
@@ -51,7 +52,7 @@ public static class EditorCatalog
 		{
 			Id = "ramp", Label = "Ramp", Category = Parts,
 			Tooltip = "A box tilted down towards +Z. Change the tilt with T and G or in the rotation's X.",
-			Add = (level, floor) => AddPart(level, new Part { Name = "Ramp", Shape = "box", Pos = floor, Rot = new Vec3(-20, 0, 0), Size = new Vec3(4, 1, 8), Material = "grid" }),
+			Add = (level, floor) => AddPart(level, new Part { Name = "Ramp", Shape = "box", Pos = floor, Rot = new Vec3(20, 0, 0), Size = new Vec3(4, 1, 8), Material = "grid" }),
 		},
 		new()
 		{
@@ -106,6 +107,79 @@ public static class EditorCatalog
 		},
 		new()
 		{
+			Id = "conveyor", Label = "Conveyor", Category = Mechanics, HazardType = "conveyor",
+			Tooltip = "A belt that carries the ball along its arrows. Turn it to point the belt.",
+			Add = (level, floor) => AddHazard(level, new Hazard
+			{
+				Type = "conveyor", Pos = floor, Speed = 4,
+				Parts = new List<Part> { new() { Shape = "box", Pos = default, Size = new Vec3(4, 0.5f, 8) } },
+			}),
+			HazardFields = h => new Field[]
+			{
+				new NumberField("Belt speed (m/s)", () => h.Speed ?? 4, v => h.Speed = v) { Min = -30, Max = 30, Arrow = 0.5f },
+				new NoteField("The belt runs along the conveyor's +Z; negative speeds run it backwards."),
+			},
+		},
+		new()
+		{
+			Id = "ice", Label = "Ice", Category = Mechanics, HazardType = "ice",
+			Tooltip = "A slippery floor: the ball slides and barely steers. Tilt it with T and G for an icy ramp.",
+			Add = (level, floor) => AddHazard(level, new Hazard
+			{
+				Type = "ice", Pos = floor,
+				Parts = new List<Part> { new() { Shape = "box", Pos = default, Size = new Vec3(4, 0.5f, 8) } },
+			}),
+		},
+		new()
+		{
+			Id = "bumper", Label = "Bumper", Category = Mechanics, HazardType = "bumper",
+			Tooltip = "A post that kicks the ball away when it touches.",
+			Add = (level, floor) => AddHazard(level, new Hazard
+			{
+				Type = "bumper", Pos = floor, Force = 10,
+				Parts = new List<Part> { new() { Shape = "cylinder", Pos = default, Radius = 0.8f, Height = 1 } },
+			}),
+			HazardFields = h => new Field[]
+			{
+				new NumberField("Kick (m/s)", () => h.Force ?? 10, v => h.Force = v) { Min = 0, Max = 50, Arrow = 1 },
+			},
+		},
+		new()
+		{
+			Id = "hole", Label = "Hole", Category = Mechanics, HazardType = "hole",
+			Tooltip = "A round hole cut into the floor it's placed on. Make it timed for a trapdoor that opens and closes.",
+			Add = (level, floor) => AddHazard(level, new Hazard { Type = "hole", Pos = floor, Radius = LevelBuilder.DefaultHoleRadius }),
+			HazardFields = HoleFields,
+		},
+		new()
+		{
+			Id = "oneway", Label = "One-way gate", Category = Mechanics, HazardType = "oneway",
+			Tooltip = "A door the ball can only pass the way its arrows point. Turn it with R.",
+			Add = (level, floor) => AddHazard(level, new Hazard { Type = "oneway", Pos = floor, Width = LevelBuilder.DefaultGateWidth }),
+			HazardFields = h => new Field[]
+			{
+				new NumberField("Width", () => h.Width ?? LevelBuilder.DefaultGateWidth, v => h.Width = v) { Min = 1, Max = 40, Arrow = 0.5f },
+				new NumberField("Height", () => h.Height ?? LevelBuilder.DefaultGateHeight, v => h.Height = v) { Min = 1, Max = 10, Arrow = 0.1f },
+			},
+		},
+		new()
+		{
+			Id = "teleporter", Label = "Teleporter", Category = Mechanics, HazardType = "teleporter",
+			Tooltip = "A pad that sends the ball to its exit. Set the exit in the panel on the right.",
+			Add = (level, floor) => AddHazard(level, new Hazard
+			{
+				Type = "teleporter", Pos = floor, Radius = LevelBuilder.DefaultTeleporterRadius, Target = floor + new Vector3(0, 0, 8),
+			}),
+			HazardFields = h => new Field[]
+			{
+				new VectorField("Exit", () => h.Target ?? (Vector3)h.Pos + new Vector3(0, 0, 8), v => h.Target = v),
+				new NoteField("The exit is a point on the floor; the ball comes out 1 m above it."),
+				new NumberField("Radius", () => h.Radius ?? LevelBuilder.DefaultTeleporterRadius, v => h.Radius = v) { Min = 0.6f, Max = 10, Arrow = 0.1f },
+				new ToggleField("Keep speed", () => h.KeepSpeed ?? false, v => h.KeepSpeed = v ? true : null),
+			},
+		},
+		new()
+		{
 			Id = "checkpoint", Label = "Checkpoint", Category = Markers,
 			Tooltip = "Rolling through it makes it the respawn point.",
 			Add = (level, floor) =>
@@ -151,6 +225,24 @@ public static class EditorCatalog
 		("sweeper", new MaterialDef { Color = new(0.9f, 0.25f, 0.15f), Roughness = 0.4f, Metallic = 0.2f }),
 		("steelie", new MaterialDef { Color = new(0.08f, 0.08f, 0.1f), Roughness = 0.25f, Metallic = 0.9f }),
 	};
+
+	private static IEnumerable<Field> HoleFields(Hazard h)
+	{
+		yield return new NumberField("Radius", () => h.Radius ?? LevelBuilder.DefaultHoleRadius, v => h.Radius = v) { Min = 0.6f, Max = 20, Arrow = 0.1f };
+		yield return new NumberField("Depth", () => h.Depth ?? 3, v => h.Depth = v) { Min = 0.5f, Max = 50, Arrow = 0.5f };
+		yield return new ToggleField("Timed", () => h.Period != null, v =>
+		{
+			h.Period = v ? 4 : null;
+			h.Open = v ? 0.5f : null;
+			if (!v)
+				h.Phase = null;
+		}) { Rebuilds = true };
+		if (h.Period == null)
+			yield break;
+		yield return new NumberField("Period (s)", () => h.Period ?? 4, v => h.Period = v) { Min = 0.5f, Max = 120, Arrow = 0.5f };
+		yield return new NumberField("Open (0-1)", () => h.Open ?? 0.5f, v => h.Open = v) { Min = 0, Max = 1, Arrow = 0.05f };
+		yield return new NumberField("Phase (0-1)", () => h.Phase ?? 0, v => h.Phase = v) { Min = 0, Max = 1, Arrow = 0.05f };
+	}
 
 	public static CatalogEntry ForHazard(string type) => Entries.FirstOrDefault(e => e.HazardType == type);
 

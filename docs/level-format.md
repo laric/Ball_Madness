@@ -6,7 +6,7 @@ Conventions used throughout:
 
 - Positions and sizes are in metres. Y is up. A level usually starts high and works its way down.
 - Vectors are `[x, y, z]` arrays.
-- `rot` is a rotation in degrees, as Euler angles in Godot's YXZ order. Leave it out for no rotation. A ramp tilted down towards +Z is `"rot": [-20, 0, 0]`.
+- `rot` is a rotation in degrees, as Euler angles in Godot's YXZ order. Leave it out for no rotation. A ramp tilted down towards +Z is `"rot": [20, 0, 0]`.
 - Any field marked optional can be left out to get the default.
 - Comments (`//`) and trailing commas are allowed.
 
@@ -67,7 +67,7 @@ A pack can be shared as a zip of its folder (or of its contents). Importing a zi
 | `materials` | optional | Named looks, see below. |
 | `spawn` | required | Where the ball starts: put it about 1 m above the floor. |
 | `course` | | Static parts, see below. |
-| `hazards` | | Moving parts and enemies. |
+| `hazards` | | Moving parts, enemies and mechanics (conveyors, ice, bumpers, holes, one-way gates, teleporters). |
 | `checkpoints` | | Where the ball respawns after a fall. |
 | `goals` | required | At least one finish pad. |
 | `gates` | | Areas the autopilot watches, see `route`. |
@@ -132,6 +132,60 @@ All hazards have `name` (optional), `type`, `pos` and `rot` (optional). Movers a
 | `maxSpeed` | 5 | |
 | `mass`, `friction`, `bounce` | 1.6, 0.9, 0.3 | |
 | `material` | dark steel | |
+
+### Mechanics
+
+Mechanics are entries in `hazards` too, with their own `type`. Conveyors, ice and bumpers are built from `parts` like movers are; holes, one-way gates and teleporters have no parts and stand on the floor at `pos`. Every mechanic can be turned with `rot`.
+
+**conveyor**: a belt that carries the ball along the hazard's +Z (turn it with `rot` to aim it). The belt pulls the ball's speed along it towards the belt's speed, gently enough that the player can still steer across or against it. Its parts always get the moving-chevron belt look; their `material` is ignored.
+
+| Field | Default | |
+|---|---|---|
+| `speed` | 4 | Belt speed in m/s; negative runs it backwards. |
+
+**ice**: a frictionless surface. On ice the ball slides instead of rolling and the player has under a third of the usual push, so turning and stopping take a long time. Tilt it for an icy ramp. Parts without a `material` get an icy look.
+
+**bumper**: a post that kicks the ball away from its centre line at `force` m/s (or faster, if the ball came in faster) and pulses. A cylinder part standing on the floor is the usual shape. Parts without a `material` get a cyan look.
+
+| Field | Default | |
+|---|---|---|
+| `force` | 10 | Speed the ball leaves at, in m/s. |
+
+**hole**: a round hole cut out of every solid course part (box or cylinder) under `pos`, which is the hole's centre on the floor's top surface. The ball falls through. With a `period` it's a trapdoor: a lid covers the hole, flashes red, then shrinks away for part of each cycle. Holes don't cut parts of other hazards or mechanics.
+
+| Field | Default | |
+|---|---|---|
+| `radius` | 1.2 | The ball is 0.5. |
+| `depth` | 3 | How far down the cut goes. |
+| `period` | none | Seconds for one open-and-close cycle. Leave it out for a hole that's always open. |
+| `open` | 0.5 | Fraction of the cycle the trapdoor is open, from 0 to 1. |
+| `phase` | 0 | Where in the cycle it starts, 0 to 1. At 0 the trapdoor starts opening. |
+
+For the autopilot, put a gate on the lid and wait for it with `"waitFor": "occupied"`: the lid counts as a moving body while it's closed, so the pilot sets off the moment the trapdoor shuts.
+
+**oneway**: a swing door across the course that the ball can only pass along the hazard's +Z (the way the floor arrows point). From the other side it's a wall. The posts at its sides are always solid.
+
+| Field | Default | |
+|---|---|---|
+| `width` | 4 | Width of the door. Posts stand just outside it. |
+| `height` | 1.2 | |
+
+**teleporter**: a glowing pad that sends the ball to `target`. The ball comes out 1 m above that point, stopped, unless `keepSpeed` is set. A faint ring marks the exit. The autopilot carries on from the nearest waypoint it hasn't passed yet, so put a waypoint on the pad and the next one beyond the exit.
+
+| Field | Default | |
+|---|---|---|
+| `target` | 8 m along +Z from `pos` | Exit point on the floor, in level space. |
+| `radius` | 1 | The ball has to roll well onto the pad. |
+| `keepSpeed` | false | Keep the ball's speed and spin through the jump. |
+
+```json
+{ "type": "conveyor", "pos": [0, -0.5, 10], "rot": [0, 90, 0], "speed": 3, "parts": [ { "shape": "box", "size": [4, 1, 8] } ] },
+{ "type": "ice", "pos": [0, -0.5, 20], "parts": [ { "shape": "box", "size": [6, 1, 10] } ] },
+{ "type": "bumper", "pos": [1.5, 0.5, 30], "force": 9, "parts": [ { "shape": "cylinder", "radius": 0.8, "height": 1 } ] },
+{ "type": "hole", "pos": [0, 0, 40], "radius": 1.3, "period": 4, "open": 0.4 },
+{ "type": "oneway", "pos": [0, 0, 50], "width": 4 },
+{ "type": "teleporter", "pos": [0, 0, 60], "target": [0, -3, 75] }
+```
 
 ### Checkpoints
 

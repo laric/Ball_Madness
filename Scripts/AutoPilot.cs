@@ -15,6 +15,9 @@ namespace BallMadness;
 /// it), so it always starts at the beginning of the hazard's safe window.
 /// A waypoint with a <c>speed</c> metadata value caps the pilot's speed on the
 /// way to it, for thin beams and tight corners.
+///
+/// After a teleporter moves the ball, the pilot carries on from the nearest
+/// waypoint that it hasn't passed yet.
 /// </summary>
 public partial class AutoPilot : Node
 {
@@ -31,6 +34,7 @@ public partial class AutoPilot : Node
 	private bool _gateArmed;
 	private int _next;
 	private int _lastFalls;
+	private int _lastTeleports;
 	private bool _relocate;
 	private bool _allLevels;
 
@@ -93,6 +97,20 @@ public partial class AutoPilot : Node
 
 		Vector3 pos = _ball.GlobalPosition;
 		Vector3 flatPos = new Vector3(pos.X, 0, pos.Z);
+
+		if (_ball.Teleports != _lastTeleports)
+		{
+			_lastTeleports = _ball.Teleports;
+			_gatePassed = -1;
+			_gateArmed = false;
+			int nearest = _next;
+			for (int i = _next + 1; i < _route.Length; i++)
+			{
+				if (flatPos.DistanceTo(Flat(_route[i])) < flatPos.DistanceTo(Flat(_route[nearest])))
+					nearest = i;
+			}
+			_next = nearest;
+		}
 
 		if (_relocate)
 		{
