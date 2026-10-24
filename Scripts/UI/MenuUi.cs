@@ -1,4 +1,5 @@
 using System;
+using BallMadness.LevelFormat;
 using Godot;
 
 namespace BallMadness;
@@ -10,21 +11,46 @@ namespace BallMadness;
 /// </summary>
 public static class MenuUi
 {
+	private static Color _accent = new(0.45f, 0.4f, 0.8f);
+	private static Color _panel = new(0.12f, 0.1f, 0.28f);
 	private static Theme _theme;
-
-	public static Theme Theme => _theme ??= CreateTheme();
-
 	private static Theme _compactTheme;
 
-	public static Theme CompactTheme => _compactTheme ??= CreateCompactTheme();
+	/// <summary>The menus' look in the current pack's world colours.</summary>
+	public static Theme Theme => _theme ??= CreateTheme(_accent, _panel);
 
-	private static Theme CreateTheme()
+	/// <summary>The same look at a smaller size, for the editor and pack manager.</summary>
+	public static Theme CompactTheme => _compactTheme ??= CreateCompactTheme(_accent, _panel);
+
+	/// <summary>The accent colour (borders, headings) of the world in use.</summary>
+	public static Color Accent => _accent;
+
+	/// <summary>Switches the menus to a world theme's colours (see <see cref="Themes.UiColors"/>).</summary>
+	public static void Use(ThemeFile world)
+	{
+		var (accent, panel) = Themes.UiColors(world);
+		if (accent == _accent && panel == _panel)
+			return;
+		_accent = accent;
+		_panel = panel;
+		_theme = null;
+		_compactTheme = null;
+	}
+
+	/// <summary>A button look in another world's colours, e.g. for that world's pack in a list.</summary>
+	public static Theme ThemeFor(ThemeFile world)
+	{
+		var (accent, panel) = Themes.UiColors(world);
+		return CreateTheme(accent, panel);
+	}
+
+	private static Theme CreateTheme(Color accent, Color panel)
 	{
 		var theme = new Theme { DefaultFontSize = 26 };
 
-		theme.SetStylebox("normal", "Button", Box(new Color(0.12f, 0.1f, 0.28f, 0.9f), new Color(0.45f, 0.4f, 0.8f)));
-		theme.SetStylebox("hover", "Button", Box(new Color(0.22f, 0.18f, 0.48f, 0.95f), new Color(0.7f, 0.65f, 1f)));
-		theme.SetStylebox("pressed", "Button", Box(new Color(0.3f, 0.25f, 0.6f, 1f), new Color(1f, 0.85f, 0.3f)));
+		theme.SetStylebox("normal", "Button", Box(Fade(panel, 0.9f), accent));
+		theme.SetStylebox("hover", "Button", Box(Fade(panel.Lerp(accent, 0.3f), 0.95f), accent.Lerp(Colors.White, 0.4f)));
+		theme.SetStylebox("pressed", "Button", Box(panel.Lerp(accent, 0.5f), new Color(1f, 0.85f, 0.3f)));
 		theme.SetStylebox("focus", "Button", Box(new Color(0, 0, 0, 0), new Color(1f, 0.85f, 0.3f), 3));
 		theme.SetStylebox("disabled", "Button", Box(new Color(0.08f, 0.08f, 0.1f, 0.75f), new Color(0.25f, 0.25f, 0.3f)));
 		theme.SetColor("font_color", "Button", new Color(0.95f, 0.95f, 1f));
@@ -35,28 +61,29 @@ public static class MenuUi
 
 		theme.SetColor("font_outline_color", "Label", Colors.Black);
 		theme.SetConstant("outline_size", "Label", 6);
-		theme.SetStylebox("panel", "PanelContainer", Box(new Color(0.04f, 0.03f, 0.1f, 0.85f), new Color(0.45f, 0.4f, 0.8f), 2, 24));
+		theme.SetStylebox("panel", "PanelContainer", Box(Fade(panel * 0.35f, 0.85f), accent, 2, 24));
 		return theme;
 	}
 
-	/// <summary>The same look at a smaller size, for the editor and pack manager.</summary>
-	private static Theme CreateCompactTheme()
+	private static Theme CreateCompactTheme(Color accent, Color panel)
 	{
 		var theme = new Theme { DefaultFontSize = 16 };
-		theme.SetStylebox("normal", "Button", Box(new Color(0.12f, 0.1f, 0.28f, 0.9f), new Color(0.45f, 0.4f, 0.8f), 1, 4));
-		theme.SetStylebox("hover", "Button", Box(new Color(0.22f, 0.18f, 0.48f, 0.95f), new Color(0.7f, 0.65f, 1f), 1, 4));
-		theme.SetStylebox("pressed", "Button", Box(new Color(0.35f, 0.28f, 0.7f, 1f), new Color(1f, 0.85f, 0.3f), 2, 4));
-		theme.SetStylebox("hover_pressed", "Button", Box(new Color(0.4f, 0.32f, 0.75f, 1f), new Color(1f, 0.85f, 0.3f), 2, 4));
+		theme.SetStylebox("normal", "Button", Box(Fade(panel, 0.9f), accent, 1, 4));
+		theme.SetStylebox("hover", "Button", Box(Fade(panel.Lerp(accent, 0.3f), 0.95f), accent.Lerp(Colors.White, 0.4f), 1, 4));
+		theme.SetStylebox("pressed", "Button", Box(panel.Lerp(accent, 0.55f), new Color(1f, 0.85f, 0.3f), 2, 4));
+		theme.SetStylebox("hover_pressed", "Button", Box(panel.Lerp(accent, 0.65f), new Color(1f, 0.85f, 0.3f), 2, 4));
 		theme.SetStylebox("disabled", "Button", Box(new Color(0.08f, 0.08f, 0.1f, 0.75f), new Color(0.25f, 0.25f, 0.3f), 1, 4));
 		theme.SetStylebox("focus", "Button", Box(new Color(0, 0, 0, 0), new Color(1f, 0.85f, 0.3f), 2, 4));
 		theme.SetColor("font_disabled_color", "Button", new Color(0.45f, 0.45f, 0.5f));
 		theme.SetColor("font_outline_color", "Label", Colors.Black);
 		theme.SetConstant("outline_size", "Label", 4);
-		theme.SetStylebox("panel", "PanelContainer", Box(new Color(0.04f, 0.03f, 0.1f, 0.85f), new Color(0.45f, 0.4f, 0.8f), 1, 6));
+		theme.SetStylebox("panel", "PanelContainer", Box(Fade(panel * 0.35f, 0.85f), accent, 1, 6));
 		foreach (string state in new[] { "normal", "hover", "pressed", "hover_pressed", "focus" })
 			theme.SetStylebox(state, "CheckBox", new StyleBoxEmpty());
 		return theme;
 	}
+
+	private static Color Fade(Color color, float alpha) => new(color.R, color.G, color.B, alpha);
 
 	public static StyleBoxFlat Box(Color fill, Color border, int borderWidth = 2, int padding = 10)
 	{
@@ -97,6 +124,7 @@ public static class MenuUi
 	{
 		var label = new Label { Text = text, HorizontalAlignment = HorizontalAlignment.Center };
 		label.AddThemeFontSizeOverride("font_size", size);
+		label.AddThemeColorOverride("font_color", _accent.Lerp(Colors.White, 0.55f));
 		parent.AddChild(label);
 		return label;
 	}

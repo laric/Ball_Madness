@@ -45,13 +45,27 @@ public static class Levels
 
 	public static bool Testing => TestLevel != null;
 
-	public static void StartTest(LevelFile level) => TestLevel = level;
+	private static ThemeFile _testTheme;
 
-	public static void EndTest() => TestLevel = null;
+	/// <summary>Test plays a level from the editor in its pack's world theme.</summary>
+	public static void StartTest(LevelFile level, ThemeFile theme)
+	{
+		TestLevel = level;
+		_testTheme = theme;
+	}
+
+	public static void EndTest()
+	{
+		TestLevel = null;
+		_testTheme = null;
+	}
+
+	/// <summary>The world theme the current level is played in: its pack's, or the tested level's pack's.</summary>
+	public static ThemeFile CurrentTheme => Testing ? _testTheme ?? Themes.Classic : CurrentPack.Theme;
 
 	/// <summary>Reads the current level's file (or the level under test) and builds its nodes.</summary>
 	public static LevelInfo BuildCurrent() =>
-		LevelBuilder.Build(TestLevel ?? Packs.LoadLevel(CurrentPath));
+		LevelBuilder.Build(TestLevel ?? Packs.LoadLevel(CurrentPath), CurrentTheme);
 
 	/// <summary>Display name of a level in the current pack, read from its file.</summary>
 	public static string NameAt(int index)

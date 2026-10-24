@@ -31,10 +31,68 @@ my-pack/
 | `name` | optional | Shown to players. Defaults to the id. |
 | `author`, `version`, `description` | optional | Shown to players. |
 | `levels` | optional | Level file names inside `levels/`, in play order. Left out, every `levels/*.json` is played in file name order. |
+| `theme` | optional | The world the pack is set in, see [World themes](#world-themes). Left out, `classic`. |
 
 Built-in packs live in `res://packs/`, players' packs in `user://packs/`. Save progress is kept per pack id.
 
 A pack can be shared as a zip of its folder (or of its contents). Importing a zip (`Packs.ImportZip`) checks every file first and only copies `pack.json` and `levels/*.json`; level file names may only use letters, digits, `-`, `_`, `.` and spaces.
+
+## World themes
+
+Every pack is set in a world: its sky, fog, sunlight, the ground far below the course, the menu colours on its title screen, level select and pause menu, and the looks of the standard materials. Pick a built-in theme in `pack.json`:
+
+```json
+"theme": { "base": "lava" }
+```
+
+The built-in themes are the files in `themes/`: `classic` (the default: each level keeps its own colours), `meadow`, `desert`, `ice`, `lava`, `neon-city`, `ocean`, `forest`, `crystal-cave`, `clockwork` and `space`. The level editor's **World** picker (in the pack manager and the editor's toolbar) writes this for you.
+
+Any part of the theme can be changed in the same block; a field left out comes from `base`. `materials` is merged key by key, the other blocks are replaced whole:
+
+```json
+"theme": {
+	"base": "ocean",
+	"fog": { "color": [0.5, 0.6, 0.7], "density": 0.008 },
+	"materials": { "rail": { "color": [1, 1, 1], "line": [0.6, 0.6, 0.6] } }
+}
+```
+
+| Field | | |
+|---|---|---|
+| `base` | optional | Built-in theme to start from. |
+| `name`, `description` | optional | Shown on the title screen, level select and the World picker. |
+| `sky` | optional | `top` and `horizon` colours: the background fades from `top` at the top of the screen to `horizon` at the bottom. `ground` tints the light from below. `stars` from 0 to 1 sprinkles stars on the background. |
+| `fog` | optional | `color`, `density` (thickness everywhere; keep it under about 0.01, the camera is 40 m away), and `heightDensity` for extra fog below `height` metres above the level's `killHeight` (default 6), so drops look deep. Leave the block out for no fog. |
+| `light` | optional | Sunlight `color` and `energy` (default 1.2), its angle as `pitch` below the horizon and compass `yaw` in degrees, and `ambientEnergy` (default 0.6) for the light from the sky. `ambient` sets a flat ambient colour instead of the sky's. |
+| `ground` | optional | A huge plane under the course (grass, sand, water, lava): `color`, `depth` below `killHeight` (default 2), `glow`, `roughness`, `metallic`. Decoration only, the ball falls through it. Leave it out for none. |
+| `ui` | optional | Menu colours: `accent` for borders and headings, `panel` for button fill. |
+| `materials` | optional | Looks by material key, in the same form as a level's `materials`. |
+
+The theme's materials replace a level's materials with the same key, so one level file looks right in every world. The keys the themes define, which the editor and the level generator use, are:
+
+| Key | Used for |
+|---|---|
+| `grid`, `ramp`, `dark`, `moss` | Floors and ramps. |
+| `start` | The start pad. |
+| `rail`, `post` | Rails, walls and posts. |
+| `bridge` | Bridges and planks. |
+| `moving`, `slider` | Moving platforms. |
+| `hazard`, `pusher`, `sweeper`, `hub` | Pistons, sliding bridges, sweeper bars and their hubs. |
+| `steelie` | Chasers (and any chaser with no `material`). |
+| `ice`, `bumper` | Ice and bumper parts that have no `material` of their own. |
+| `conveyor` | Conveyor belts: `color` is the belt, `line` the moving chevrons. |
+| `hole`, `trapdoor` | Walls of holes cut in the course, and a timed hole's lid. |
+| `oneway`, `gatepost` | A one-way gate's panel and arrows (only `color` is used), and its posts. |
+| `teleporter` | Teleporter pads, rings and exits (only `color` is used). |
+| `checkpoint`, `goal`, `pole` | The checkpoint stripe, goal pad and flag, and flag pole. |
+
+Material keys a theme doesn't know (like `sweeper_mat` in some of the built-in levels) keep the level's own look. To keep a level's look for a key the theme does know, mark it `override`:
+
+```json
+"materials": { "rail": { "color": [1, 0.2, 0.2], "line": [0.5, 0.1, 0.1], "override": true } }
+```
+
+To preview any pack in another world without changing it: `godot --path . -- --theme lava` (works with `--level` and `--pack`).
 
 ## Level file
 
@@ -82,7 +140,9 @@ A pack can be shared as a zip of its folder (or of its contents). Importing a zi
 }
 ```
 
-With `line`, the part gets the course's grid shader (base colour plus 1 m grid lines). Without it, a plain surface with optional `roughness` (default 1) and `metallic` (default 0). Colours are RGB from 0 to 1. A part with no material, or an unknown one, is grey-blue grid.
+With `line`, the part gets the course's grid shader (base colour plus 1 m grid lines). Without it, a plain surface with optional `roughness` (default 1) and `metallic` (default 0). `glow` makes the grid lines (or the plain surface) give off their colour at that strength, for neon and lava. Colours are RGB from 0 to 1. A part with no material, or an unknown one, is the theme's `grid` (grey-blue grid in `classic`).
+
+The pack's [world theme](#world-themes) replaces materials it has a look for; add `"override": true` to keep the level's own.
 
 ### Parts
 

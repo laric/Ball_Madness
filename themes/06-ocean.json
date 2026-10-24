@@ -1,0 +1,32 @@
+{
+	"id": "ocean",
+	"name": "Ocean",
+	"description": "Piers and coral over open water",
+	"sky": { "top": [0.18, 0.48, 0.85], "horizon": [0.72, 0.9, 0.96], "ground": [0.05, 0.3, 0.45] },
+	"fog": { "color": [0.6, 0.82, 0.92], "density": 0.001, "heightDensity": 0.004 },
+	"light": { "color": [1, 0.97, 0.9], "energy": 1.1, "ambientEnergy": 0.3 },
+	"ground": { "color": [0.05, 0.36, 0.56], "depth": 3, "roughness": 0.15, "metallic": 0.2 },
+	"ui": { "accent": [0.25, 0.78, 0.88], "panel": [0.04, 0.17, 0.27] },
+	"materials": {
+		"grid": { "color": [0.9, 0.86, 0.76], "line": [0.5, 0.62, 0.64] },
+		"start": { "color": [0.96, 0.96, 0.92], "line": [0.3, 0.56, 0.72] },
+		"ramp": { "color": [0.972, 0.929, 0.821], "line": [0.5, 0.62, 0.64] },
+		"dark": { "color": [0.54, 0.516, 0.456], "line": [0.4, 0.496, 0.512] },
+		"moss": { "color": [0.65, 0.78, 0.555], "line": [0.293, 0.351, 0.25] },
+		"rail": { "color": [0.15, 0.52, 0.62], "line": [0.06, 0.28, 0.36] },
+		"bridge": { "color": [0.62, 0.5, 0.36], "line": [0.36, 0.28, 0.18] },
+		"post": { "color": [0.96, 0.46, 0.36], "line": [0.55, 0.2, 0.15] },
+		"moving": { "color": [1.0, 0.78, 0.3], "roughness": 0.5 },
+		"slider": { "color": [1.0, 0.78, 0.3], "roughness": 0.5 },
+		"hazard": { "color": [1.0, 0.5, 0.25], "roughness": 0.6 },
+		"pusher": { "color": [1.0, 0.5, 0.25], "roughness": 0.6 },
+		"sweeper": { "color": [0.95, 0.3, 0.25], "roughness": 0.4, "metallic": 0.1 },
+		"hub": { "color": [0.22, 0.32, 0.38], "roughness": 0.4, "metallic": 0.6 },
+		"steelie": { "color": [0.08, 0.12, 0.18], "roughness": 0.2, "metallic": 0.85 },
+		"bumper": { "color": [1.0, 0.6, 0.3], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.15, 0.3, 0.38], "line": [0.95, 0.95, 0.85] },
+		"teleporter": { "color": [0.3, 0.95, 0.85] },
+		"trapdoor": { "color": [0.9, 0.7, 0.35], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.22, 0.32, 0.38], "roughness": 0.4, "metallic": 0.6 }
+	}
+}

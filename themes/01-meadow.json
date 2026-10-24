@@ -1,0 +1,32 @@
+{
+	"id": "meadow",
+	"name": "Meadow",
+	"description": "Green hills under a summer sky",
+	"sky": { "top": [0.3, 0.55, 0.92], "horizon": [0.78, 0.9, 1.0], "ground": [0.25, 0.4, 0.2] },
+	"fog": { "color": [0.78, 0.88, 0.98], "density": 0.001, "heightDensity": 0.004 },
+	"light": { "color": [1, 0.96, 0.86], "energy": 1.1, "ambientEnergy": 0.3 },
+	"ground": { "color": [0.2, 0.4, 0.14] },
+	"ui": { "accent": [0.55, 0.8, 0.3], "panel": [0.12, 0.24, 0.08] },
+	"materials": {
+		"grid": { "color": [0.62, 0.8, 0.45], "line": [0.36, 0.55, 0.25] },
+		"start": { "color": [0.98, 0.9, 0.6], "line": [0.6, 0.48, 0.22] },
+		"ramp": { "color": [0.67, 0.864, 0.486], "line": [0.36, 0.55, 0.25] },
+		"dark": { "color": [0.372, 0.48, 0.27], "line": [0.288, 0.44, 0.2] },
+		"moss": { "color": [0.51, 0.75, 0.4], "line": [0.23, 0.338, 0.18] },
+		"rail": { "color": [0.3, 0.55, 0.28], "line": [0.15, 0.32, 0.14] },
+		"bridge": { "color": [0.72, 0.52, 0.32], "line": [0.42, 0.28, 0.15] },
+		"post": { "color": [0.96, 0.96, 0.92], "line": [0.6, 0.6, 0.55] },
+		"moving": { "color": [0.98, 0.78, 0.25], "roughness": 0.6 },
+		"slider": { "color": [0.98, 0.78, 0.25], "roughness": 0.6 },
+		"hazard": { "color": [0.95, 0.45, 0.2], "roughness": 0.6 },
+		"pusher": { "color": [0.95, 0.45, 0.2], "roughness": 0.6 },
+		"sweeper": { "color": [0.88, 0.22, 0.2], "roughness": 0.4, "metallic": 0.1 },
+		"hub": { "color": [0.4, 0.32, 0.25], "roughness": 0.5, "metallic": 0.3 },
+		"steelie": { "color": [0.14, 0.12, 0.1], "roughness": 0.25, "metallic": 0.85 },
+		"bumper": { "color": [0.95, 0.55, 0.75], "roughness": 0.3, "metallic": 0.3 },
+		"conveyor": { "color": [0.25, 0.3, 0.2], "line": [1.0, 0.85, 0.2] },
+		"teleporter": { "color": [0.75, 0.4, 1.0] },
+		"trapdoor": { "color": [0.85, 0.6, 0.3], "roughness": 0.5, "metallic": 0.3 },
+		"gatepost": { "color": [0.4, 0.32, 0.25], "roughness": 0.5, "metallic": 0.3 }
+	}
+}

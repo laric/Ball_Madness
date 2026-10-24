@@ -66,6 +66,8 @@ public partial class LevelEditor : Node3D
 	private Button _redoButton;
 	private readonly Dictionary<CatalogEntry, Button> _toolButtons = new();
 	private ConfirmationDialog _leaveDialog;
+	private Control _uiRoot;
+	private OptionButton _worldPicker;
 
 	private DragKind _drag;
 	private string _dragSnapshot;
@@ -140,8 +142,53 @@ public partial class LevelEditor : Node3D
 		}
 		_rig.SnapToTarget();
 
+		ApplyWorld();
 		RefreshScene();
 		RebuildPanel();
+	}
+
+	/// <summary>The world theme of the pack being edited.</summary>
+	private static ThemeFile PackWorld() => Packs.Find(EditorSession.PackId)?.Theme ?? Themes.Classic;
+
+	/// <summary>Dresses the editor (sky, light, menu colours, swatches) in the pack's world.</summary>
+	private void ApplyWorld()
+	{
+		var world = PackWorld();
+		EditorCatalog.World = world;
+		MenuUi.Use(world);
+		_uiRoot.Theme = MenuUi.CompactTheme;
+		Themes.ApplyEnvironment(this, world, _level?.KillHeight ?? -12);
+		string baseId = Themes.BaseId(Packs.Find(EditorSession.PackId)?.Info);
+		for (int i = 0; i < Themes.BuiltIn.Count; i++)
+		{
+			if (Themes.BuiltIn[i].Id == baseId)
+				_worldPicker.Select(i);
+		}
+	}
+
+	/// <summary>Sets the world the whole pack is played in, from the theme picker.</summary>
+	public void SetWorld(string themeId)
+	{
+		var pack = Packs.Find(EditorSession.PackId);
+		var theme = Themes.Find(themeId);
+		if (pack == null || theme == null || pack.BuiltIn)
+			return;
+		try
+		{
+			var info = Packs.InfoCopy(pack);
+			info.Theme = Themes.WithBase(info.Theme, themeId);
+			Packs.SaveInfo(pack, info);
+			Levels.ReloadPack();
+		}
+		catch (Exception e)
+		{
+			ShowStatus($"Couldn't change the world: {e.Message}", true);
+			return;
+		}
+		ApplyWorld();
+		RefreshScene();
+		RebuildPanel();
+		ShowStatus($"Every level in {pack.Name} is now set in {theme.Name}");
 	}
 
 	/// <summary>A start pad with the spawn on it: the smallest level that loads.</summary>
@@ -224,7 +271,7 @@ public partial class LevelEditor : Node3D
 		}
 		try
 		{
-			var built = LevelBuilder.Build(_level);
+			var built = LevelBuilder.Build(_level, EditorCatalog.World);
 			// Frozen: hazards are shown where they start.
 			built.ProcessMode = ProcessModeEnum.Disabled;
 			AddChild(built);
@@ -881,7 +928,7 @@ public partial class LevelEditor : Node3D
 		EditorSession.Selected = _selected;
 		EditorSession.BuildHeight = _buildHeight;
 		EditorSession.View = (_focus.GlobalPosition, _rig.Yaw, _rig.Pitch, _rig.Zoom);
-		Levels.StartTest(Packs.ParseLevel(EditorSession.WorkingCopy, "test"));
+		Levels.StartTest(Packs.ParseLevel(EditorSession.WorkingCopy, "test"), PackWorld());
 		GetTree().ChangeSceneToFile(Game.ScenePath);
 	}
 
@@ -906,6 +953,7 @@ public partial class LevelEditor : Node3D
 
 	private void BuildUi(Control root)
 	{
+		_uiRoot = root;
 		root.Theme = MenuUi.CompactTheme;
 		root.MouseFilter = Control.MouseFilterEnum.Ignore;
 
@@ -927,6 +975,13 @@ public partial class LevelEditor : Node3D
 		_heightSpin = new SpinBox { MinValue = -500, MaxValue = 500, Step = Snap, Suffix = "m", CustomMinimumSize = new Vector2(110, 0), TooltipText = "Where new parts are placed (Shift+PgUp/PgDn, or Shift+click an object to use its top)" };
 		_heightSpin.ValueChanged += v => _buildHeight = (float)v;
 		bar.AddChild(_heightSpin);
+		bar.AddChild(new VSeparator());
+		bar.AddChild(new Label { Text = "World" });
+		_worldPicker = new OptionButton { FocusMode = Control.FocusModeEnum.None, TooltipText = "The world theme every level of this pack is played in: sky, light, ground and the looks of the standard materials" };
+		foreach (var theme in Themes.BuiltIn)
+			_worldPicker.AddItem(theme.Name);
+		_worldPicker.ItemSelected += i => SetWorld(Themes.BuiltIn[(int)i].Id);
+		bar.AddChild(_worldPicker);
 		bar.AddChild(new VSeparator());
 		_title = new Label { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, ClipText = true };
 		bar.AddChild(_title);

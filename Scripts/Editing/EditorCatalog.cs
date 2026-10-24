@@ -261,17 +261,25 @@ public static class EditorCatalog
 		}
 	}
 
-	/// <summary>Every material key a part of this level can pick: the level's own, then the presets it lacks.</summary>
+	/// <summary>Every material key a part of this level can pick: the level's own, the presets it lacks, then the world's.</summary>
 	public static List<string> MaterialKeys(LevelFile level)
 	{
 		var keys = level.Materials.Keys.ToList();
-		keys.AddRange(Materials.Select(m => m.Key).Where(k => !level.Materials.ContainsKey(k)));
+		keys.AddRange(Materials.Select(m => m.Key).Where(k => !keys.Contains(k)));
+		if (World?.Materials != null)
+			keys.AddRange(World.Materials.Keys.Where(k => !keys.Contains(k) && !ThemeOnlyKeys.Contains(k)));
 		return keys;
 	}
 
+	/// <summary>Theme looks for the game's own markers and mechanics, which aren't offered for parts.</summary>
+	private static readonly HashSet<string> ThemeOnlyKeys = new() { "checkpoint", "goal", "pole", "conveyor", "hole", "trapdoor", "oneway", "gatepost", "teleporter" };
+
+	/// <summary>The world theme of the pack being edited; its looks win over the level's (see <see cref="Themes.Look"/>).</summary>
+	public static ThemeFile World { get; set; }
+
 	public static MaterialDef Look(LevelFile level, string key)
 	{
-		if (key != null && level.Materials.TryGetValue(key, out var def))
+		if (Themes.Look(level, World, key) is MaterialDef def)
 			return def;
 		foreach (var (presetKey, look) in Materials)
 		{

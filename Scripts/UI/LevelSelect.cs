@@ -21,6 +21,9 @@ public partial class LevelSelect : Control
 		Theme = MenuUi.Theme;
 
 		var column = MenuUi.CenteredColumn(this, "LEVEL SELECT", 900);
+		var current = Levels.CurrentPack;
+		var world = MenuUi.AddHeading(column, $"{current.Name}  ·  {current.Theme.Name}", 22);
+		world.AddThemeColorOverride("font_color", MenuUi.Accent.Lerp(Colors.White, 0.3f));
 		var grid = new GridContainer { Columns = 2 };
 		grid.AddThemeConstantOverride("h_separation", 14);
 		grid.AddThemeConstantOverride("v_separation", 10);

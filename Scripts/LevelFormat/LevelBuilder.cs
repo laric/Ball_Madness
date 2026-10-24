@@ -16,6 +16,7 @@ namespace BallMadness.LevelFormat;
 ///   Goal, Goal2  Area3Ds in the "goal" group, with pad, pole and flag
 ///   Gates        Area3Ds the autopilot watches
 ///   Route        hidden Marker3D waypoints for the autopilot
+///   Ground       the world theme's ground plane, if it has one (decoration)
 /// </code>
 /// Every type name in the file maps to one of the game's own scripts, so
 /// building a level never runs code from the file.
@@ -34,6 +35,9 @@ public static class LevelBuilder
 	private static readonly MaterialDef BumperLook = new() { Color = new(0.2f, 0.85f, 0.95f), Roughness = 0.3f, Metallic = 0.3f };
 	private static readonly MaterialDef HoleLook = new() { Color = new(0.05f, 0.05f, 0.08f) };
 	private static readonly MaterialDef PostLook = new() { Color = new(0.3f, 0.3f, 0.38f), Roughness = 0.5f, Metallic = 0.4f };
+	private static readonly MaterialDef TrapDoorLook = new() { Color = new(0.95f, 0.6f, 0.15f), Roughness = 0.5f, Metallic = 0.3f };
+	private static readonly MaterialDef OneWayLook = new() { Color = new(0.4f, 0.95f, 0.6f) };
+	private static readonly MaterialDef TeleporterLook = new() { Color = new(0.7f, 0.35f, 1.0f) };
 
 	public const float DefaultHoleRadius = 1.2f;
 	public const float DefaultTeleporterRadius = 1.0f;
@@ -42,7 +46,32 @@ public static class LevelBuilder
 
 	public const float DefaultGoalRadius = 2.0f;
 
-	public static LevelInfo Build(LevelFile file)
+	/// <summary>The world theme of the level being built; see <see cref="ThemeLook"/>.</summary>
+	private static ThemeFile _theme;
+
+	/// <summary>
+	/// Builds the level in a world <paramref name="theme"/> (see
+	/// <see cref="Themes"/>), which supplies its looks for the level's
+	/// material keys, the mechanics and markers, and the ground under the
+	/// course. Null keeps the level's own looks.
+	/// </summary>
+	public static LevelInfo Build(LevelFile file, ThemeFile theme = null)
+	{
+		_theme = theme;
+		try
+		{
+			return BuildNodes(file);
+		}
+		finally
+		{
+			_theme = null;
+		}
+	}
+
+	/// <summary>The theme's look for one of the game's own things (e.g. "bumper"), or the built-in one.</summary>
+	private static MaterialDef ThemeLook(string key, MaterialDef fallback) => Themes.Look(null, _theme, key) ?? fallback;
+
+	private static LevelInfo BuildNodes(LevelFile file)
 	{
 		var materials = new Dictionary<string, Material>();
 		Material MaterialFor(string key)
@@ -50,11 +79,12 @@ public static class LevelBuilder
 			key ??= "";
 			if (!materials.TryGetValue(key, out var material))
 			{
-				if (!file.Materials.TryGetValue(key, out var def))
+				var def = Themes.Look(file, _theme, key);
+				if (def == null)
 				{
 					if (key != "")
 						GD.PushWarning($"Level \"{file.Name}\" has no material \"{key}\"");
-					def = DefaultLook;
+					def = ThemeLook("grid", DefaultLook);
 				}
 				material = MakeMaterial(def);
 				materials[key] = material;
@@ -91,12 +121,12 @@ public static class LevelBuilder
 			Add(hazards, MakeHazard(hazard, MaterialFor), hazard.Name ?? Capitalize(hazard.Type));
 
 		var checkpoints = AddGroup(root, "Checkpoints");
-		var stripe = MakeMaterial(CheckpointLook);
+		var stripe = MakeMaterial(ThemeLook("checkpoint", CheckpointLook));
 		foreach (var checkpoint in file.Checkpoints)
 			Add(checkpoints, MakeCheckpoint(checkpoint, stripe), "Checkpoint");
 
-		var goalLook = MakeMaterial(GoalLook);
-		var poleLook = MakeMaterial(PoleLook);
+		var goalLook = MakeMaterial(ThemeLook("goal", GoalLook));
+		var poleLook = MakeMaterial(ThemeLook("pole", PoleLook));
 		foreach (var goal in file.Goals)
 			Add(root, MakeGoal(goal, goalLook, poleLook), "Goal");
 
@@ -119,6 +149,9 @@ public static class LevelBuilder
 			Add(route, marker, "Waypoint");
 		}
 
+		if (_theme?.Ground is GroundDef ground)
+			root.AddChild(MakeGround(ground, file.KillHeight));
+
 		return root;
 	}
 
@@ -129,13 +162,41 @@ public static class LevelBuilder
 			var material = new ShaderMaterial { Shader = GridShader };
 			material.SetShaderParameter("base_color", ToColor(def.Color));
 			material.SetShaderParameter("line_color", ToColor(line));
+			material.SetShaderParameter("line_glow", def.Glow ?? 0.0f);
 			return material;
 		}
-		return new StandardMaterial3D
+		var plain = new StandardMaterial3D
 		{
 			AlbedoColor = ToColor(def.Color),
 			Roughness = def.Roughness ?? 1.0f,
 			Metallic = def.Metallic ?? 0.0f,
+		};
+		if (def.Glow is float glow && glow > 0)
+		{
+			plain.EmissionEnabled = true;
+			plain.Emission = ToColor(def.Color);
+			plain.EmissionEnergyMultiplier = glow;
+		}
+		return plain;
+	}
+
+	/// <summary>The theme's ground: a plane far bigger than any course, under the kill height, with no collision.</summary>
+	private static Node3D MakeGround(GroundDef ground, float killHeight)
+	{
+		var material = MakeMaterial(new MaterialDef
+		{
+			Color = ground.Color,
+			Roughness = ground.Roughness ?? 1.0f,
+			Metallic = ground.Metallic ?? 0.0f,
+			Glow = ground.Glow,
+		});
+		return new MeshInstance3D
+		{
+			Name = "Ground",
+			Mesh = new PlaneMesh { Size = new Vector2(3000, 3000) },
+			MaterialOverride = material,
+			Position = new Vector3(0, killHeight - (ground.Depth ?? 2.0f), 0),
+			CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
 		};
 	}
 
@@ -185,6 +246,11 @@ public static class LevelBuilder
 				return MakeChaser(hazard, materialFor);
 			case "conveyor":
 				var belt = new ShaderMaterial { Shader = ConveyorShader };
+				if (Themes.Look(null, _theme, "conveyor") is MaterialDef beltLook)
+				{
+					belt.SetShaderParameter("base_color", ToColor(beltLook.Color));
+					belt.SetShaderParameter("stripe_color", ToColor(beltLook.Line ?? new Vec3(0.95f, 0.75f, 0.15f)));
+				}
 				var conveyor = new Conveyor { Speed = hazard.Speed ?? 4.0f, Belt = belt, Transform = Place(hazard.Pos, hazard.Rot) };
 				foreach (var part in hazard.Parts ?? new List<Part>())
 					AddBodyPart(conveyor, part, belt);
@@ -206,7 +272,7 @@ public static class LevelBuilder
 		}
 
 		body.Transform = Place(hazard.Pos, hazard.Rot);
-		var fallback = hazard.Type switch { "ice" => MakeMaterial(IceLook), "bumper" => MakeMaterial(BumperLook), _ => null };
+		var fallback = hazard.Type switch { "ice" => MakeMaterial(ThemeLook("ice", IceLook)), "bumper" => MakeMaterial(ThemeLook("bumper", BumperLook)), _ => null };
 		foreach (var part in hazard.Parts ?? new List<Part>())
 			AddBodyPart(body, part, part.Material == null && fallback != null ? fallback : materialFor(part.Material));
 		return body;
@@ -218,7 +284,7 @@ public static class LevelBuilder
 		float radius = hole.Radius ?? DefaultHoleRadius;
 		float depth = hole.Depth ?? 3.0f;
 		var holePlace = Place(hole.Pos, hole.Rot);
-		var walls = MakeMaterial(HoleLook);
+		var walls = MakeMaterial(ThemeLook("hole", HoleLook));
 		foreach (var (part, node) in parts)
 		{
 			if (part.Collide == false || part.Shape == "sphere")
@@ -254,7 +320,7 @@ public static class LevelBuilder
 			return new Marker3D { Transform = place };
 
 		float radius = (hazard.Radius ?? DefaultHoleRadius) - 0.03f;
-		var look = new StandardMaterial3D { AlbedoColor = new Color(0.95f, 0.6f, 0.15f), Roughness = 0.5f, Metallic = 0.3f };
+		var look = (StandardMaterial3D)MakeMaterial(Plain(ThemeLook("trapdoor", TrapDoorLook)));
 		var door = new TrapDoor
 		{
 			Period = Mathf.Max(period, 0.2f),
@@ -283,9 +349,10 @@ public static class LevelBuilder
 		var panelSize = new Vector3(width, height, gate.Thickness);
 		gate.AddChild(new CollisionShape3D { Name = "Shape", Position = new Vector3(0, height / 2, 0), Shape = new BoxShape3D { Size = panelSize } });
 
+		Vec3 gateColor = ThemeLook("oneway", OneWayLook).Color;
 		var panelLook = new StandardMaterial3D
 		{
-			AlbedoColor = new Color(0.4f, 0.95f, 0.6f, 0.55f),
+			AlbedoColor = new Color(gateColor.X, gateColor.Y, gateColor.Z, 0.55f),
 			Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
 			Roughness = 0.3f,
 		};
@@ -294,7 +361,7 @@ public static class LevelBuilder
 		gate.AddChild(gate.Hinge);
 
 		// Chevrons on the floor point the way through.
-		var arrowLook = MakeMaterial(new MaterialDef { Color = new(0.4f, 0.95f, 0.6f) });
+		var arrowLook = MakeMaterial(new MaterialDef { Color = gateColor });
 		for (int i = -1; i <= 1; i += 2)
 		{
 			foreach (float side in new[] { -1f, 1f })
@@ -312,7 +379,7 @@ public static class LevelBuilder
 
 		// Posts at the sides: always solid, so they're their own body.
 		var posts = new StaticBody3D { Name = "Posts" };
-		var postLook = MakeMaterial(PostLook);
+		var postLook = MakeMaterial(ThemeLook("gatepost", PostLook));
 		foreach (float side in new[] { -1f, 1f })
 		{
 			var pos = new Vector3(side * (width / 2 + 0.15f), (height + 0.3f) / 2, 0);
@@ -333,11 +400,12 @@ public static class LevelBuilder
 	private static Node3D MakeTeleporter(Hazard hazard)
 	{
 		float radius = hazard.Radius ?? DefaultTeleporterRadius;
+		Color color = ToColor(ThemeLook("teleporter", TeleporterLook).Color);
 		var glow = new StandardMaterial3D
 		{
-			AlbedoColor = new Color(0.7f, 0.35f, 1.0f),
+			AlbedoColor = color,
 			EmissionEnabled = true,
-			Emission = new Color(0.6f, 0.25f, 1.0f),
+			Emission = color.Darkened(0.1f),
 			EmissionEnergyMultiplier = 1.5f,
 		};
 		var place = Place(hazard.Pos, hazard.Rot);
@@ -373,7 +441,7 @@ public static class LevelBuilder
 			Mesh = new TorusMesh { InnerRadius = 0.75f, OuterRadius = 0.85f, Rings = 32, RingSegments = 6 },
 			MaterialOverride = new StandardMaterial3D
 			{
-				AlbedoColor = new Color(0.7f, 0.35f, 1.0f, 0.6f),
+				AlbedoColor = new Color(color, 0.6f),
 				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
 				ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
 			},
@@ -403,7 +471,7 @@ public static class LevelBuilder
 		{
 			Name = "Mesh",
 			Mesh = new SphereMesh { Radius = radius, Height = radius * 2 },
-			MaterialOverride = hazard.Material != null ? materialFor(hazard.Material) : MakeMaterial(ChaserLook),
+			MaterialOverride = hazard.Material != null ? materialFor(hazard.Material) : MakeMaterial(ThemeLook("steelie", ChaserLook)),
 		});
 		return chaser;
 	}
@@ -510,6 +578,10 @@ public static class LevelBuilder
 	}
 
 	private static Color ToColor(Vec3 v) => new(v.X, v.Y, v.Z);
+
+	/// <summary>A theme look as a plain surface, for the parts that can't take the grid shader.</summary>
+	private static MaterialDef Plain(MaterialDef def) =>
+		def.Line == null ? def : new MaterialDef { Color = def.Color, Roughness = def.Roughness, Metallic = def.Metallic, Glow = def.Glow };
 
 	private static string Capitalize(string s) =>
 		string.IsNullOrEmpty(s) ? "Part" : char.ToUpperInvariant(s[0]) + s[1..];
