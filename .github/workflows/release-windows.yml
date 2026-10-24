@@ -101,10 +101,12 @@ jobs:
       - name: Smoke test (autopilot through the last level)
         shell: pwsh
         run: |
-          $last = (Get-Content packs/main/pack.json -Raw | ConvertFrom-Json).levels.Count
+          # The game is complete after the last level of the campaign's last world.
+          $world = (Get-Content packs/campaign.json -Raw | ConvertFrom-Json).worlds[-1]
+          $last = (Get-Content "packs/$world/pack.json" -Raw | ConvertFrom-Json).levels.Count
           $log = "$PWD\autopilot.log"
           $p = Start-Process -FilePath ".\$env:EXE" -PassThru `
-            -ArgumentList '--headless', '--log-file', "`"$log`"", '--', '--level', "$last", '--autopilot'
+            -ArgumentList '--headless', '--log-file', "`"$log`"", '--', '--pack', "$world", '--level', "$last", '--autopilot'
           $exited = $p.WaitForExit(300000)
           if (-not $exited) { $p.Kill() }
           if (Test-Path $log) { Get-Content $log }
