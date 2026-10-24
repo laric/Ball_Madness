@@ -110,7 +110,7 @@ Palette entries come from one list in `Scripts/Editing/EditorCatalog.cs`; a new 
 
 ## Sound
 
-Every sound effect is made from scratch by `tools/make-sounds.py` (sine waves, noise and envelopes, standard library only) and written to `Sounds/*.wav`. There is no music. Run the script again after changing a sound; the output is the same every time.
+Every sound effect is made from scratch by `tools/make-sounds.py` (sine waves, noise and envelopes, standard library only) and written to `Sounds/*.wav`. There is no music. Run the script again after changing a sound; the output is the same every time. The game reads a sound straight from its `.wav` until Godot has imported it, so a fresh checkout run with `godot --path .` has sound without opening the editor first (running `godot --path . --import` once builds the import cache).
 
 - **Ball:** a rolling rumble whose pitch and volume follow the ball's speed (silent in the air), and a thud on hard hits, louder the harder it hits.
 - **Course:** a whack when a piston or sweeper hits the ball, a clang from enemy steelies and a two-note blip when one starts chasing.

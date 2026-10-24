@@ -159,7 +159,7 @@ public partial class Sfx : Node
 			return null;
 
 		string path = Folder + name + ".wav";
-		var stream = ResourceLoader.Exists(path) ? GD.Load<AudioStream>(path) : null;
+		var stream = Load(path);
 		if (stream == null)
 		{
 			Missing.Add(name);
@@ -174,6 +174,24 @@ public partial class Sfx : Node
 		}
 		Streams[name] = stream;
 		return stream;
+	}
+
+	/// <summary>
+	/// Loads a sound through Godot's import, or straight from the .wav when
+	/// the import cache hasn't been built yet (a fresh checkout or a new sound
+	/// run with <c>godot --path .</c> before the editor has opened the project).
+	/// </summary>
+	private static AudioStream Load(string path)
+	{
+		var import = new ConfigFile();
+		if (import.Load(path + ".import") == Error.Ok
+			&& import.GetValue("remap", "path", "").AsString() is { Length: > 0 } imported
+			&& FileAccess.FileExists(imported))
+			return GD.Load<AudioStream>(path);
+
+		if (FileAccess.FileExists(path))
+			return AudioStreamWav.LoadFromFile(path);
+		return ResourceLoader.Exists(path) ? GD.Load<AudioStream>(path) : null;
 	}
 
 	private AudioStreamPlayer NextFlat()
