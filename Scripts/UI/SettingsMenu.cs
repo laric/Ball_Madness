@@ -10,6 +10,7 @@ public partial class SettingsMenu : Control
 	public Action Closed;
 
 	private Button _cameraButton;
+	private Button _steeringButton;
 
 	public override void _Ready()
 	{
@@ -18,6 +19,7 @@ public partial class SettingsMenu : Control
 
 		var column = MenuUi.CenteredColumn(this, "SETTINGS", 520);
 		_cameraButton = MenuUi.AddButton(column, "", CycleCamera);
+		_steeringButton = MenuUi.AddButton(column, "", CycleSteering);
 		MenuUi.AddButton(column, "Back", Close);
 		UpdateLabels();
 		MenuUi.FocusFirst(this);
@@ -41,8 +43,20 @@ public partial class SettingsMenu : Control
 		UpdateLabels();
 	}
 
+	private void CycleSteering()
+	{
+		Settings.SteeringMode = Settings.SteeringMode == Settings.SteeringModes.Camera
+			? Settings.SteeringModes.Tank
+			: Settings.SteeringModes.Camera;
+		Settings.Save();
+		UpdateLabels();
+	}
+
 	private void UpdateLabels()
 	{
+		_steeringButton.Text = Settings.SteeringMode == Settings.SteeringModes.Tank
+			? "Steering: Tank (left/right turn)"
+			: "Steering: Screen direction";
 		_cameraButton.Text = Settings.CameraMode == Settings.CameraModes.Follow
 			? "Camera: Follow ball"
 			: "Camera: Fixed isometric";
