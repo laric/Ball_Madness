@@ -1,6 +1,6 @@
 {
 	"format": 1,
-	"name": "Silent Maze",
+	"name": "Blaze Maze",
 	"difficulty": 0.85,
 	"generator": "v2 seed 209009",
 	"timeLimit": 35,
