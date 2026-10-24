@@ -31,7 +31,7 @@ public static class LevelBuilder
 	private static readonly MaterialDef PoleLook = new() { Color = new(0.9f, 0.3f, 0.2f), Line = new(0.4f, 0.1f, 0.08f) };
 	private static readonly MaterialDef DefaultLook = new();
 	private static readonly MaterialDef ChaserLook = new() { Color = new(0.08f, 0.08f, 0.1f), Roughness = 0.25f, Metallic = 0.8f };
-	private static readonly MaterialDef IceLook = new() { Color = new(0.78f, 0.93f, 1.0f), Line = new(0.55f, 0.75f, 0.92f) };
+	private static readonly MaterialDef IceLook = new() { Color = new(0.72f, 0.9f, 1.0f), Line = new(0.55f, 0.75f, 0.92f), Texture = "ice", Detail = new(0.95f, 0.98f, 1.0f) };
 	private static readonly MaterialDef BumperLook = new() { Color = new(0.2f, 0.85f, 0.95f), Roughness = 0.3f, Metallic = 0.3f };
 	private static readonly MaterialDef HoleLook = new() { Color = new(0.05f, 0.05f, 0.08f) };
 	private static readonly MaterialDef PostLook = new() { Color = new(0.3f, 0.3f, 0.38f), Roughness = 0.5f, Metallic = 0.4f };
@@ -107,7 +107,8 @@ public static class LevelBuilder
 		foreach (var part in file.Course)
 		{
 			var node = MakeStaticPart(part, MaterialFor);
-			built.Add((part, node));
+			if (node is CsgPrimitive3D csg)
+				built.Add((part, csg));
 			Add(course, node, part.Name);
 		}
 		foreach (var hazard in file.Hazards)
@@ -155,14 +156,49 @@ public static class LevelBuilder
 		return root;
 	}
 
+	/// <summary>
+	/// The surface textures a material's <c>texture</c> can name, in the
+	/// grid shader's <c>pattern</c> order (0 is none), with each one's
+	/// default roughness and metallic.
+	/// </summary>
+	public static readonly IReadOnlyList<(string Name, float Roughness, float Metallic)> Patterns = new[]
+	{
+		("grass", 0.9f, 0f), ("moss", 0.9f, 0f), ("sand", 0.95f, 0f), ("stone", 0.85f, 0f), ("planks", 0.8f, 0f),
+		("ice", 0.15f, 0.05f), ("basalt", 0.85f, 0f), ("metal", 0.45f, 0.55f), ("crystal", 0.2f, 0.1f),
+	};
+
+	public static int PatternIndex(string texture)
+	{
+		for (int i = 0; i < Patterns.Count; i++)
+		{
+			if (Patterns[i].Name == texture)
+				return i + 1;
+		}
+		return 0;
+	}
+
 	public static Material MakeMaterial(MaterialDef def)
 	{
-		if (def.Line is Vec3 line)
+		int pattern = PatternIndex(def.Texture);
+		if (def.Texture != null && pattern == 0)
+			GD.PushWarning($"Unknown texture \"{def.Texture}\"");
+		if (def.Line != null || pattern > 0)
 		{
 			var material = new ShaderMaterial { Shader = GridShader };
 			material.SetShaderParameter("base_color", ToColor(def.Color));
-			material.SetShaderParameter("line_color", ToColor(line));
+			material.SetShaderParameter("line_color", ToColor(def.Line ?? def.Color));
 			material.SetShaderParameter("line_glow", def.Glow ?? 0.0f);
+			if (pattern > 0)
+			{
+				var (_, roughness, metallic) = Patterns[pattern - 1];
+				// The grid stays on textures to show slopes, but only faintly.
+				material.SetShaderParameter("line_strength", def.Line != null ? 0.35f : 0.0f);
+				material.SetShaderParameter("pattern", pattern);
+				material.SetShaderParameter("detail_color", ToColor(def.Detail ?? (Vec3)((Vector3)def.Color * 0.5f)));
+				material.SetShaderParameter("texture_scale", Mathf.Max(def.Scale ?? 1.0f, 0.05f));
+				material.SetShaderParameter("roughness", def.Roughness ?? roughness);
+				material.SetShaderParameter("metallic", def.Metallic ?? metallic);
+			}
 			return material;
 		}
 		var plain = new StandardMaterial3D
@@ -200,9 +236,23 @@ public static class LevelBuilder
 		};
 	}
 
-	/// <summary>A course part: CSG, so it looks and collides like the hand-made levels did.</summary>
-	private static CsgPrimitive3D MakeStaticPart(Part part, Func<string, Material> materialFor)
+	/// <summary>
+	/// A course part: CSG, so it looks and collides like the hand-made levels
+	/// did (and holes can be cut in it), or a terrain body for bumps, mounds and rocks.
+	/// </summary>
+	private static Node3D MakeStaticPart(Part part, Func<string, Material> materialFor)
 	{
+		if (Terrain.IsTerrain(part.Shape))
+		{
+			var body = new StaticBody3D { Transform = Place(part.Pos, part.Rot) };
+			AddBodyPart(body, new Part
+			{
+				Name = Capitalize(part.Shape), Shape = part.Shape, Pos = part.Pos, Size = part.Size,
+				Collide = part.Collide, Visible = part.Visible,
+			}, materialFor(part.Material), Transform3D.Identity);
+			return body;
+		}
+
 		CsgPrimitive3D node = part.Shape switch
 		{
 			"box" => new CsgBox3D { Size = part.Size ?? Vector3.One },
@@ -477,12 +527,20 @@ public static class LevelBuilder
 	}
 
 	/// <summary>Adds a part to a moving body as a mesh plus a matching collision shape.</summary>
-	private static void AddBodyPart(Node3D body, Part part, Material material)
+	private static void AddBodyPart(Node3D body, Part part, Material material) =>
+		AddBodyPart(body, part, material, Place(part.Pos, part.Rot));
+
+	private static void AddBodyPart(Node3D body, Part part, Material material, Transform3D transform)
 	{
 		Mesh mesh;
 		Shape3D shape;
 		switch (part.Shape)
 		{
+			case "bump":
+			case "mound":
+			case "rock":
+				(mesh, shape) = Terrain.Make(part);
+				break;
 			case "box":
 				var size = part.Size ?? Vector3.One;
 				mesh = new BoxMesh { Size = size };
@@ -502,10 +560,15 @@ public static class LevelBuilder
 				throw new InvalidOperationException($"Unknown part shape \"{part.Shape}\"");
 		}
 
-		var transform = Place(part.Pos, part.Rot);
 		string name = part.Name ?? Capitalize(part.Shape);
 		if (part.Visible ?? true)
-			body.AddChild(new MeshInstance3D { Name = name + "Mesh", Mesh = mesh, MaterialOverride = material, Transform = transform });
+		{
+			var instance = new MeshInstance3D { Name = name + "Mesh", Mesh = mesh, MaterialOverride = material, Transform = transform };
+			// Smooth hills show shadow acne in bands; their shading shows the shape well enough.
+			if (part.Shape is "bump" or "mound")
+				instance.CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
+			body.AddChild(instance);
+		}
 		if (part.Collide ?? true)
 			body.AddChild(new CollisionShape3D { Name = name + "Shape", Shape = shape, Transform = transform });
 	}

@@ -30,6 +30,8 @@
 		"conveyor": { "color": [0.18, 0.2, 0.25], "line": [0.3, 0.75, 1.0] },
 		"teleporter": { "color": [0.75, 0.4, 1.0] },
 		"trapdoor": { "color": [0.6, 0.62, 0.68], "roughness": 0.5, "metallic": 0.3 },
-		"gatepost": { "color": [0.3, 0.32, 0.36], "roughness": 0.3, "metallic": 0.9 }
+		"gatepost": { "color": [0.3, 0.32, 0.36], "roughness": 0.3, "metallic": 0.9 },
+		"rock": { "color": [0.46, 0.45, 0.47], "texture": "stone", "detail": [0.26, 0.26, 0.29] },
+		"crate": { "color": [0.42, 0.44, 0.5], "line": [0.3, 0.7, 1], "glow": 0.8 }
 	}
 }

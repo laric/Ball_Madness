@@ -8,13 +8,13 @@
 	"ground": { "color": [0.55, 0.68, 0.82], "roughness": 0.6 },
 	"ui": { "accent": [0.55, 0.82, 1.0], "panel": [0.08, 0.2, 0.34] },
 	"materials": {
-		"grid": { "color": [0.78, 0.9, 1.0], "line": [0.36, 0.55, 0.8] },
-		"start": { "color": [0.96, 0.98, 1.0], "line": [0.6, 0.7, 0.86] },
-		"ramp": { "color": [0.842, 0.972, 1], "line": [0.36, 0.55, 0.8] },
-		"dark": { "color": [0.468, 0.54, 0.6], "line": [0.288, 0.44, 0.64] },
+		"grid": { "color": [0.78, 0.9, 1], "line": [0.36, 0.55, 0.8], "texture": "stone", "detail": [0.55, 0.7, 0.88] },
+		"start": { "color": [0.96, 0.98, 1], "line": [0.6, 0.7, 0.86], "texture": "stone", "detail": [0.66, 0.76, 0.9] },
+		"ramp": { "color": [0.93, 0.97, 1], "line": [0.36, 0.55, 0.8], "texture": "sand", "detail": [0.74, 0.84, 0.96] },
+		"dark": { "color": [0.468, 0.54, 0.6], "line": [0.288, 0.44, 0.64], "texture": "stone", "detail": [0.3, 0.38, 0.48] },
 		"moss": { "color": [0.59, 0.8, 0.675], "line": [0.266, 0.36, 0.304] },
 		"rail": { "color": [0.5, 0.72, 0.95], "line": [0.25, 0.42, 0.7] },
-		"bridge": { "color": [0.6, 0.66, 0.76], "line": [0.35, 0.4, 0.5] },
+		"bridge": { "color": [0.6, 0.66, 0.76], "line": [0.35, 0.4, 0.5], "texture": "planks", "detail": [0.38, 0.42, 0.52] },
 		"post": { "color": [0.3, 0.5, 0.88], "line": [0.15, 0.25, 0.5] },
 		"moving": { "color": [0.45, 0.88, 0.96], "roughness": 0.15, "metallic": 0.3 },
 		"slider": { "color": [0.45, 0.88, 0.96], "roughness": 0.15, "metallic": 0.3 },
@@ -27,6 +27,9 @@
 		"conveyor": { "color": [0.3, 0.38, 0.5], "line": [0.85, 0.95, 1.0] },
 		"teleporter": { "color": [0.6, 0.45, 1.0] },
 		"trapdoor": { "color": [0.45, 0.6, 0.85], "roughness": 0.5, "metallic": 0.3 },
-		"gatepost": { "color": [0.55, 0.6, 0.7], "roughness": 0.3, "metallic": 0.7 }
+		"gatepost": { "color": [0.55, 0.6, 0.7], "roughness": 0.3, "metallic": 0.7 },
+		"ice": { "color": [0.55, 0.78, 1], "texture": "ice", "detail": [0.92, 0.97, 1] },
+		"rock": { "color": [0.72, 0.86, 1], "texture": "ice", "detail": [0.95, 0.99, 1] },
+		"crate": { "color": [0.62, 0.66, 0.74], "texture": "planks", "detail": [0.38, 0.42, 0.52] }
 	}
 }

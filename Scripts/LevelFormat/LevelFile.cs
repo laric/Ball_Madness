@@ -62,8 +62,8 @@ public class LevelFile
 }
 
 /// <summary>
-/// Either the course's grid shader (<see cref="Line"/> set) or a plain
-/// surface (<see cref="Line"/> left out).
+/// Either the course's grid shader (<see cref="Line"/> or <see cref="Texture"/>
+/// set) or a plain surface (both left out).
 /// </summary>
 public class MaterialDef
 {
@@ -78,22 +78,38 @@ public class MaterialDef
 	/// <summary>Makes the grid lines (or a plain surface) give off their colour at this strength.</summary>
 	public float? Glow { get; set; }
 
+	/// <summary>
+	/// A procedural surface pattern, see <see cref="LevelBuilder.Patterns"/>:
+	/// "grass", "moss", "sand", "stone", "planks", "ice", "basalt", "metal" or "crystal".
+	/// </summary>
+	public string Texture { get; set; }
+
+	/// <summary>The texture's second colour (soil, moss, mortar, cracks, seams).</summary>
+	public Vec3? Detail { get; set; }
+
+	/// <summary>Makes the texture bigger (above 1) or smaller.</summary>
+	public float? Scale { get; set; }
+
 	/// <summary>True to keep this look whatever the pack's theme says for the same key.</summary>
 	public bool? Override { get; set; }
 }
 
-/// <summary>A box, cylinder or sphere: the building block of courses and hazards.</summary>
+/// <summary>
+/// A box, cylinder or sphere: the building block of courses and hazards.
+/// Course parts can also be terrain: a "bump" (a smooth ridge across the
+/// course), a "mound" (a round hill) or a "rock", each filling its <see cref="Size"/>.
+/// </summary>
 public class Part
 {
 	public string Name { get; set; }
 
-	/// <summary>"box", "cylinder" or "sphere".</summary>
+	/// <summary>"box", "cylinder" or "sphere"; in the course also "bump", "mound" or "rock".</summary>
 	public string Shape { get; set; } = "box";
 
 	public Vec3 Pos { get; set; }
 	public Vec3? Rot { get; set; }
 
-	/// <summary>Box size.</summary>
+	/// <summary>Box, bump, mound and rock size.</summary>
 	public Vec3? Size { get; set; }
 
 	/// <summary>Cylinder and sphere radius.</summary>

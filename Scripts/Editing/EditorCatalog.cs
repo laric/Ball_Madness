@@ -36,6 +36,7 @@ public sealed class CatalogEntry
 public static class EditorCatalog
 {
 	public const string Parts = "Parts";
+	public const string Terrain = "Terrain";
 	public const string Hazards = "Hazards";
 	public const string Mechanics = "Mechanics";
 	public const string Markers = "Markers";
@@ -59,6 +60,30 @@ public static class EditorCatalog
 			Id = "cylinder", Label = "Cylinder", Category = Parts,
 			Tooltip = "A round platform or post.",
 			Add = (level, floor) => AddPart(level, new Part { Shape = "cylinder", Pos = floor, Radius = 2, Height = 1, Material = "grid" }),
+		},
+		new()
+		{
+			Id = "bump", Label = "Bump", Category = Terrain,
+			Tooltip = "A smooth ridge across the course that a fast ball jumps off. Its size's X is the width across, Z the length along.",
+			Add = (level, floor) => AddPart(level, new Part { Shape = "bump", Pos = floor, Size = new Vec3(4, 0.5f, 3), Material = "grid" }),
+		},
+		new()
+		{
+			Id = "mound", Label = "Hill", Category = Terrain,
+			Tooltip = "A round hill to roll over or around.",
+			Add = (level, floor) => AddPart(level, new Part { Shape = "mound", Pos = floor, Size = new Vec3(3, 0.8f, 3), Material = "grid" }),
+		},
+		new()
+		{
+			Id = "rock", Label = "Rock", Category = Terrain,
+			Tooltip = "A boulder in the way. Each rock's shape comes from where it stands.",
+			Add = (level, floor) => AddPart(level, new Part { Shape = "rock", Pos = floor, Size = new Vec3(1.2f, 0.9f, 1.2f), Material = "rock" }),
+		},
+		new()
+		{
+			Id = "crate", Label = "Crate", Category = Terrain,
+			Tooltip = "A wooden crate in the way. Turn it with R.",
+			Add = (level, floor) => AddPart(level, new Part { Name = "Crate", Shape = "box", Pos = floor, Size = new Vec3(1, 1, 1), Material = "crate" }),
 		},
 		new()
 		{
@@ -224,6 +249,8 @@ public static class EditorCatalog
 		("pusher", new MaterialDef { Color = new(0.85f, 0.2f, 0.45f), Roughness = 0.5f, Metallic = 0.1f }),
 		("sweeper", new MaterialDef { Color = new(0.9f, 0.25f, 0.15f), Roughness = 0.4f, Metallic = 0.2f }),
 		("steelie", new MaterialDef { Color = new(0.08f, 0.08f, 0.1f), Roughness = 0.25f, Metallic = 0.9f }),
+		("rock", new MaterialDef { Color = new(0.56f, 0.54f, 0.52f), Texture = "stone", Detail = new Vec3(0.32f, 0.31f, 0.3f) }),
+		("crate", new MaterialDef { Color = new(0.82f, 0.6f, 0.34f), Texture = "planks", Detail = new Vec3(0.36f, 0.22f, 0.1f) }),
 	};
 
 	private static IEnumerable<Field> HoleFields(Hazard h)
@@ -255,7 +282,11 @@ public static class EditorCatalog
 		{
 			if (presetKey == key)
 			{
-				level.Materials[key] = new MaterialDef { Color = look.Color, Line = look.Line, Roughness = look.Roughness, Metallic = look.Metallic };
+				level.Materials[key] = new MaterialDef
+				{
+					Color = look.Color, Line = look.Line, Roughness = look.Roughness, Metallic = look.Metallic,
+					Texture = look.Texture, Detail = look.Detail, Scale = look.Scale,
+				};
 				return;
 			}
 		}
