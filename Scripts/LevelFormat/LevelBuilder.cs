@@ -10,7 +10,8 @@ namespace BallMadness.LevelFormat;
 /// Level (LevelInfo)
 ///   Spawn        Marker3D where the ball starts
 ///   Course       static parts (CSG with collision)
-///   Hazards      Mover / Spinner / Chaser bodies
+///   Hazards      Mover / Spinner / Chaser bodies and the mechanics:
+///                Conveyor, Ice, Bumper, Hole (with a TrapDoor), OneWayGate, Teleporter
 ///   Checkpoints  Area3Ds in the "checkpoint" group, with a yellow stripe
 ///   Goal, Goal2  Area3Ds in the "goal" group, with pad, pole and flag
 ///   Gates        Area3Ds the autopilot watches
@@ -22,12 +23,22 @@ namespace BallMadness.LevelFormat;
 public static class LevelBuilder
 {
 	private static readonly Shader GridShader = GD.Load<Shader>("res://Shaders/grid.gdshader");
+	private static readonly Shader ConveyorShader = GD.Load<Shader>(Conveyor.ShaderPath);
 
 	private static readonly MaterialDef CheckpointLook = new() { Color = new(0.95f, 0.85f, 0.2f), Line = new(0.5f, 0.4f, 0.05f) };
 	private static readonly MaterialDef GoalLook = new() { Color = new(0.3f, 0.9f, 0.4f), Line = new(0.05f, 0.4f, 0.1f) };
 	private static readonly MaterialDef PoleLook = new() { Color = new(0.9f, 0.3f, 0.2f), Line = new(0.4f, 0.1f, 0.08f) };
 	private static readonly MaterialDef DefaultLook = new();
 	private static readonly MaterialDef ChaserLook = new() { Color = new(0.08f, 0.08f, 0.1f), Roughness = 0.25f, Metallic = 0.8f };
+	private static readonly MaterialDef IceLook = new() { Color = new(0.78f, 0.93f, 1.0f), Line = new(0.55f, 0.75f, 0.92f) };
+	private static readonly MaterialDef BumperLook = new() { Color = new(0.2f, 0.85f, 0.95f), Roughness = 0.3f, Metallic = 0.3f };
+	private static readonly MaterialDef HoleLook = new() { Color = new(0.05f, 0.05f, 0.08f) };
+	private static readonly MaterialDef PostLook = new() { Color = new(0.3f, 0.3f, 0.38f), Roughness = 0.5f, Metallic = 0.4f };
+
+	public const float DefaultHoleRadius = 1.2f;
+	public const float DefaultTeleporterRadius = 1.0f;
+	public const float DefaultGateWidth = 4.0f;
+	public const float DefaultGateHeight = 1.2f;
 
 	public const float DefaultGoalRadius = 2.0f;
 
@@ -62,8 +73,18 @@ public static class LevelBuilder
 		root.AddChild(new Marker3D { Name = "Spawn", Position = file.Spawn });
 
 		var course = AddGroup(root, "Course");
+		var built = new List<(Part Part, CsgPrimitive3D Node)>();
 		foreach (var part in file.Course)
-			Add(course, MakeStaticPart(part, MaterialFor), part.Name);
+		{
+			var node = MakeStaticPart(part, MaterialFor);
+			built.Add((part, node));
+			Add(course, node, part.Name);
+		}
+		foreach (var hazard in file.Hazards)
+		{
+			if (hazard.Type == "hole")
+				CutHole(hazard, built);
+		}
 
 		var hazards = AddGroup(root, "Hazards");
 		foreach (var hazard in file.Hazards)
@@ -119,7 +140,7 @@ public static class LevelBuilder
 	}
 
 	/// <summary>A course part: CSG, so it looks and collides like the hand-made levels did.</summary>
-	private static Node3D MakeStaticPart(Part part, Func<string, Material> materialFor)
+	private static CsgPrimitive3D MakeStaticPart(Part part, Func<string, Material> materialFor)
 	{
 		CsgPrimitive3D node = part.Shape switch
 		{
@@ -162,14 +183,205 @@ public static class LevelBuilder
 				break;
 			case "chaser":
 				return MakeChaser(hazard, materialFor);
+			case "conveyor":
+				var belt = new ShaderMaterial { Shader = ConveyorShader };
+				var conveyor = new Conveyor { Speed = hazard.Speed ?? 4.0f, Belt = belt, Transform = Place(hazard.Pos, hazard.Rot) };
+				foreach (var part in hazard.Parts ?? new List<Part>())
+					AddBodyPart(conveyor, part, belt);
+				return conveyor;
+			case "ice":
+				body = new Ice();
+				break;
+			case "bumper":
+				body = new Bumper { Kick = hazard.Force ?? 10.0f };
+				break;
+			case "hole":
+				return MakeHole(hazard);
+			case "oneway":
+				return MakeOneWayGate(hazard);
+			case "teleporter":
+				return MakeTeleporter(hazard);
 			default:
 				throw new InvalidOperationException($"Unknown hazard type \"{hazard.Type}\"");
 		}
 
 		body.Transform = Place(hazard.Pos, hazard.Rot);
+		var fallback = hazard.Type switch { "ice" => MakeMaterial(IceLook), "bumper" => MakeMaterial(BumperLook), _ => null };
 		foreach (var part in hazard.Parts ?? new List<Part>())
-			AddBodyPart(body, part, materialFor(part.Material));
+			AddBodyPart(body, part, part.Material == null && fallback != null ? fallback : materialFor(part.Material));
 		return body;
+	}
+
+	/// <summary>Cuts a hazard "hole" out of every course part it overlaps.</summary>
+	private static void CutHole(Hazard hole, List<(Part Part, CsgPrimitive3D Node)> parts)
+	{
+		float radius = hole.Radius ?? DefaultHoleRadius;
+		float depth = hole.Depth ?? 3.0f;
+		var holePlace = Place(hole.Pos, hole.Rot);
+		var walls = MakeMaterial(HoleLook);
+		foreach (var (part, node) in parts)
+		{
+			if (part.Collide == false || part.Shape == "sphere")
+				continue;
+			var partPlace = Place(part.Pos, part.Rot);
+			Vector3 local = partPlace.AffineInverse() * hole.Pos;
+			Vector3 half = part.Shape == "cylinder"
+				? new Vector3(part.Radius ?? 0.5f, (part.Height ?? 1) / 2, part.Radius ?? 0.5f)
+				: (Vector3)(part.Size ?? Vector3.One) / 2;
+			if (Mathf.Abs(local.X) > half.X + radius || Mathf.Abs(local.Z) > half.Z + radius
+				|| local.Y < -half.Y - 0.01f || local.Y - depth > half.Y)
+				continue;
+			// From just above the floor down through the part.
+			var cutter = new CsgCylinder3D
+			{
+				Name = "Hole",
+				Operation = CsgShape3D.OperationEnum.Subtraction,
+				Radius = radius,
+				Height = depth + 0.5f,
+				Sides = 24,
+				Material = walls,
+				Transform = partPlace.AffineInverse() * holePlace * new Transform3D(Basis.Identity, new Vector3(0, 0.25f - depth / 2, 0)),
+			};
+			node.AddChild(cutter, forceReadableName: true);
+		}
+	}
+
+	/// <summary>The hole itself is cut into the course; this adds the trapdoor lid of a timed hole.</summary>
+	private static Node3D MakeHole(Hazard hazard)
+	{
+		var place = Place(hazard.Pos, hazard.Rot);
+		if (hazard.Period is not float period)
+			return new Marker3D { Transform = place };
+
+		float radius = (hazard.Radius ?? DefaultHoleRadius) - 0.03f;
+		var look = new StandardMaterial3D { AlbedoColor = new Color(0.95f, 0.6f, 0.15f), Roughness = 0.5f, Metallic = 0.3f };
+		var door = new TrapDoor
+		{
+			Period = Mathf.Max(period, 0.2f),
+			PhaseOffset = hazard.Phase ?? 0.0f,
+			OpenFraction = Mathf.Clamp(hazard.Open ?? 0.5f, 0, 1),
+			LidLook = look,
+			Transform = place,
+		};
+		door.Shape = new CollisionShape3D { Name = "Shape", Position = new Vector3(0, -0.1f, 0), Shape = new CylinderShape3D { Radius = radius, Height = 0.2f } };
+		door.Lid = new MeshInstance3D
+		{
+			Name = "Lid",
+			Position = new Vector3(0, -0.1f, 0),
+			Mesh = new CylinderMesh { TopRadius = radius, BottomRadius = radius, Height = 0.2f, RadialSegments = 24 },
+			MaterialOverride = look,
+		};
+		door.AddChild(door.Shape);
+		door.AddChild(door.Lid);
+		return door;
+	}
+
+	private static Node3D MakeOneWayGate(Hazard hazard)
+	{
+		float width = hazard.Width ?? DefaultGateWidth, height = hazard.Height ?? DefaultGateHeight;
+		var gate = new OneWayGate { Width = width, Height = height, Transform = Place(hazard.Pos, hazard.Rot) };
+		var panelSize = new Vector3(width, height, gate.Thickness);
+		gate.AddChild(new CollisionShape3D { Name = "Shape", Position = new Vector3(0, height / 2, 0), Shape = new BoxShape3D { Size = panelSize } });
+
+		var panelLook = new StandardMaterial3D
+		{
+			AlbedoColor = new Color(0.4f, 0.95f, 0.6f, 0.55f),
+			Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+			Roughness = 0.3f,
+		};
+		gate.Hinge = new Node3D { Name = "Hinge", Position = new Vector3(0, height, 0) };
+		gate.Hinge.AddChild(new MeshInstance3D { Name = "Panel", Position = new Vector3(0, -height / 2, 0), Mesh = new BoxMesh { Size = panelSize }, MaterialOverride = panelLook });
+		gate.AddChild(gate.Hinge);
+
+		// Chevrons on the floor point the way through.
+		var arrowLook = MakeMaterial(new MaterialDef { Color = new(0.4f, 0.95f, 0.6f) });
+		for (int i = -1; i <= 1; i += 2)
+		{
+			foreach (float side in new[] { -1f, 1f })
+			{
+				var arm = new MeshInstance3D
+				{
+					Name = "Arrow",
+					Mesh = new BoxMesh { Size = new Vector3(0.18f, 0.02f, 0.9f) },
+					MaterialOverride = arrowLook,
+					Transform = new Transform3D(Basis.FromEuler(new Vector3(0, side * Mathf.DegToRad(40), 0)), new Vector3(side * 0.29f, 0.01f, i * 1.0f - 0.35f)),
+				};
+				gate.AddChild(arm, forceReadableName: true);
+			}
+		}
+
+		// Posts at the sides: always solid, so they're their own body.
+		var posts = new StaticBody3D { Name = "Posts" };
+		var postLook = MakeMaterial(PostLook);
+		foreach (float side in new[] { -1f, 1f })
+		{
+			var pos = new Vector3(side * (width / 2 + 0.15f), (height + 0.3f) / 2, 0);
+			posts.AddChild(new CollisionShape3D { Name = "Shape", Position = pos, Shape = new BoxShape3D { Size = new Vector3(0.3f, height + 0.3f, 0.3f) } }, forceReadableName: true);
+			posts.AddChild(new MeshInstance3D { Name = "Post", Position = pos, Mesh = new BoxMesh { Size = new Vector3(0.3f, height + 0.3f, 0.3f) }, MaterialOverride = postLook }, forceReadableName: true);
+		}
+		posts.AddChild(new MeshInstance3D
+		{
+			Name = "Lintel",
+			Position = new Vector3(0, height + 0.22f, 0),
+			Mesh = new BoxMesh { Size = new Vector3(width + 0.6f, 0.16f, 0.3f) },
+			MaterialOverride = postLook,
+		});
+		gate.AddChild(posts);
+		return gate;
+	}
+
+	private static Node3D MakeTeleporter(Hazard hazard)
+	{
+		float radius = hazard.Radius ?? DefaultTeleporterRadius;
+		var glow = new StandardMaterial3D
+		{
+			AlbedoColor = new Color(0.7f, 0.35f, 1.0f),
+			EmissionEnabled = true,
+			Emission = new Color(0.6f, 0.25f, 1.0f),
+			EmissionEnergyMultiplier = 1.5f,
+		};
+		var place = Place(hazard.Pos, hazard.Rot);
+		Vector3 target = hazard.Target is Vec3 t ? t : (Vector3)hazard.Pos + new Vector3(0, 0, 8);
+		var teleporter = new Teleporter { Target = target, KeepSpeed = hazard.KeepSpeed ?? false, Transform = place };
+		// The ball has to roll well onto the pad.
+		teleporter.AddChild(new CollisionShape3D
+		{
+			Name = "Shape",
+			Position = new Vector3(0, 0.75f, 0),
+			Shape = new CylinderShape3D { Radius = Mathf.Max(radius - 0.4f, 0.1f), Height = 1.5f },
+		});
+		teleporter.AddChild(new MeshInstance3D
+		{
+			Name = "Pad",
+			Position = new Vector3(0, 0.02f, 0),
+			Mesh = new CylinderMesh { TopRadius = radius, BottomRadius = radius, Height = 0.04f, RadialSegments = 32 },
+			MaterialOverride = glow,
+		});
+		teleporter.Ring = new MeshInstance3D
+		{
+			Name = "Ring",
+			Position = new Vector3(0, 0.9f, 0),
+			Mesh = new TorusMesh { InnerRadius = radius - 0.12f, OuterRadius = radius, Rings = 32, RingSegments = 6 },
+			MaterialOverride = glow,
+		};
+		teleporter.AddChild(teleporter.Ring);
+
+		// A faint ring where the ball comes out, in level space.
+		var exit = new MeshInstance3D
+		{
+			Name = "Exit",
+			Mesh = new TorusMesh { InnerRadius = 0.75f, OuterRadius = 0.85f, Rings = 32, RingSegments = 6 },
+			MaterialOverride = new StandardMaterial3D
+			{
+				AlbedoColor = new Color(0.7f, 0.35f, 1.0f, 0.6f),
+				Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+				ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+			},
+			TopLevel = true,
+			Position = target + Vector3.Up * 0.05f,
+		};
+		teleporter.AddChild(exit);
+		return teleporter;
 	}
 
 	private static Node3D MakeChaser(Hazard hazard, Func<string, Material> materialFor)

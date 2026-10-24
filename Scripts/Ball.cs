@@ -28,6 +28,9 @@ public partial class Ball : RigidBody3D
 	/// <summary>Speed above which the player can no longer accelerate.</summary>
 	[Export] public float MaxSpeed = 14.0f;
 
+	/// <summary>Fraction of the push still available on <see cref="Ice"/>.</summary>
+	[Export(PropertyHint.Range, "0,1")] public float IceControl = 0.3f;
+
 	/// <summary>Tank steering: how fast left and right turn the heading, in degrees per second.</summary>
 	[Export] public float TankTurnDegrees = 150.0f;
 
@@ -38,6 +41,13 @@ public partial class Ball : RigidBody3D
 	public Vector3? SteerOverride { get; set; }
 
 	public bool OnGround { get; private set; }
+	public bool OnIce { get; private set; }
+
+	/// <summary>How many times a <see cref="Teleporter"/> has moved the ball.</summary>
+	public int Teleports { get; private set; }
+
+	/// <summary>Raised after a <see cref="Teleporter"/> has moved the ball.</summary>
+	public event System.Action Teleported;
 
 	/// <summary>The flat direction tank steering pushes along, or null when tank steering is off.</summary>
 	public Vector3? Heading => TankSteering && _headingSet ? _heading : null;
@@ -52,6 +62,7 @@ public partial class Ball : RigidBody3D
 	private const float ImpactThreshold = 2.5f;
 
 	private AudioStreamPlayer _roll;
+	private AudioStreamPlayer _slide;
 	private float _rollLevel;
 	private Vector3 _lastVelocity;
 	private float _impactCooldown;
@@ -64,11 +75,14 @@ public partial class Ball : RigidBody3D
 		BodyEntered += body => _touched.Add(body);
 
 		_roll = Sfx.LoopFlat("roll");
-		if (_roll != null)
+		_slide = Sfx.LoopFlat("ice");
+		foreach (var loop in new[] { _roll, _slide })
 		{
-			_roll.VolumeDb = -80;
-			AddChild(_roll);
-			_roll.Play();
+			if (loop == null)
+				continue;
+			loop.VolumeDb = -80;
+			AddChild(loop);
+			loop.Play();
 		}
 
 		_arrow = MakeArrow();
@@ -92,6 +106,22 @@ public partial class Ball : RigidBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		OnGround = GetContactCount() > 0;
+		OnIce = false;
+		foreach (Node3D body in GetCollidingBodies())
+		{
+			switch (body)
+			{
+				case Ice:
+					OnIce = true;
+					break;
+				case Conveyor conveyor:
+					conveyor.Carry(this, (float)delta);
+					break;
+				case Bumper bumper:
+					bumper.Hit(this);
+					break;
+			}
+		}
 		UpdateSounds((float)delta);
 
 		if (!ControlEnabled)
@@ -106,9 +136,9 @@ public partial class Ball : RigidBody3D
 		if (speedAlong > MaxSpeed)
 			return;
 
-		float control = OnGround ? 1.0f : AirControl;
+		float control = !OnGround ? AirControl : OnIce ? IceControl : 1.0f;
 		ApplyCentralForce(dir * PushForce * control);
-		if (OnGround)
+		if (OnGround && !OnIce)
 			ApplyTorque(Vector3.Up.Cross(dir) * RollTorque);
 	}
 
@@ -174,15 +204,19 @@ public partial class Ball : RigidBody3D
 
 	private void UpdateSounds(float dt)
 	{
-		// Rolling: louder and higher the faster the ball goes, silent in the air.
+		// Rolling: louder and higher the faster the ball goes, silent in the
+		// air. On ice the rumble gives way to a hiss.
 		float speed = LinearVelocity.Length();
 		float target = OnGround ? Mathf.Clamp(speed / MaxSpeed, 0, 1) : 0;
 		_rollLevel = Mathf.MoveToward(_rollLevel, target, dt * (target > _rollLevel ? 3.0f : 6.0f));
-		if (_roll != null)
+		var (active, quiet) = OnIce && _slide != null ? (_slide, _roll) : (_roll, _slide);
+		if (active != null)
 		{
-			_roll.VolumeDb = _rollLevel < 0.02f ? -80 : Mathf.LinearToDb(_rollLevel * 0.9f);
-			_roll.PitchScale = 0.55f + 0.95f * Mathf.Clamp(speed / MaxSpeed, 0, 1.2f);
+			active.VolumeDb = _rollLevel < 0.02f ? -80 : Mathf.LinearToDb(_rollLevel * 0.9f);
+			active.PitchScale = 0.55f + 0.95f * Mathf.Clamp(speed / MaxSpeed, 0, 1.2f);
 		}
+		if (quiet != null)
+			quiet.VolumeDb = -80;
 
 		// Impacts: the velocity jumped since last step, more than gravity or rolling could do.
 		_impactCooldown -= dt;
@@ -211,6 +245,21 @@ public partial class Ball : RigidBody3D
 				return sound.ImpactSound;
 		}
 		return "impact";
+	}
+
+	/// <summary>Moves the ball to <paramref name="position"/>, stopping it unless <paramref name="keepSpeed"/>.</summary>
+	public void Teleport(Vector3 position, bool keepSpeed)
+	{
+		Vector3 velocity = LinearVelocity, spin = AngularVelocity;
+		Respawn(position);
+		if (keepSpeed)
+		{
+			LinearVelocity = velocity;
+			AngularVelocity = spin;
+		}
+		Teleports++;
+		Sfx.Play("teleport");
+		Teleported?.Invoke();
 	}
 
 	private Vector3 ReadInputDirection()

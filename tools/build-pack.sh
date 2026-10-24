@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Generates a level pack and proves every level can be finished.
 #
-#   tools/build-pack.sh ID COUNT [SEED] [FROM] [TO] [NAME]
+#   tools/build-pack.sh ID COUNT [SEED] [FROM] [TO] [NAME] [FEATURE]
 #
 # Writes packs/ID/ with COUNT generated levels whose difficulty rises from
-# FROM to TO (0 to 1). The autopilot then plays each level; a level it can't
+# FROM to TO (0 to 1). With FEATURE (a section name such as Ice) every level
+# has that section in it. The autopilot then plays each level; a level it can't
 # finish without falling is generated again from another seed, and a level
 # it finishes gets its time limit from the autopilot's time.
 #
@@ -21,6 +22,7 @@ seed=${3:-1}
 from=${4:-0}
 to=${5:-1}
 name=${6:-$id}
+feature=${7:-}
 tries=8
 
 tools() { "$GODOT" --headless --path . res://Scenes/Tools.tscn -- "$@" 2>&1 | grep '^\[tools\]' || true; }
@@ -31,7 +33,7 @@ play() {
 	timeout 120 "$GODOT" --headless --fixed-fps 60 --path . -- --pack "$id" --level "$1" --autopilot 2>&1 || true
 }
 
-tools --generate-pack "$id" --count "$count" --seed "$seed" --from "$from" --to "$to" --name "$name"
+tools --generate-pack "$id" --count "$count" --seed "$seed" --from "$from" --to "$to" --name "$name" ${feature:+--feature "$feature"}
 
 failed=0
 for i in $(seq 1 "$count"); do

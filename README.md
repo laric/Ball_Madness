@@ -102,6 +102,8 @@ The editor shows the level as the game builds it, with hazards frozen where they
 
 The panel on the right edits the selection's position, rotation, size, material (from a small preset palette) and hazard settings, or the level's name, time limit and kill height when nothing is selected. Underneath it, the editor checks the level as you go: it needs a name, a goal, ground under the spawn, and everything above the kill height before it will save. **Test** plays the level as it is now, saved or not; finish it or pick **Back to editor** in the pause menu to return with the camera, selection and undo history as you left them.
 
+The **Mechanics** group places conveyors, ice, bumpers, holes (tick **Timed** for a trapdoor), one-way gates and teleporters; a selected teleporter shows a line to its exit, and gates and belts show an arrow the way they let the ball through or carry it.
+
 Palette entries come from one list in `Scripts/Editing/EditorCatalog.cs`; a new hazard type needs an entry there (with its property rows) and a case in `LevelBuilder`.
 
 ## Sound
@@ -142,6 +144,7 @@ Scripts/AutoPilot.cs Smoke test that drives the course by itself
 Scripts/LevelGen/   Level generator: course sections chained into a level with an autopilot route
 Scripts/Tools/      Command line tools for packs (Scenes/Tools.tscn); tools/*.sh drive them
 Scripts/Hazards/    Moving obstacles: Mover (pistons, sliding bridges), Spinner (sweeper bars), Chaser (enemy steelies)
+Scripts/Mechanics/  Conveyor, Ice, Bumper, TrapDoor (timed holes), OneWayGate, Teleporter
 Shaders/            World-space grid for the course, the editor's build grid, two-tone ball
 ```
 
@@ -164,11 +167,14 @@ Add `--fixed-fps 60` to run the autopilot as fast as the machine allows; physics
 
 ## Level generator
 
-`Scripts/LevelGen/` builds levels from a seed and a difficulty from 0 (gentlest) to 1 (hardest). It chains course sections together: runs, ramps, steps, a slalom, zig-zag beams, swaying planks, a sweeper bar, thin beams, a sliding bridge, pistons and enemy steelies. Each section appears from a set difficulty and gets narrower, steeper or faster as difficulty rises. The course always heads down and away from the camera, every level gets an autopilot route, and the same seed always gives the same level.
+`Scripts/LevelGen/` builds levels from a seed and a difficulty from 0 (gentlest) to 1 (hardest). It chains course sections together: runs, ramps, steps, a slalom, zig-zag beams, swaying planks, a sweeper bar, thin beams, a sliding bridge, pistons, enemy steelies, conveyor belts, ice, bumpers, holes, trapdoors, teleporters and an uphill climb with one-way gates. Each section appears from a set difficulty and gets narrower, steeper or faster as difficulty rises. The course mostly heads down and away from the camera, every level gets an autopilot route, and the same seed always gives the same level.
+
+Sections first appear at these difficulties (`LevelGenerator.Unlocks`): run and ramp 0, steps 0.05, slalom 0.1, conveyor 0.15 (a speed-up belt at first, cross belts from 0.35), zig-zag 0.2, bumpers 0.25, holes 0.3, planks 0.35, ice 0.4, sweeper 0.45, teleporter 0.5, beam 0.55, trapdoors 0.6, sliding bridge 0.65, one-way climb 0.7, pistons 0.75, steelies 0.85. The newest section unlocked is favoured, so each level tends to show off what it introduces. Pass a section name as `--feature` (or build-pack's 7th argument) to put that section in every level whatever the difficulty, for example for a world built around one mechanic.
 
 ```sh
 dotnet build
 GODOT=godot-mono tools/build-pack.sh my-pack 20 1 0 1 "My pack"   # ID COUNT SEED FROM TO NAME
+GODOT=godot-mono tools/build-pack.sh ice-world 10 1 0.3 0.7 "Ice" Ice   # every level has an Ice section
 ```
 
 That writes `packs/my-pack/` with 20 levels whose difficulty rises from 0 to 1, then plays each one with the autopilot. A level the autopilot can't finish without falling is generated again from another seed, and every level's time limit is set from the autopilot's time on it: about 2.6 times as long on the easiest levels, down to 1.3 times on the hardest. The lower-level commands it uses are in `Scripts/Tools/ToolRunner.cs`.

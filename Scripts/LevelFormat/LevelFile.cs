@@ -109,7 +109,15 @@ public class Part
 /// <item>"mover": slides to <see cref="Offset"/> and back every <see cref="Period"/> seconds.</item>
 /// <item>"spinner": turns <see cref="Speed"/> degrees a second around <see cref="Axis"/>.</item>
 /// <item>"chaser": an enemy marble of <see cref="Radius"/> that rolls after the ball.</item>
+/// <item>"conveyor": belt <see cref="Parts"/> that carry the ball along +Z at <see cref="Speed"/> m/s.</item>
+/// <item>"ice": frictionless <see cref="Parts"/>.</item>
+/// <item>"bumper": <see cref="Parts"/> that kick the ball away at <see cref="Force"/> m/s.</item>
+/// <item>"hole": a hole of <see cref="Radius"/> cut into the course; with a <see cref="Period"/> it's a trapdoor.</item>
+/// <item>"oneway": a door <see cref="Width"/> wide the ball can only pass along +Z.</item>
+/// <item>"teleporter": a pad of <see cref="Radius"/> that sends the ball to <see cref="Target"/>.</item>
 /// </list>
+/// Mechanics without <see cref="Parts"/> (hole, oneway, teleporter) stand on
+/// the floor at <see cref="Pos"/>.
 /// </summary>
 public class Hazard
 {
@@ -123,11 +131,26 @@ public class Hazard
 	public float? Period { get; set; }
 	public float? Phase { get; set; }
 
-	// spinner
+	// spinner (degrees a second) and conveyor (metres a second)
 	public float? Speed { get; set; }
 	public Vec3? Axis { get; set; }
 
-	// chaser
+	// bumper
+	public float? Force { get; set; }
+
+	// hole: also radius, and period and phase for a trapdoor
+	public float? Open { get; set; }
+	public float? Depth { get; set; }
+
+	// oneway
+	public float? Width { get; set; }
+	public float? Height { get; set; }
+
+	// teleporter: also radius
+	public Vec3? Target { get; set; }
+	public bool? KeepSpeed { get; set; }
+
+	// chaser, hole and teleporter
 	public float? Radius { get; set; }
 	public float? ChaseRadius { get; set; }
 	public float? PushForce { get; set; }
