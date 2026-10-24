@@ -19,9 +19,20 @@ public static class Settings
 		Follow,
 	}
 
+	/// <summary>How the stick or arrow keys steer the ball.</summary>
+	public enum SteeringModes
+	{
+		/// <summary>Up rolls the ball towards the top of the screen.</summary>
+		Camera,
+
+		/// <summary>Left and right turn the ball's heading; up rolls it forward along it.</summary>
+		Tank,
+	}
+
 	public const string Path = "user://settings.cfg";
 
 	private const string CameraSection = "camera";
+	private const string ControlsSection = "controls";
 	private const string AudioSection = "audio";
 
 	private static ConfigFile _file;
@@ -42,6 +53,14 @@ public static class Settings
 			? mode
 			: CameraModes.Fixed;
 		set => File.SetValue(CameraSection, "mode", value.ToString());
+	}
+
+	public static SteeringModes SteeringMode
+	{
+		get => System.Enum.TryParse((string)File.GetValue(ControlsSection, "steering", nameof(SteeringModes.Camera)), out SteeringModes mode)
+			? mode
+			: SteeringModes.Camera;
+		set => File.SetValue(ControlsSection, "steering", value.ToString());
 	}
 
 	/// <summary>Overall volume, 0 to 1. Apply changes with <see cref="Sfx.ApplySettings"/>.</summary>

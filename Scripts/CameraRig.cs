@@ -11,6 +11,7 @@ namespace BallMadness;
 /// In <see cref="Settings.CameraModes.Follow"/> (see <see cref="Settings"/>) the yaw also
 /// eases round to look the way the ball is rolling, gently enough that the
 /// camera-relative controls don't feel like they're shifting under you.
+/// With tank steering it stays behind the ball's heading instead.
 /// </summary>
 public partial class CameraRig : Node3D
 {
@@ -47,6 +48,12 @@ public partial class CameraRig : Node3D
 
 	/// <summary>Follow mode: seconds after a right-drag before the camera starts following again.</summary>
 	[Export] public float FollowOrbitHoldSeconds = 2.0f;
+
+	/// <summary>Follow mode with tank steering: how quickly the yaw swings behind the ball's heading.</summary>
+	[Export] public float HeadingYawSharpness = 5.0f;
+
+	/// <summary>Follow mode with tank steering: the fastest the camera turns to keep up, in degrees per second.</summary>
+	[Export] public float HeadingMaxTurnDegrees = 270.0f;
 
 	/// <summary>When false the camera stays where it is (e.g. while the ball falls off the course).</summary>
 	public bool Following { get; set; } = true;
@@ -144,6 +151,12 @@ public partial class CameraRig : Node3D
 			return;
 		}
 
+		if (body is Ball { Heading: Vector3 heading })
+		{
+			TurnTowards(Mathf.Atan2(-heading.X, -heading.Z), HeadingYawSharpness, HeadingMaxTurnDegrees, delta);
+			return;
+		}
+
 		Vector3 velocity = body.LinearVelocity with { Y = 0 };
 		_travel = _travel.Lerp(velocity, 1.0f - Mathf.Exp(-FollowVelocitySmoothing * delta));
 
@@ -152,13 +165,16 @@ public partial class CameraRig : Node3D
 			return;
 
 		// The camera looks along the rig's -Z, which for yaw y is (-sin y, 0, -cos y).
-		float wantedYaw = Mathf.Atan2(-_travel.X, -_travel.Z);
-		float gap = Mathf.Wrap(wantedYaw - _yaw, -Mathf.Pi, Mathf.Pi);
-
 		// Ease in just above the minimum speed instead of snapping into motion.
 		float strength = Mathf.Clamp((speed - FollowMinSpeed) / FollowMinSpeed, 0.0f, 1.0f);
-		float step = gap * (1.0f - Mathf.Exp(-FollowYawSharpness * strength * delta));
-		float maxStep = Mathf.DegToRad(FollowMaxTurnDegrees) * delta;
+		TurnTowards(Mathf.Atan2(-_travel.X, -_travel.Z), FollowYawSharpness * strength, FollowMaxTurnDegrees, delta);
+	}
+
+	private void TurnTowards(float wantedYaw, float sharpness, float maxTurnDegrees, float delta)
+	{
+		float gap = Mathf.Wrap(wantedYaw - _yaw, -Mathf.Pi, Mathf.Pi);
+		float step = gap * (1.0f - Mathf.Exp(-sharpness * delta));
+		float maxStep = Mathf.DegToRad(maxTurnDegrees) * delta;
 		step = Mathf.Clamp(step, -maxStep, maxStep);
 
 		_yaw = Mathf.Wrap(_yaw + step, -Mathf.Pi, Mathf.Pi);

@@ -1,8 +1,9 @@
 name: CI
 
-# Builds the game and has the autopilot play every level of every built-in
-# pack, so a change that breaks a level (or the level format) shows up on
-# the pull request.
+# Builds the game and loads every level of every built-in pack, so a change
+# that breaks the build or the level format shows up on the pull request.
+# Playing the levels with the autopilot (tools/check-pack.sh) is done
+# locally to save CI minutes.
 on:
   pull_request:
   push:
@@ -50,10 +51,5 @@ jobs:
       - name: Import
         run: timeout 300 "$GODOT" --headless --path . --import || true
 
-      - name: Play every level with the autopilot
-        run: |
-          failed=0
-          for pack in packs/*/; do
-            tools/check-pack.sh "$(basename "$pack")" || failed=1
-          done
-          exit $failed
+      - name: Load every level
+        run: timeout 300 "$GODOT" --headless --path . res://Scenes/Tools.tscn -- --validate

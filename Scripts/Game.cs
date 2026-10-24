@@ -75,7 +75,7 @@ public partial class Game : Node3D
 
 		var spawn = GetNode<Node3D>("Level/Spawn");
 		_respawnPoint = spawn.GlobalPosition;
-		_ball.Respawn(_respawnPoint);
+		_ball.Respawn(_respawnPoint, StartHeading(_respawnPoint));
 		_cameraRig.SnapToTarget();
 
 		foreach (Node node in GetTree().GetNodesInGroup("checkpoint"))
@@ -248,7 +248,7 @@ public partial class Game : Node3D
 				TickClock(dt);
 				if (_state == State.Falling && _stateTimer >= RespawnDelay)
 				{
-					_ball.Respawn(_respawnPoint);
+					_ball.Respawn(_respawnPoint, StartHeading(_respawnPoint));
 					Sfx.Play("respawn");
 					_cameraRig.ResetFollow();
 					_cameraRig.Following = true;
@@ -324,6 +324,44 @@ public partial class Game : Node3D
 		_respawnPoint = checkpoint.GlobalPosition + Vector3.Up * 1.0f;
 		Sfx.Play("checkpoint");
 		Flash("Checkpoint!");
+	}
+
+	/// <summary>
+	/// Which way the course goes on from <paramref name="from"/>, for tank
+	/// steering's starting heading: towards the next autopilot waypoint, or
+	/// the nearest goal on a level without a route.
+	/// </summary>
+	private Vector3? StartHeading(Vector3 from)
+	{
+		static Vector3 Flat(Vector3 v) => v with { Y = 0 };
+
+		var waypoints = new System.Collections.Generic.List<Vector3>();
+		foreach (Node node in GetNodeOrNull("Level/Route")?.GetChildren() ?? new Godot.Collections.Array<Node>())
+		{
+			if (node is Node3D marker)
+				waypoints.Add(marker.GlobalPosition);
+		}
+		int nearest = -1;
+		for (int i = 0; i < waypoints.Count; i++)
+		{
+			if (nearest < 0 || Flat(waypoints[i] - from).Length() < Flat(waypoints[nearest] - from).Length())
+				nearest = i;
+		}
+		for (int i = System.Math.Max(nearest, 0); i < waypoints.Count; i++)
+		{
+			Vector3 toward = Flat(waypoints[i] - from);
+			if (toward.Length() > 1.5f)
+				return toward.Normalized();
+		}
+
+		Vector3? best = null;
+		foreach (Node node in GetTree().GetNodesInGroup("goal"))
+		{
+			if (node is Node3D goal && Flat(goal.GlobalPosition - from) is var toward && toward.Length() > 0.1f
+				&& (best == null || toward.Length() < best.Value.Length()))
+				best = toward;
+		}
+		return best?.Normalized();
 	}
 
 	/// <summary>Shows a short message that clears itself while playing.</summary>

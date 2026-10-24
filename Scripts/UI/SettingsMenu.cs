@@ -10,6 +10,7 @@ public partial class SettingsMenu : Control
 	public Action Closed;
 
 	private Button _cameraButton;
+	private Button _steeringButton;
 	private Button _muteButton;
 	private ulong _lastPreview;
 
@@ -20,6 +21,7 @@ public partial class SettingsMenu : Control
 
 		var column = MenuUi.CenteredColumn(this, "SETTINGS", 520);
 		_cameraButton = MenuUi.AddButton(column, "", CycleCamera);
+		_steeringButton = MenuUi.AddButton(column, "", CycleSteering);
 		AddVolume(column, "Volume", Settings.MasterVolume, v => Settings.MasterVolume = v, "checkpoint");
 		AddVolume(column, "Effects", Settings.EffectsVolume, v => Settings.EffectsVolume = v, "impact");
 		AddVolume(column, "Menu sounds", Settings.MenuVolume, v => Settings.MenuVolume = v, "menu_click", Sfx.MenuBus);
@@ -43,6 +45,15 @@ public partial class SettingsMenu : Control
 		Settings.CameraMode = Settings.CameraMode == Settings.CameraModes.Fixed
 			? Settings.CameraModes.Follow
 			: Settings.CameraModes.Fixed;
+		Settings.Save();
+		UpdateLabels();
+	}
+
+	private void CycleSteering()
+	{
+		Settings.SteeringMode = Settings.SteeringMode == Settings.SteeringModes.Camera
+			? Settings.SteeringModes.Tank
+			: Settings.SteeringModes.Camera;
 		Settings.Save();
 		UpdateLabels();
 	}
@@ -102,6 +113,9 @@ public partial class SettingsMenu : Control
 	private void UpdateLabels()
 	{
 		_muteButton.Text = Settings.Muted ? "Sound: Off (M)" : "Sound: On (M)";
+		_steeringButton.Text = Settings.SteeringMode == Settings.SteeringModes.Tank
+			? "Steering: Tank (left/right turn)"
+			: "Steering: Screen direction";
 		_cameraButton.Text = Settings.CameraMode == Settings.CameraModes.Follow
 			? "Camera: Follow ball"
 			: "Camera: Fixed isometric";
